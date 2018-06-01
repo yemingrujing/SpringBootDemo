@@ -23,6 +23,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <fastjson.version>1.2.43</fastjson.version>
+        <mybatis.version>1.3.2</mybatis.version>
+        <alibaba.version>1.1.9</alibaba.version>
     </properties>
 
     <dependencies>
@@ -41,7 +43,7 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>1.3.2</version>
+            <version>${mybatis.version}</version>
         </dependency>
 
         <dependency>
@@ -50,6 +52,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- alibaba数据源 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${alibaba.version}</version>
+        </dependency>
+
+        <!-- json工具包 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
