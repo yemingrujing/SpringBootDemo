@@ -9,6 +9,10 @@
     <modules>
         <module>app</module>
         <module>controller</module>
+        <module>base</module>
+        <module>dao</module>
+        <module>util</module>
+        <module>service</module>
     </modules>
     <packaging>pom</packaging>
 

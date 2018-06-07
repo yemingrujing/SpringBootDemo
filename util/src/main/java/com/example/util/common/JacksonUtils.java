@@ -1,4 +1,4 @@
-package com.app.common.utils;
+package com.example.util.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,10 +19,10 @@ import java.util.Map;
  * @author Wei.Guang
  * @create 2018-06-01 11:36
  **/
-public class JacksonUtils  {
-    private final static ObjectMapper objectMapper = new ObjectMapper();
+public final class JacksonUtils {
+    private  static ObjectMapper objectMapper = new ObjectMapper();
 
-    private JacksonUtils (){
+    private JacksonUtils(){
 
     }
 
@@ -86,11 +86,11 @@ public class JacksonUtils  {
      * @return
      * @throws IOException
      */
-    public static <T> Map<String,T> json2map(String jsonString,Class<T> clazz) throws IOException {
-        Map<String,Map<String,Object>> map = objectMapper.readValue(jsonString,new TypeReference<Map<String,T>>(){});
-        Map<String,T> result = new HashMap<String,T>();
-        for(Map.Entry<String,Map<String,Object>> entry : map.entrySet()){
-            result.put(entry.getKey(),map2pojo(entry.getValue(),clazz));
+    public static <T> Map<String,T> json2map(String jsonString, Class<T> clazz) throws IOException {
+        Map<String, Map<String, Object>> map = objectMapper.readValue(jsonString, new TypeReference<Map<String,T>>(){});
+        Map<String, T> result = new HashMap<String, T>();
+        for (Map.Entry<String, Map<String, Object>> entry : map.entrySet()){
+            result.put(entry.getKey(), (T) entry.getValue());
         }
         return result;
     }
@@ -100,7 +100,7 @@ public class JacksonUtils  {
      * @param json
      * @return
      */
-    public static Map<String,Object> json2mapDeeply(String json) throws IOException {
+    public static Map<String, Object> json2mapDeeply(String json) throws IOException {
         return json2MapRecursion(json, objectMapper);
     }
 
@@ -113,8 +113,8 @@ public class JacksonUtils  {
      * @throws IOException
      */
     public static<T> List<T> json2list(String jsonArrayStr, Class<T> clazz) throws IOException {
-        JavaType javaType = getCollectionType(ArrayList.class,clazz);
-        List<T> list = (List<T>) objectMapper.readValue(jsonArrayStr,javaType);
+        JavaType javaType = getCollectionType(ArrayList.class, clazz);
+        List<T> list = (List<T>) objectMapper.readValue(jsonArrayStr, javaType);
         return list;
     }
 

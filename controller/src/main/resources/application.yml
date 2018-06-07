@@ -1,11 +1,11 @@
-#·şÎñ¶Ë¿Úserver:
+#æœåŠ¡ç«¯å£server:
 server:
-    port: 8888
+  port: 8080
 
-#»ù´¡ÅäÖÃ
+#åŸºç¡€é…ç½®
 spring:
   application:
-    name: SpringBootDemp-app #Ö¸¶¨Ó¦ÓÃµÄÃû×Ö
+    name: SpringBootDemp-app #æŒ‡å®šåº”ç”¨çš„åå­—
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.jdbc.Driver
@@ -13,39 +13,39 @@ spring:
     username: root
     password: q123456789
     druid:
-      #³õÊ¼»¯´óĞ¡£¬×îĞ¡£¬×î´ó
+      #åˆå§‹åŒ–å¤§å°ï¼Œæœ€å°ï¼Œæœ€å¤§
       initial-size: 5
       min-idle: 10
       max-active: 200
-      #ÅäÖÃ»ñÈ¡Á¬½ÓµÈ´ı³¬Ê±µÄÊ±¼ä
+      #é…ç½®è·å–è¿æ¥ç­‰å¾…è¶…æ—¶çš„æ—¶é—´
       max-wait: 60000
-      # ÅäÖÃÒ»¸öÁ¬½ÓÔÚ³ØÖĞ×îĞ¡Éú´æµÄÊ±¼ä£¬µ¥Î»ÊÇºÁÃë
+      # é…ç½®ä¸€ä¸ªè¿æ¥åœ¨æ± ä¸­æœ€å°ç”Ÿå­˜çš„æ—¶é—´ï¼Œå•ä½æ˜¯æ¯«ç§’
       min-evictable-idle-time-millis: 30000
-      # ÅäÖÃ¼ä¸ô¶à¾Ã²Å½øĞĞÒ»´Î¼ì²â£¬¼ì²âĞèÒª¹Ø±ÕµÄ¿ÕÏĞÁ¬½Ó£¬µ¥Î»ÊÇºÁÃë
+      # é…ç½®é—´éš”å¤šä¹…æ‰è¿›è¡Œä¸€æ¬¡æ£€æµ‹ï¼Œæ£€æµ‹éœ€è¦å…³é—­çš„ç©ºé—²è¿æ¥ï¼Œå•ä½æ˜¯æ¯«ç§’
       time-between-eviction-runs-millis: 60000
-      # ´ò¿ªPSCache£¬²¢ÇÒÖ¸¶¨Ã¿¸öÁ¬½ÓÉÏPSCacheµÄ´óĞ¡
+      # æ‰“å¼€PSCacheï¼Œå¹¶ä¸”æŒ‡å®šæ¯ä¸ªè¿æ¥ä¸ŠPSCacheçš„å¤§å°
       pool-prepared-statements: true
       max-pool-prepared-statement-per-connection-size: 20
-      # Í¨¹ıconnectPropertiesÊôĞÔÀ´´ò¿ªmergeSql¹¦ÄÜ£»ÂıSQL¼ÇÂ¼
+      # é€šè¿‡connectPropertieså±æ€§æ¥æ‰“å¼€mergeSqlåŠŸèƒ½ï¼›æ…¢SQLè®°å½•
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-      #ºÏ²¢¶à¸öDruidDataSourceµÄ¼à¿ØÊı¾İ
+      #åˆå¹¶å¤šä¸ªDruidDataSourceçš„ç›‘æ§æ•°æ®
       use-global-data-source-stat: true
-      # ÅäÖÃ¼à¿ØÍ³¼ÆÀ¹½ØµÄfilters£¬È¥µôºó¼à¿Ø½çÃæsqlÎŞ·¨Í³¼Æ£¬'wall'ÓÃÓÚ·À»ğÇ½
+      # é…ç½®ç›‘æ§ç»Ÿè®¡æ‹¦æˆªçš„filtersï¼Œå»æ‰åç›‘æ§ç•Œé¢sqlæ— æ³•ç»Ÿè®¡ï¼Œ'wall'ç”¨äºé˜²ç«å¢™
     filters: stat,wall,log4j
   redis:
     host: localhost
     port: 6379
     password: gw123456
     pool:
-    #Á¬½Ó³Ø×î´óÁ¬½ÓÊı£¨Ê¹ÓÃ¸ºÖµ±íÊ¾Ã»ÓĞÏŞÖÆ£©
-    max-active: 1000
-    #Á¬½Ó³ØÖĞµÄ×î´ó¿ÕÏĞÁ¬½Ó
-    min-idle: 10
-    #Á¬½Ó³Ø×î´ó×èÈûµÈ´ıÊ±¼ä£¨Ê¹ÓÃ¸ºÖµ±íÊ¾Ã»ÓĞÏŞÖÆ£©
-    max-wait: -1
-    #Á¬½Ó³¬Ê±Ê±¼ä£¨ºÁÃë£©
+      #è¿æ¥æ± æœ€å¤§è¿æ¥æ•°ï¼ˆä½¿ç”¨è´Ÿå€¼è¡¨ç¤ºæ²¡æœ‰é™åˆ¶ï¼‰
+      max-active: 1000
+      #è¿æ¥æ± ä¸­çš„æœ€å¤§ç©ºé—²è¿æ¥
+      min-idle: 10
+      #è¿æ¥æ± æœ€å¤§é˜»å¡ç­‰å¾…æ—¶é—´ï¼ˆä½¿ç”¨è´Ÿå€¼è¡¨ç¤ºæ²¡æœ‰é™åˆ¶ï¼‰
+      max-wait: -1
+    #è¿æ¥è¶…æ—¶æ—¶é—´ï¼ˆæ¯«ç§’ï¼‰
     timeout: 2000
 
-#´òÓ¡sqlĞÅÏ¢
+#æ‰“å°sqlä¿¡æ¯
 logging:
   config: classpath:logback-spring.xml
