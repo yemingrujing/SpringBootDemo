@@ -68,12 +68,6 @@
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper.mybatis.version}</version>
             </dependency>
-            <!--添加通用Mapper依赖 -->
-            <dependency>
-                <groupId>tk.mybatis</groupId>
-                <artifactId>mapper-spring-boot-starter</artifactId>
-                <version>${tk.mybatis.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -103,17 +97,18 @@
                 <version>${alibaba.version}</version>
             </dependency>
 
+            <!--添加通用Mapper依赖 -->
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${tk.mybatis.version}</version>
+            </dependency>
+
             <!-- json工具包 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>

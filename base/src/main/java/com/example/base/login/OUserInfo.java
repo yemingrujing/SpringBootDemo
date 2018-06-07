@@ -44,7 +44,7 @@ public class OUserInfo {
     /**
      * 头像
      */
-    private byte[] avatar;
+    private String avatar;
 
     /**
      * 获取id
@@ -177,7 +177,7 @@ public class OUserInfo {
      *
      * @return avatar - 头像
      */
-    public byte[] getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
@@ -186,7 +186,7 @@ public class OUserInfo {
      *
      * @param avatar 头像
      */
-    public void setAvatar(byte[] avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.service.wechat.impl;
 
+import com.example.base.login.OAuthInfo;
 import com.example.base.login.OUserInfo;
 import com.example.mapper.login.OAuthInfoMapper;
 import com.example.mapper.login.OUserInfoMapper;
@@ -7,6 +8,8 @@ import com.example.service.wechat.WeChatService;
 import com.example.util.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * 微信登陆验证
@@ -24,8 +27,23 @@ public class WeChatServiceImpl extends BaseServiceImpl<OUserInfo> implements WeC
     private OUserInfoMapper oUserInfoMapper;
 
     @Override
+    public OAuthInfo saveWXUserInfo(Map<String, String> map) {
+        OUserInfo userInfo = new OUserInfo();
+        OAuthInfo authInfo = new OAuthInfo();
+        userInfo.setNicname(map.get("nickname"));
+        userInfo.setSex(Integer.parseInt(String.valueOf(map.get("sex"))));
+        userInfo.setAvatar(map.get("headimgurl"));
+        int userInfoId = oUserInfoMapper.insertUserInfo(userInfo);
+        authInfo.setUserId(userInfo.getId());
+        authInfo.setWxOpenid(map.get("openId"));
+        authInfo.setCredential(map.get("accessToken"));
+        int authInfoId = oAuthInfoMapper.insertWXAuthInfo(authInfo);
+        return oAuthInfoMapper.getAuthInfoById(authInfo.getId());
+    }
+
+    @Override
     public OUserInfo getUserByWeiXinID(String openId) {
-        Integer userId = oAuthInfoMapper.getUserIdByOpenId(openId);
-        return oUserInfoMapper.getUserByUserID(userId);
+        int userId = oAuthInfoMapper.getUserIdByOpenId(openId);
+        return oUserInfoMapper.getUserInfoById(userId);
     }
 }

@@ -12,10 +12,15 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="mobile" jdbcType="INTEGER" property="mobile" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="avatar" jdbcType="LONGVARBINARY" property="avatar" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
   </resultMap>
-  
-  <select id="getUserByUserID" resultMap="BaseResultMap">
+
+  <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="userInfo.id" parameterType="OUserInfo">
+    insert into t_user_info(nicname,sex,avatar)
+    values(#{userInfo.nicname},#{userInfo.sex},#{userInfo.avatar})
+  </insert>
+
+  <select id="getUserInfoById" resultType="com.example.base.login.OUserInfo">
     select t.* from t_user_info t
     where t.id = #{userId}
   </select>

@@ -1,22 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.login.OAuthInfoMapper">
-  <resultMap id="BaseResultMap" type="com.example.base.login.OAuthInfo">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="identify_type" jdbcType="VARCHAR" property="identifyType" />
-    <result column="wx_openid" jdbcType="VARCHAR" property="wxOpenid" />
-    <result column="qq_openid" jdbcType="VARCHAR" property="qqOpenid" />
-    <result column="credential" jdbcType="VARCHAR" property="credential" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="verified" jdbcType="INTEGER" property="verified" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.example.base.login.OAuthInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="identify_type" jdbcType="VARCHAR" property="identifyType"/>
+        <result column="wx_openid" jdbcType="VARCHAR" property="wxOpenid"/>
+        <result column="qq_openid" jdbcType="VARCHAR" property="qqOpenid"/>
+        <result column="credential" jdbcType="VARCHAR" property="credential"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="verified" jdbcType="INTEGER" property="verified"/>
+    </resultMap>
 
-  <select id="getUserIdByOpenId" resultType="int">
+    <insert id="insertWXAuthInfo" keyProperty="authInfo.id" useGeneratedKeys="true" parameterType="OAuthInfo">
+    insert into t_user_auths(user_id,identify_type,wx_openid,credential,verified)
+    values (#{authInfo.userId},#{authInfo.identifyType},#{authInfo.wxOpenid},#{authInfo.credential},1)
+  </insert>
+
+    <select id="getUserIdByOpenId" resultType="int">
     select t.user_id from t_user_auths t
     where t.wx_openid = #{openId}
   </select>
+
+    <select id="getAuthInfoById" resultType="com.example.base.login.OAuthInfo">
+        select t.* from t_user_auths t
+        where t.id = #{id}
+    </select>
 </mapper>

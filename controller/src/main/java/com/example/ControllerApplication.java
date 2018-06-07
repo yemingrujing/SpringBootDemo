@@ -5,8 +5,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-@MapperScan("com.example.mapper")
+
 @SpringBootApplication
+@MapperScan("com.example.mapper")
 @EnableAsync
 public class ControllerApplication {
 

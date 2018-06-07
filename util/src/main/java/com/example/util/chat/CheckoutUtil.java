@@ -1,6 +1,5 @@
 package com.example.util.chat;
 
-import com.example.base.login.OAuthInfo;
 import com.example.util.common.HttpClientUtil;
 import com.example.util.common.JacksonUtils;
 
@@ -126,19 +125,19 @@ public class CheckoutUtil {
      * @param code 上一步的 code
      * @return
      */
-    public static OAuthInfo getAccessToken(String code) {
+    public static Map<String, String> getAccessToken(String code) {
         //第二步：通过code换取网页授权access_token
         String authUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code";
         authUrl = authUrl.replace("SECRET", ChatParam.SECRET);
         authUrl = authUrl.replace("APPID", ChatParam.APPID);
         authUrl = authUrl.replace("CODE", code);
 
-        OAuthInfo auth = null;
+        Map<String, String> userInfo = null;
         try {
-            Map<String, String> jsonMap = HttpClientUtil.sendGetRequestReturnMap(authUrl, null);
-            String openid = jsonMap.get("openid");
-            String accessToken = jsonMap.get("access_token");
-            String refreshToken = jsonMap.get("refresh_token");
+            Map<String, String> authInfo = HttpClientUtil.sendGetRequestReturnMap(authUrl, null);
+            String openid = authInfo.get("openid");
+            String accessToken = authInfo.get("access_token");
+            String refreshToken = authInfo.get("refresh_token");
 
             // 验证access_token是否失效；展示都不需要
             String checkUrl = "https://api.weixin.qq.com/sns/auth?access_token=" + accessToken + "&openid=" + openid;
@@ -156,14 +155,16 @@ public class CheckoutUtil {
                         + "&openid=" + openid
                         + "&lang=zh_CN";
                 System.out.println("infoUrl:" + infoUrl);
-                Map<String, String> userInfo = HttpClientUtil.sendGetRequestReturnMap(infoUrl, null);
+                userInfo = HttpClientUtil.sendGetRequestReturnMap(infoUrl, null);
                 System.out.println("JSON-----" + JacksonUtils.map2pojo(userInfo));
                 System.out.println("名字-----" + userInfo.get("nickname"));
                 System.out.println("头像-----" + userInfo.get("headimgurl"));
+                userInfo.put("openId", openid);
+                userInfo.put("accessToken", accessToken);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return auth;
+        return userInfo;
     }
 }
