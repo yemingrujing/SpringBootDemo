@@ -5,7 +5,9 @@ import com.example.base.login.OUserInfo;
 import com.example.service.wechat.WeChatService;
 import com.example.util.chat.CheckoutUtil;
 import com.example.util.common.StringUtil;
+import com.example.util.rest.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +33,13 @@ public class WeChat {
      */
     @Autowired
     private WeChatService weChatService;
+
+    /**
+     * 引入rest客户端
+     */
+    @Autowired
+    @Qualifier("restClient")
+    private RestClient restClient;
 
     /**
      * 微信消息接收和token验证
@@ -107,4 +116,6 @@ public class WeChat {
         // 未授权
         return "redirect:" + CheckoutUtil.getStartURLToGetCode();
     }
+
+
 }
