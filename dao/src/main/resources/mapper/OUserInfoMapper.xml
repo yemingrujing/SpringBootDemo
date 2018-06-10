@@ -21,7 +21,15 @@
   </insert>
 
   <select id="getUserInfoById" resultType="com.example.base.login.OUserInfo">
-    select t.* from t_user_info t
+    select t.id,
+           t.nicname,
+           t.sex,
+           t.age,
+           t.email,
+           t.mobile,
+           t.status,
+           t.avatar
+    from t_user_info t
     where t.id = #{userId}
   </select>
 </mapper>

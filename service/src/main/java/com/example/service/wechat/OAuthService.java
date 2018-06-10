@@ -11,7 +11,7 @@ import com.example.base.login.OAuthInfo;
 public interface OAuthService {
 
     /**
-     * 是否获取授权信息
+     * 是否有授权登
      * @param openId 授权用户唯一标识
      * @param accessToken 接口调用凭证
      * @param idenType 授权类型

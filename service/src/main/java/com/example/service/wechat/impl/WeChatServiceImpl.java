@@ -35,9 +35,10 @@ public class WeChatServiceImpl extends BaseServiceImpl<OUserInfo> implements WeC
         userInfo.setAvatar(map.get("headimgurl"));
         int userInfoId = oUserInfoMapper.insertUserInfo(userInfo);
         authInfo.setUserId(userInfo.getId());
+        authInfo.setIdentifyType("wx");
         authInfo.setWxOpenid(map.get("openId"));
         authInfo.setCredential(map.get("accessToken"));
-        int authInfoId = oAuthInfoMapper.insertWXAuthInfo(authInfo);
+        int authInfoId = oAuthInfoMapper.saveAuthInfo(authInfo);
         return oAuthInfoMapper.getAuthInfoById(authInfo.getId());
     }
 

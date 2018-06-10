@@ -3,6 +3,8 @@ package com.example.service.wechat.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.login.OAuthInfo;
 import com.example.base.login.OUserInfo;
+import com.example.mapper.login.OAuthInfoMapper;
+import com.example.mapper.login.OUserInfoMapper;
 import com.example.service.wechat.WeixinAuthService;
 import com.example.util.chat.ChatParam;
 import com.example.util.rest.RestClient;
@@ -17,6 +19,12 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class WeixinAuthServiceImpl implements WeixinAuthService {
+
+    @Autowired
+    private OAuthInfoMapper oAuthInfoMapper;
+
+    @Autowired
+    private OUserInfoMapper oUserInfoMapper;
 
     /**
      * Http请求类
@@ -60,12 +68,28 @@ public class WeixinAuthServiceImpl implements WeixinAuthService {
 
     @Override
     public boolean isAuthorize(String openId, String accessToken, String idenType) {
-
-        return false;
+        OAuthInfo authInfo = new OAuthInfo();
+        if ("wx".equals(idenType)) {
+            authInfo.setWxOpenid(openId);
+        } else {
+            authInfo.setQqOpenid(openId);
+        }
+        authInfo.setCredential(accessToken);
+        authInfo.setIdentifyType(idenType);
+        return oAuthInfoMapper.isAuthorize(authInfo) == 0 ? false : true;
     }
 
     @Override
     public OAuthInfo saveAuthInfo(String openId, String accessToken, String idenType) {
-        return null;
+        OAuthInfo authInfo = new OAuthInfo();
+        if ("wx".equals(idenType)) {
+            authInfo.setWxOpenid(openId);
+        } else {
+            authInfo.setQqOpenid(openId);
+        }
+        authInfo.setCredential(accessToken);
+        authInfo.setIdentifyType(idenType);
+        oAuthInfoMapper.saveAuthInfo(authInfo);
+        return authInfo;
     }
 }
