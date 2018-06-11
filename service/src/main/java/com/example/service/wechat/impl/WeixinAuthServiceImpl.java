@@ -49,10 +49,13 @@ public class WeixinAuthServiceImpl implements WeixinAuthService {
     }
 
     @Override
-    public OUserInfo getUserInfo(String accessToken, String openId) {
+    public OUserInfo saveUserInfo(String accessToken, String openId, String idenType) {
         OUserInfo userInfo = new OUserInfo();
+        OAuthInfo authInfo = new OAuthInfo();
+        //保存用户信息
         String url = ChatParam.GETUSERINFOURL.replace("ACCESS_TOKEN", accessToken).
-                replace("OPENID", openId);
+                replace("OPENID", openId).
+                replace("LANG", "zh_CN");
         JSONObject json = restClient.get(url);
         //昵称
         String nickname = (String) json.get("nickname");
@@ -61,26 +64,36 @@ public class WeixinAuthServiceImpl implements WeixinAuthService {
         //头像
         String headimgurl = (String) json.get("headimgurl");
         userInfo.setNicname(nickname);
-        userInfo.setStatus(sex);
+        userInfo.setSex(sex);
         userInfo.setAvatar(headimgurl);
-        return userInfo;
-    }
-
-    @Override
-    public boolean isAuthorize(String openId, String accessToken, String idenType) {
-        OAuthInfo authInfo = new OAuthInfo();
+        oUserInfoMapper.saveUserInfo(userInfo);
+        //保存授权信息
         if ("wx".equals(idenType)) {
             authInfo.setWxOpenid(openId);
         } else {
             authInfo.setQqOpenid(openId);
         }
         authInfo.setCredential(accessToken);
+        authInfo.setIdentifyType(idenType);
+        authInfo.setUserId(userInfo.getId());
+        oAuthInfoMapper.saveAuthInfo(authInfo);
+        return userInfo;
+    }
+
+    @Override
+    public boolean isAuthorize(String openId, String idenType) {
+        OAuthInfo authInfo = new OAuthInfo();
+        if ("wx".equals(idenType)) {
+            authInfo.setWxOpenid(openId);
+        } else {
+            authInfo.setQqOpenid(openId);
+        }
         authInfo.setIdentifyType(idenType);
         return oAuthInfoMapper.isAuthorize(authInfo) == 0 ? false : true;
     }
 
     @Override
-    public OAuthInfo saveAuthInfo(String openId, String accessToken, String idenType) {
+    public int updateAuthInfo(String openId, String accessToken, String idenType) {
         OAuthInfo authInfo = new OAuthInfo();
         if ("wx".equals(idenType)) {
             authInfo.setWxOpenid(openId);
@@ -89,7 +102,35 @@ public class WeixinAuthServiceImpl implements WeixinAuthService {
         }
         authInfo.setCredential(accessToken);
         authInfo.setIdentifyType(idenType);
-        oAuthInfoMapper.saveAuthInfo(authInfo);
-        return authInfo;
+        return oAuthInfoMapper.updateAuthInfo(authInfo);
+    }
+
+    @Override
+    public int updateUserInfo(String openId, String accessToken, String idenType) {
+        return 0;
+    }
+
+    @Override
+    public OAuthInfo getAuthInfoByOpenId(String openId, String idenType) {
+        return oAuthInfoMapper.getAuthInfoByOpenId(openId, idenType);
+    }
+
+    @Override
+    public OUserInfo getUserInfoByOpenId(String openId, String idenType) {
+        int userId = oAuthInfoMapper.getUserIdByOpenId(openId, idenType);
+        OUserInfo userInfo = oUserInfoMapper.getUserInfoById(userId);
+        return userInfo;
+    }
+
+    @Override
+    public Boolean checkAccessToken(String openId, String accessToken) {
+        String url = ChatParam.CHECKURL.replace("ACCESS_TOKEN", accessToken).
+                replace("OPENID", openId);
+        JSONObject json = restClient.get(url);
+        int code = (int) json.get("errcode");
+        if (code == 0) {
+            return true;
+        }
+        return false;
     }
 }

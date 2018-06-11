@@ -88,7 +88,7 @@ public class WeChat {
         String state = request.getParameter("state");
         System.out.println("code = " + code + ", state = " + state);
 
-        if(code != null && !"".equals(code)) {
+        if (code != null && !"".equals(code)) {
             // 授权成功, 微信获取用户openID
             Map<String, String> map = CheckoutUtil.getAccessToken(code);
             OAuthInfo authInfo = weChatService.saveWXUserInfo(map);

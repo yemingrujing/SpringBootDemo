@@ -33,7 +33,7 @@ public class WeChatServiceImpl extends BaseServiceImpl<OUserInfo> implements WeC
         userInfo.setNicname(map.get("nickname"));
         userInfo.setSex(Integer.parseInt(String.valueOf(map.get("sex"))));
         userInfo.setAvatar(map.get("headimgurl"));
-        int userInfoId = oUserInfoMapper.insertUserInfo(userInfo);
+        int userInfoId = oUserInfoMapper.saveUserInfo(userInfo);
         authInfo.setUserId(userInfo.getId());
         authInfo.setIdentifyType("wx");
         authInfo.setWxOpenid(map.get("openId"));
@@ -44,7 +44,7 @@ public class WeChatServiceImpl extends BaseServiceImpl<OUserInfo> implements WeC
 
     @Override
     public OUserInfo getUserByWeiXinID(String openId) {
-        int userId = oAuthInfoMapper.getUserIdByOpenId(openId);
+        int userId = oAuthInfoMapper.getUserIdByOpenId(openId, "wx");
         return oUserInfoMapper.getUserInfoById(userId);
     }
 }

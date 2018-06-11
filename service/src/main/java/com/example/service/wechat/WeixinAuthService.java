@@ -29,8 +29,9 @@ public interface WeixinAuthService extends OAuthService {
     /**
      * 第四步：拉取用户信息(需scope为 snsapi_userinfo)
      * @param accessToken 接口调用凭证
-     * @param OpenId 授权用户唯一标识
+     * @param openId 授权用户唯一标识
+     * @param idenType 登录类型
      * @return
      */
-    OUserInfo getUserInfo(String accessToken, String OpenId);
+    OUserInfo saveUserInfo(String accessToken, String openId, String idenType);
 }

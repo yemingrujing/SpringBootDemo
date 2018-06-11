@@ -18,7 +18,7 @@
     <insert id="saveAuthInfo" keyProperty="authInfo.id" useGeneratedKeys="true" parameterType="OAuthInfo">
     insert into t_user_auths(user_id,identify_type,wx_openid,credential,verified)
     <choose>
-        <when test="authInfo.identifyType == wx">
+        <when test='authInfo.identifyType == "wx"'>
             values (#{authInfo.userId},#{authInfo.identifyType},#{authInfo.wxOpenid},#{authInfo.credential},1)
         </when>
         <otherwise>
@@ -29,7 +29,15 @@
 
     <select id="getUserIdByOpenId" resultType="int">
     select t.user_id from t_user_auths t
-    where t.wx_openid = #{openId}
+    where
+        <choose>
+            <when test='idenType == "wx"'>
+                t.wx_openid = #{openId}
+            </when>
+            <otherwise>
+                t.qq_openid = #{openId}
+            </otherwise>
+        </choose>
   </select>
 
     <select id="getAuthInfoById" resultType="com.example.base.login.OAuthInfo">
@@ -48,14 +56,48 @@
     <select id="isAuthorize" parameterType="OAuthInfo" resultType="int">
         select count(t.id) from t_user_auths t
         where <choose>
-                  <when test="authInfo.identifyType == wx">
-                      t.wx_openid = #{authInfo.openId}
+                  <when test='authInfo.identifyType == "wx"'>
+                      t.wx_openid = #{authInfo.wxOpenid}
                   </when>
                   <otherwise>
-                      t.qq_openid = #{authInfo.openId}
+                      t.qq_openid = #{authInfo.qqOpenid}
                   </otherwise>
               </choose>
-              and t.credential = #{authInfo.credential}
               and t.identify_type = #{authInfo.identifyType}
+    </select>
+
+    <select id="getAuthInfoByOpenId" parameterType="com.example.base.login.OAuthInfo">
+        select t.id,
+               t.user_id,
+               t.identify_type,
+               t.wx_openid,
+               t.qq_openid,
+               t.credential,
+               t.password,
+               t.verified
+        from t_user_auths t
+        where
+            <choose>
+              <when test='idenType == "wx"'>
+                  t.wx_openid = #{openId}
+              </when>
+                <otherwise>
+                    t.qq_openid = #{openId}
+                </otherwise>
+            </choose>
+    </select>
+
+    <select id="updateAuthInfo" resultType="OAuthInfo">
+        update t_user_auths
+        set credential = #{authInfo.credential}
+        where
+          <choose>
+              <when test='authInfo.identifyType == "wx"'>
+                  t.wx_openid = #{authInfo.wxOpenid}
+              </when>
+              <otherwise>
+                  t.qq_openid = #{authInfo.qqOpenid}
+              </otherwise>
+          </choose>
     </select>
 </mapper>

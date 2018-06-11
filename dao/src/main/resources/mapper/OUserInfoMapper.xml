@@ -15,7 +15,7 @@
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
   </resultMap>
 
-  <insert id="insertUserInfo" useGeneratedKeys="true" keyProperty="userInfo.id" parameterType="OUserInfo">
+  <insert id="saveUserInfo" useGeneratedKeys="true" keyProperty="userInfo.id" parameterType="OUserInfo">
     insert into t_user_info(nicname,sex,avatar)
     values(#{userInfo.nicname},#{userInfo.sex},#{userInfo.avatar})
   </insert>

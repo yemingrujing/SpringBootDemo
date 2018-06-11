@@ -15,7 +15,7 @@ public class ChatParam {
     /**
      * 同意授权后跳转的 URL
      */
-    public static final String REDIRECT_URI = "http://902e8cbb.ngrok.io/wechat/loginByWeiXin";
+    public static final String REDIRECT_URI = "http://bed383fb.ngrok.io/login/loginByWx";
 
     /**
      * 微信开发者测试账号密码
@@ -42,5 +42,5 @@ public class ChatParam {
     /**
      * 根据access_token和openId获取用户信息
      */
-    public static final String GETUSERINFOURL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID";
+    public static final String GETUSERINFOURL = "https://api.weixin.qq.com/sns/userinfo?access_token=ACCESS_TOKEN&openid=OPENID&lang=LANG";
 }

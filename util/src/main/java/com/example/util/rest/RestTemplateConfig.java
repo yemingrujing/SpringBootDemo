@@ -29,11 +29,12 @@ public class RestTemplateConfig {
         Iterator<HttpMessageConverter<?>> iterator = messageConverters.iterator();
         while (iterator.hasNext()) {
             HttpMessageConverter<?> converter = iterator.next();
-            if(converter instanceof StringHttpMessageConverter) {
+            if (converter instanceof StringHttpMessageConverter) {
                 iterator.remove();
             }
         }
         messageConverters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        messageConverters.add(new WxMappingJackson2HttpMessageConverter());
         return restTemplate;
     }
 

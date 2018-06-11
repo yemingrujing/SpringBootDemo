@@ -21,10 +21,11 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
 
     /**
      * 根据openId查询用户ID
-     * @param OpenId
+     * @param openId
+     * @param idenType
      * @return
      */
-    int getUserIdByOpenId(@Param("openId") String openId);
+    int getUserIdByOpenId(@Param("openId") String openId, @Param("idenType") String idenType);
 
     /**
      * 是否有授权
@@ -32,4 +33,19 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
      * @return
      */
     int isAuthorize(@Param("authInfo") OAuthInfo authInfo);
+
+    /**
+     * 根据openId获取授权信息
+     * @param openId
+     * @param idenType
+     * @return
+     */
+    OAuthInfo getAuthInfoByOpenId(@Param("openId") String openId, @Param("idenType") String idenType);
+
+    /**
+     * 更新授权信息
+     * @param authInfo
+     * @return
+     */
+    int updateAuthInfo(@Param("authInfo") OAuthInfo authInfo);
 }
