@@ -1,6 +1,7 @@
 package com.example.util.common;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * MD5加密工具(基于hash算法实现，不可逆)
@@ -69,5 +70,35 @@ public class MD5Utils {
         int d1 = n / 16;
         int d2 = n % 16;
         return hexDigits[d1] + hexDigits[d2];
+    }
+
+    public static String encryption(String OrderNo) {
+        String result = OrderNo + "354039456123789" + "andriod";
+        String reMd5 = new String();
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(result.getBytes());
+            byte[] b = md.digest();
+
+            int i;
+
+            StringBuffer buf = new StringBuffer("");
+            for (int offset = 0; offset < b.length; offset++) {
+                i = b[offset];
+                if (i < 0) {
+                    i += 256;
+                }
+                if (i < 16) {
+                    buf.append("0");
+                }
+                buf.append(Integer.toHexString(i));
+            }
+
+            reMd5 = buf.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return reMd5.toUpperCase();
     }
 }

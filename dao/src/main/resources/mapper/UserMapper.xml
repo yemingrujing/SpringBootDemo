@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.login.UserMapper">
+  <resultMap id="BaseResultMap" type="com.example.base.login.User">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="member_code" jdbcType="VARCHAR" property="memberCode" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="pass_word" jdbcType="VARCHAR" property="passWord" />
+    <result column="sex" jdbcType="TINYINT" property="sex" />
+    <result column="grade" jdbcType="VARCHAR" property="grade" />
+    <result column="growth_value" jdbcType="INTEGER" property="growthValue" />
+    <result column="integral" jdbcType="INTEGER" property="integral" />
+    <result column="image_id" jdbcType="INTEGER" property="imageId" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="province" jdbcType="INTEGER" property="province" />
+    <result column="city" jdbcType="INTEGER" property="city" />
+    <result column="district" jdbcType="INTEGER" property="district" />
+    <result column="wang_wang" jdbcType="VARCHAR" property="wangWang" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="wei_xin" jdbcType="VARCHAR" property="weiXin" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="category_code" jdbcType="VARCHAR" property="categoryCode" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="to_ken" jdbcType="VARCHAR" property="toKen" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+</mapper>
