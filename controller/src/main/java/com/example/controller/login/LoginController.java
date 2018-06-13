@@ -2,6 +2,8 @@ package com.example.controller.login;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.login.OUserInfo;
+import com.example.base.login.User;
+import com.example.service.wechat.LoginService;
 import com.example.service.wechat.WeixinAuthService;
 import com.example.util.chat.CheckoutUtil;
 import com.example.util.common.StringUtil;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -42,6 +45,9 @@ public class LoginController {
     @Autowired
     private DefaultKaptcha defaultKaptcha;
 
+    @Autowired
+    private LoginService loginService;
+
     /**
      * 微信登录
      */
@@ -58,6 +64,36 @@ public class LoginController {
         String index = "/login";
         model.addAttribute("name", index);
         return "login";
+    }
+
+    /**
+     * 注册页面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/register"}, method = RequestMethod.GET)
+    public String register(Model model) {
+
+        return "register";
+    }
+
+    /**
+     * 注册方法
+     * @param user
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"/doRegister"}, method = RequestMethod.POST)
+    private String doResgister(User user, Model model) {
+        int i = loginService.register(user);
+        if (i > 0) {
+            model.addAttribute("info", "注册成功");
+            return "login";
+        } else{
+            model.addAttribute("info", "注册失败");
+            return "register";
+        }
+
     }
 
     /**
@@ -118,68 +154,88 @@ public class LoginController {
 
     /**
      * 执行登录
-     * @param username
-     * @param password
+     * @param userName
+     * @param passWord
      * @param returnUrl
      * @param model
      * @return
      */
-    @RequestMapping("/doLogin")
-    public String doLogin(String username, String password, String token, String returnUrl, Model model) {
+    @RequestMapping(value = {"/doLogin"}, method = RequestMethod.POST)
+    public String doLogin(String userName, String passWord, String toKen, String returnUrl, Model model) {
         String captchaId = (String) request.getSession().getAttribute("vrifyCode");
         String parameter = request.getParameter("vrifyCode");
-        //token不为空，以前登录过，验证token是否正确
-        if (StringUtil.isBlank(token)) {
-            //判断token是否和本地数据库一致
-            if (true) {
-                //判断token是否过期
-                try {
-                    Map<String, Object> map = TokenUtils.valid(token);
-                    int result = (int) map.get("result");
-                    if (i == 0) {
-                        return "index";
+
+        //判断是邮箱还是手机号的正则表达式
+        String em = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$";
+        String ph = "^[1][34578]\\d{9}$";
+
+        //不能为空
+        if (StringUtil.isBlank(userName) || StringUtil.isBlank(passWord)) {
+            model.addAttribute("error", "用户名或密码不能为空！");
+            return "login";
+        }
+
+        if (userName.matches(ph)) {
+            User user = loginService.loginByPhone(userName);
+            if (user != null) {
+                if(StringUtil.isBlank(passWord)){
+                    if (user.getToKen() != toKen){
+                        model.addAttribute("error", "密码已过期，请重新登录");
+                        return "login";
                     } else {
-                        model.addAttribute("error", "密码已过期，请重新登录！");
+                        model.addAttribute("info", "登录成功！");
+                        return "redirect:/index";
+                    }
+                } else {
+                    if (passWord.equals(user.getPassWord())){
+                        //获取token
+                        toKen = TokenUtils.getToken(userName);
+                        //保存token
+                        loginService.saveToken(user.getId(), toKen);
+                        //传回前端
+                        model.addAttribute("token", toKen);
+                        model.addAttribute("info", "密码输入正确，登录成功！");
+                        return "redirect:/index";
+                    } else {
+                        model.addAttribute("error", "密码错误，请重新输入！");
                         return "login";
                     }
-                } catch (Exception e) {
-                    log.error("token解析失败", ExceptionUtils.getStackTrace(e));
-                    e.printStackTrace();
                 }
             } else {
+                model.addAttribute("error", "手机用户不存在，请先注册！");
                 return "login";
             }
         } else {
-            //不能为空
-            if (StringUtil.isBlank(username) || StringUtil.isBlank(password) || StringUtil.isBlank(parameter)) {
-                model.addAttribute("error", "用户名/密码/验证码不能为空！");
+            User user = loginService.loginByUsername(userName);
+            if (user != null){
+                if (StringUtil.isBlank(passWord)){
+                    if (user.getToKen() != toKen){
+                        model.addAttribute("error", "密码已过期，请重新登录");
+                        return "login";
+                    } else {
+                        model.addAttribute("info", "登录成功！");
+                        return "redirect:/index";
+                    }
+                } else {
+                    if (passWord.equals(user.getPassWord())){
+                        //获取token
+                        toKen = TokenUtils.getToken(userName);
+                        //保存token
+                        loginService.saveToken(user.getId(), toKen);
+                        //传回前端
+                        model.addAttribute("token", toKen);
+                        model.addAttribute("info", "密码输入正确，登录成功！");
+                        return "redirect:/index";
+                    } else {
+                        model.addAttribute("error", "密码错误，请重新输入！");
+                        return "login";
+                    }
+                }
+            } else {
+                model.addAttribute("error", "用户名不存在，请先注册！");
                 return "login";
-            }
-            //验证码错误
-            if (captchaId.equals(parameter)) {
-                model.addAttribute("error", "验证码错误！");
-                return "login";
-            }
-            //用户名或密码错误
-            if (false) {
-                return "login";
-            }
-
-            //登录成功，生成token，下次根据token登录
-            try {
-                //登录失效以月计算
-                token = TokenUtils.getToken(username, 12);
-                //保存token
-
-                //传回前端
-                model.addAttribute("token", token);
-            } catch (Exception e) {
-                log.error("token生成失败", ExceptionUtils.getStackTrace(e));
-                e.printStackTrace();
             }
         }
-
-        return "/index";
     }
 
     /**

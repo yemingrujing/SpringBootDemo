@@ -1,13 +1,16 @@
 package com.example.util.login;
 
+import com.example.util.common.Base64Utils;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import net.minidev.json.JSONObject;
+import org.springframework.cglib.core.Local;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,6 +108,16 @@ public class TokenUtils {
         //过期时间
         map.put("exp", expireTime);
         return creatToken(map);
+    }
+
+    /**
+     * 生成token
+     * @param username
+     * @return
+     */
+    public static String getToken(String username) {
+        String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        return Base64Utils.encode(username + "_" + localTime);
     }
 
     public static void main(String[] args){

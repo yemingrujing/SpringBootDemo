@@ -92,8 +92,8 @@
         <!-- 指定列的java数据类型 -->
         <!-- <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />-->
         <!-- </table>-->
-        <table tableName="c_user_auths" domainObjectName="UserAuths"/>
-        <table tableName="c_user" domainObjectName="User"/>
+        <table tableName="t_user_auths" domainObjectName="UserAuths"/>
+        <table tableName="t_user" domainObjectName="User"/>
 
     </context>
 </generatorConfiguration>

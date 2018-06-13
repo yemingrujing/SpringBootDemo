@@ -1,7 +1,6 @@
 package com.example.service.wechat;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.service.wechat.AuthService;
 
 /**
  * 微信登录service

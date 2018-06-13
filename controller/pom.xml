@@ -80,6 +80,7 @@
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper</artifactId>
             <version>3.5.3</version>
+            <optional>true</optional>
             <scope>compile</scope>
         </dependency>
 
@@ -121,6 +122,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 没有该配置，devtools 不生效 -->
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
         </plugins>
     </build>

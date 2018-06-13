@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
-@Table(name = "c_user")
+@Table(name = "t_user")
 public class User {
     /**
      * 主键
@@ -128,7 +128,13 @@ public class User {
     private String type;
 
     /**
-     * 用户登录令牌
+     * 允许设备最大接入数量
+     */
+    @Column(name = "max_login_number")
+    private Integer maxLoginNumber;
+
+    /**
+     * 用户登录身份令牌
      */
     @Column(name = "to_ken")
     private String toKen;
@@ -536,18 +542,36 @@ public class User {
     }
 
     /**
-     * 获取用户登录令牌
+     * 获取允许设备最大接入数量
      *
-     * @return to_ken - 用户登录令牌
+     * @return max_login_number - 允许设备最大接入数量
+     */
+    public Integer getMaxLoginNumber() {
+        return maxLoginNumber;
+    }
+
+    /**
+     * 设置允许设备最大接入数量
+     *
+     * @param maxLoginNumber 允许设备最大接入数量
+     */
+    public void setMaxLoginNumber(Integer maxLoginNumber) {
+        this.maxLoginNumber = maxLoginNumber;
+    }
+
+    /**
+     * 获取用户登录身份令牌
+     *
+     * @return to_ken - 用户登录身份令牌
      */
     public String getToKen() {
         return toKen;
     }
 
     /**
-     * 设置用户登录令牌
+     * 设置用户登录身份令牌
      *
-     * @param toKen 用户登录令牌
+     * @param toKen 用户登录身份令牌
      */
     public void setToKen(String toKen) {
         this.toKen = toKen;

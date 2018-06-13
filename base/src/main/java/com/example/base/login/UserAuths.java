@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "c_user_auths")
+@Table(name = "t_user_auths")
 public class UserAuths {
     /**
      * id

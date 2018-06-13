@@ -13,4 +13,7 @@
 		<setting name="defaultExecutorType" value="SIMPLE" />
 		<setting name="defaultStatementTimeout" value="25000" />
 	</settings>
+	<mappers>
+		<package name="com.example.mapper"></package>
+	</mappers>
 </configuration>

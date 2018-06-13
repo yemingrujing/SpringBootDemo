@@ -32,6 +32,21 @@ spring:
       use-global-data-source-stat: true
       # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
     filters: stat,wall,log4j
+  thymeleaf:
+    cache: true
+    check-template: true
+    servlet:
+      content-type: text/html
+    enabled: true
+    encoding: utf-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+    excluded-view-names:
+  devtools:
+    remote:
+      restart:
+        enabled: true
   redis:
     host: localhost
     port: 6379
