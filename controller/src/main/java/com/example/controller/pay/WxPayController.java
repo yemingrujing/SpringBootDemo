@@ -314,7 +314,7 @@ public class WxPayController {
             result.put("info", "退单号或订单号不能为空！");
         }
         Map<String, String> restMap = null;
-        SortedMap<Object, Object> param = new TreeMap<Object, Object>()
+        SortedMap<Object, Object> param = new TreeMap<Object, Object>();
         param.put("appid", PayParam.APPID);
         param.put("mch_id", PayParam.MCHID);
         param.put("transaction_id", tradeno);
