@@ -72,8 +72,8 @@ public class MD5Utils {
         return hexDigits[d1] + hexDigits[d2];
     }
 
-    public static String encryption(String OrderNo) {
-        String result = OrderNo + "354039456123789" + "andriod";
+    public static String encryption(String userName) {
+        String result = userName + System.currentTimeMillis() + StringUtil.generateStr(8);
         String reMd5 = new String();
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -100,5 +100,9 @@ public class MD5Utils {
             e.printStackTrace();
         }
         return reMd5.toUpperCase();
+    }
+    
+    public static void main(String[] args){
+        System.out.println(encryption("haha"));
     }
 }

@@ -26,7 +26,7 @@ import java.util.Map;
  **/
 @Controller
 @RequestMapping("/wechat")
-public class WeChat {
+public class WeChatController {
 
     /**
      * 微信登陆操作service
