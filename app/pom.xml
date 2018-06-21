@@ -22,12 +22,12 @@
         <fastjson.version>1.2.43</fastjson.version>
         <!-- MyBatis Generator -->
         <!-- Java接口和实体类 -->
-        <targetModelPackage>com.example.base.login</targetModelPackage>
+        <targetModelPackage>com.example.order</targetModelPackage>
         <targetJavaProject>${basedir}/src/main/java/</targetJavaProject>
-        <targetMapperPackage>com.example.dao.login</targetMapperPackage>
+        <targetMapperPackage>com.example.dao.order</targetMapperPackage>
         <!-- XML生成路径 -->
         <targetResourcesProject>${basedir}/src/main/resources</targetResourcesProject>
-        <targetXMLPackage>mapper</targetXMLPackage>
+        <targetXMLPackage>mapper/order</targetXMLPackage>
     </properties>
 
     <dependencies>

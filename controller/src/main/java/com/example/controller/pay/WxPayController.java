@@ -139,35 +139,35 @@ public class WxPayController {
         String resXml = "";
         if (PayCommonUtil.isTenpaySign("UTF-8", packageParams)) {
             if("SUCCESS".equals(packageParams.get("result_code"))) {
-                //支付成功
-                //执行自己的业务逻辑
-                String mch_id = (String) packageParams.get("mch_id"); //商户号
-                String openid = (String) packageParams.get("openid");  //用户标识
-                String out_trade_no = (String) packageParams.get("out_trade_no"); //商户订单号
-                String total_fee = (String) packageParams.get("total_fee");
-                String transaction_id = (String) packageParams.get("transaction_id"); //微信支付订单号
-                //根据订单号查询订单信息
-                GoodsTrade gt = new GoodsTrade();
-                gt.setTid(out_trade_no);
-                GoodsTrade trade = 订单查询;
-                if (!PayParam.MCHID.equals(mch_id) || trade == null || new BigDecimal(total_fee).compareTo(new BigDecimal(trade.getPrice()).multiply(new BigDecimal(100))) != 0) {
-                    log.info("支付失败,错误信息：" + "参数错误");
-                    resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-                            + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";
-                } else {
-                    if ("no_pay".equals(trade.getPayStatus()) && "wait_buyer_pay".equals(trade.getStatus())) {//支付的价格
-                        //订单状态的修改。根据实际业务逻辑执行
-
-
-                        resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-                                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-
-                    } else {
-                        resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-                                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-                        log.info("订单已处理");
-                    }
-                }
+//                //支付成功
+//                //执行自己的业务逻辑
+//                String mch_id = (String) packageParams.get("mch_id"); //商户号
+//                String openid = (String) packageParams.get("openid");  //用户标识
+//                String out_trade_no = (String) packageParams.get("out_trade_no"); //商户订单号
+//                String total_fee = (String) packageParams.get("total_fee");
+//                String transaction_id = (String) packageParams.get("transaction_id"); //微信支付订单号
+//                //根据订单号查询订单信息
+//                GoodsTrade gt = new GoodsTrade();
+//                gt.setTid(out_trade_no);
+//                GoodsTrade trade = 订单查询;
+//                if (!PayParam.MCHID.equals(mch_id) || trade == null || new BigDecimal(total_fee).compareTo(new BigDecimal(trade.getPrice()).multiply(new BigDecimal(100))) != 0) {
+//                    log.info("支付失败,错误信息：" + "参数错误");
+//                    resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+//                            + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";
+//                } else {
+//                    if ("no_pay".equals(trade.getPayStatus()) && "wait_buyer_pay".equals(trade.getStatus())) {//支付的价格
+//                        //订单状态的修改。根据实际业务逻辑执行
+//
+//
+//                        resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+//                                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+//
+//                    } else {
+//                        resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+//                                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+//                        log.info("订单已处理");
+//                    }
+//                }
             } else {
                 log.info("支付失败,错误信息：" + packageParams.get("err_code"));
                 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
@@ -309,7 +309,7 @@ public class WxPayController {
     public Map<String, Object> wxPayReFundQuery(HttpServletRequest request, HttpServletResponse response, String refundid, String refundno, String tradeno, String orderno) {
         log.info("微信退款查询");
         Map<String, Object> result = new HashMap<String, Object>();
-        if(StringUtil.isEmpty(refundid) && StringUtil.isEmpty(refundno)
+        if (StringUtil.isEmpty(refundid) && StringUtil.isEmpty(refundno)
                 && StringUtil.isEmpty(tradeno) && StringUtil.isEmpty(orderno)) {
             result.put("info", "退单号或订单号不能为空！");
         }
@@ -329,7 +329,7 @@ public class WxPayController {
             Map<String, String> refundMap = new HashMap<>();
             if(!restMap.isEmpty() && "SUCCESS".equals(restMap.get("result_code"))) {
                 // 订单退款查询成功 处理业务逻辑
-                log.info("退款订单查询：订单" + restMap.get("out_trade_no") + "退款成功，退款状态"+ restmap.get("refund_status_0"));
+                log.info("退款订单查询：订单" + restMap.get("out_trade_no") + "退款成功，退款状态" + restMap.get("refund_status_0"));
                 refundMap.put("transaction_id", restMap.get("transaction_id"));
                 refundMap.put("out_trade_no", restMap.get("out_trade_no"));
                 refundMap.put("refund_id", restMap.get("refund_id_0"));

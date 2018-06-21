@@ -92,8 +92,11 @@
         <!-- 指定列的java数据类型 -->
         <!-- <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />-->
         <!-- </table>-->
-        <table tableName="t_user_auths" domainObjectName="UserAuths"/>
-        <table tableName="t_user" domainObjectName="User"/>
+        <table tableName="t_order" domainObjectName="Order"/>
+        <table tableName="t_order_item" domainObjectName="OrderItem"/>
+        <table tableName="t_receipt_address" domainObjectName="ReceiptAddress"/>
+        <table tableName="t_region" domainObjectName="Region"/>
+        <table tableName="t_delivery_address" domainObjectName="DeliveryAddress"/>
 
     </context>
 </generatorConfiguration>

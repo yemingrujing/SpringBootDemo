@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.order.OrderItemMapper">
+  <resultMap id="BaseResultMap" type="com.example.base.order.OrderItem">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="brand_code" jdbcType="VARCHAR" property="brandCode" />
+    <result column="spu_id" jdbcType="INTEGER" property="spuId" />
+    <result column="sku_id" jdbcType="INTEGER" property="skuId" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="act_price" jdbcType="DECIMAL" property="actPrice" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
+    <result column="order_id" jdbcType="VARBINARY" property="orderId" />
+  </resultMap>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.order.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.example.base.order.Order">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="payment" jdbcType="DECIMAL" property="payment" />
+    <result column="pay_type" jdbcType="INTEGER" property="payType" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime" />
+    <result column="consign_time" jdbcType="TIMESTAMP" property="consignTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="over_time" jdbcType="TIMESTAMP" property="overTime" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="address" jdbcType="INTEGER" property="address" />
+    <result column="order_code" jdbcType="VARBINARY" property="orderCode" />
+  </resultMap>
+</mapper>
