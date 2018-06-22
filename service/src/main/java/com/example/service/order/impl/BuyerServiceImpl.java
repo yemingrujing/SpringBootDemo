@@ -1,5 +1,6 @@
 package com.example.service.order.impl;
 
+import com.example.base.order.Goods;
 import com.example.base.order.Order;
 import com.example.base.order.OrderItem;
 import com.example.mapper.order.GoodsMapper;
@@ -54,8 +55,10 @@ public class BuyerServiceImpl implements BuyerService {
         //查询商品数量(数量，价格)
         orderItemList.stream().forEach(orderItem -> {
             //根据spu,sku检查商品是否存在
+            Goods goods = goodsService.findOne(orderItem.getSpuId());
 
             //查询商品库存，价格
+
 
         });
 

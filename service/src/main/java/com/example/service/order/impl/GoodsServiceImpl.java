@@ -18,4 +18,9 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods> implements GoodsSer
 
     @Autowired
     private GoodsMapper goodsMapper;
+
+    @Override
+    public Goods findOne(int goodsId) {
+        return findOne(goodsId);
+    }
 }
