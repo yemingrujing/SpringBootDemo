@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-06-21 18:25:03
+Date: 2018-06-22 17:34:39
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -146,18 +146,19 @@ CREATE TABLE `t_advertising` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='广告信息';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='广告信息';
 
 -- ----------------------------
 -- Records of t_advertising
 -- ----------------------------
-INSERT INTO `t_advertising` VALUES ('1', 'AD_APP_INDEX_BANNER', '淘美妆上线', '0', 'http://img', 'http://link', '广告文字', '2018-06-15 16:05:31', '2018-08-30 14:48:38', '1', '2018-06-30 14:48:38', '2018-06-15 14:48:38', '1');
+INSERT INTO `t_advertising` VALUES ('1', 'AD_APP_INDEX_BANNER', '淘美妆上线', '0', 'http://img', 'http://link', '广告文字', '2018-06-22 09:34:15', '2019-08-30 14:48:38', '1', '2018-06-30 14:48:38', '2018-06-15 14:48:38', '1');
 INSERT INTO `t_advertising` VALUES ('2', 'AD_APP_INDEX_MENU', '商会介绍', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:08:45', '2018-06-15 17:08:45', '1');
 INSERT INTO `t_advertising` VALUES ('3', 'AD_APP_INDEX_MENU', '会员', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:09:18', '2018-06-15 17:09:18', '1');
 INSERT INTO `t_advertising` VALUES ('4', 'AD_APP_INDEX_MENU', '品牌', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:09:26', '2018-06-15 17:09:26', '1');
 INSERT INTO `t_advertising` VALUES ('5', 'AD_APP_INDEX_MENU', '红人', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:26:24', '2018-06-15 17:26:24', '1');
 INSERT INTO `t_advertising` VALUES ('6', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '1', '', 'http://aticle/1.html', '找货：TOP 20面膜出炉 ，全球最好卖的面膜在这儿', '2018-06-19 18:57:43', '2019-06-19 23:59:59', '1', '2018-06-19 18:56:37', '2018-06-19 18:56:37', '1');
 INSERT INTO `t_advertising` VALUES ('7', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '1', '', 'http://aticle/1.html', '科普贴：干性皮肤如何处理', '2018-06-19 18:57:45', '2019-06-19 23:59:59', '1', '2018-06-19 18:57:20', '2018-06-19 18:57:20', '1');
+INSERT INTO `t_advertising` VALUES ('8', 'AD_APP_INDEX_GOODS', '芙丽芳丝面膜团购开始了', '1', '', 'http://goods/1.html', '分类：芦荟、蓝莓、香梨', '2018-06-22 00:00:00', '2019-06-22 23:59:59', '1', '2018-06-22 09:32:35', '2018-06-22 09:32:35', '1');
 
 -- ----------------------------
 -- Table structure for t_advertising_site
@@ -166,8 +167,8 @@ DROP TABLE IF EXISTS `t_advertising_site`;
 CREATE TABLE `t_advertising_site` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '广告位ID',
   `ads_code` varchar(50) NOT NULL COMMENT '广告位编码  详细见字典表',
-  `ads_title` varchar(255) NOT NULL COMMENT '标题',
-  `sub_title` varchar(255) NOT NULL COMMENT '子标题 如更多',
+  `ads_title` varchar(255) DEFAULT NULL COMMENT '标题',
+  `sub_title` varchar(255) DEFAULT NULL COMMENT '子标题 如更多',
   `title_view_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否显示标题  1显示  0不显示',
   `ads_type` smallint(3) DEFAULT NULL COMMENT '类型 (0:图片,1:文字,2:flash)',
   `view_max_num` int(5) DEFAULT NULL COMMENT '最大显示数量',
@@ -176,7 +177,7 @@ CREATE TABLE `t_advertising_site` (
   `ads_desc` varchar(255) DEFAULT NULL COMMENT '描述',
   `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='广告位信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='广告位信息表';
 
 -- ----------------------------
 -- Records of t_advertising_site
@@ -184,6 +185,7 @@ CREATE TABLE `t_advertising_site` (
 INSERT INTO `t_advertising_site` VALUES ('1', 'AD_APP_INDEX_BANNER', '', '', '0', '0', '6', '280', '750', '手机端APP首页轮播图', '1');
 INSERT INTO `t_advertising_site` VALUES ('2', 'AD_APP_INDEX_MENU', '', '', '0', '0', '6', '280', '750', '手机端APP首页分类', '1');
 INSERT INTO `t_advertising_site` VALUES ('3', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '更多', '1', '0', '6', '280', '750', '手机端APP首页资讯头条', '1');
+INSERT INTO `t_advertising_site` VALUES ('4', 'AD_APP_INDEX_GOODS', '', null, '0', '0', '1', '280', '750', '手机端首页商品广告', '1');
 
 -- ----------------------------
 -- Table structure for t_article
@@ -323,6 +325,37 @@ CREATE TABLE `t_article_like` (
 INSERT INTO `t_article_like` VALUES ('1', '1', '1', '1', '2018-06-12 16:34:51', '2018-06-12 16:34:51');
 
 -- ----------------------------
+-- Table structure for t_attr_name
+-- ----------------------------
+DROP TABLE IF EXISTS `t_attr_name`;
+CREATE TABLE `t_attr_name` (
+  `id` int(11) NOT NULL COMMENT '主键',
+  `attr_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '属性名',
+  `cate_id` int(11) DEFAULT NULL COMMENT '商品分类编号',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父属性编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='属性名';
+
+-- ----------------------------
+-- Records of t_attr_name
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_attr_value
+-- ----------------------------
+DROP TABLE IF EXISTS `t_attr_value`;
+CREATE TABLE `t_attr_value` (
+  `id` int(11) NOT NULL COMMENT '主键',
+  `attr_value` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '属性值',
+  `attr_name_id` int(11) DEFAULT NULL COMMENT '属性名编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='属性值';
+
+-- ----------------------------
+-- Records of t_attr_value
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for t_bank_card
 -- ----------------------------
 DROP TABLE IF EXISTS `t_bank_card`;
@@ -366,16 +399,83 @@ CREATE TABLE `t_brand_aptitude` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for t_brand_aptitude_history
+-- ----------------------------
+DROP TABLE IF EXISTS `t_brand_aptitude_history`;
+CREATE TABLE `t_brand_aptitude_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `brand_id` int(11) NOT NULL COMMENT '品牌基本信息ID',
+  `record_certificate` varchar(150) DEFAULT NULL COMMENT '化妆品备案凭证（多图）',
+  `overseas_brand_business_license` varchar(150) DEFAULT NULL COMMENT '境外品牌所有者营业执照 (图）',
+  `quarantine_certificate` varchar(150) DEFAULT NULL COMMENT '进口检验检疫证明（多图）',
+  `complete_auth_chain` varchar(150) DEFAULT NULL COMMENT '完整授权链 品牌方（选填）代理商（必填）（多图）',
+  `trade_mark_paper_internal` varchar(150) DEFAULT NULL COMMENT '商标注册证-国内（多图）（跨境贸易选填）',
+  `trade_mark_paper_overseas` varchar(150) DEFAULT NULL COMMENT '商标注册证-海外（多图）',
+  `bill_sales` varchar(150) DEFAULT NULL COMMENT '出货单（多图）',
+  `customs_declaration` varchar(150) DEFAULT NULL COMMENT '报关单（多图）',
+  `knowledge_complaint` smallint(1) DEFAULT NULL COMMENT '是否有知识产权投诉权利（0 - 未有，1 - 有）',
+  `special_certificate` varchar(150) DEFAULT NULL COMMENT '是否有特证（多图）',
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌流水历史资质表';
+
+-- ----------------------------
+-- Records of t_brand_aptitude_history
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for t_brand_basic_info
 -- ----------------------------
 DROP TABLE IF EXISTS `t_brand_basic_info`;
 CREATE TABLE `t_brand_basic_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `brand_code` varchar(50) DEFAULT NULL COMMENT '品牌编码',
+  `brand_code` varchar(16) DEFAULT NULL COMMENT '品牌编码',
   `brand_name` varchar(50) DEFAULT NULL COMMENT '品牌名称',
   `brand_name_en` varchar(50) DEFAULT NULL COMMENT '英文名称',
   `trade_types` varchar(11) DEFAULT NULL COMMENT '贸易种类（一般贸易，跨境贸易，国货）（数据字典）',
-  `country_id` int(11) NOT NULL COMMENT '品牌国籍',
+  `country_code` int(11) NOT NULL COMMENT '品牌国籍',
+  `production_address` varchar(50) DEFAULT NULL COMMENT '生产地址',
+  `tmall_overseas_shop_flag` smallint(1) DEFAULT '0' COMMENT '天猫国际海外旗舰店（0 - 没有，1 - 有）',
+  `tmall_shop_flag` smallint(1) DEFAULT '0' COMMENT '天猫旗舰店（0 - 没有，1 - 有）',
+  `main_category` varchar(255) DEFAULT NULL COMMENT '主营类目（存JSON串）',
+  `auth_channel` varchar(20) DEFAULT NULL COMMENT '授权渠道',
+  `channel_type` varchar(20) NOT NULL COMMENT '渠道类型（品牌方/代理商）',
+  `channel_company_name` varchar(50) DEFAULT NULL COMMENT '渠道公司名称',
+  `brand_auth_expire_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '品牌授权过期时间',
+  `sales_amount_on_line` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '全球品牌市场销售概况-线上',
+  `sales_amount_under_line` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '全球品牌市场销售概况-线下',
+  `brand_idea` varchar(200) DEFAULT NULL COMMENT '品牌理念',
+  `brand_logo` varchar(12) DEFAULT NULL COMMENT '品牌Logo',
+  `status` smallint(1) DEFAULT '0' COMMENT '审核状态 （默认通过 2 ）',
+  `create_user_id` int(11) DEFAULT NULL COMMENT '用户Id',
+  `sort` smallint(3) DEFAULT NULL COMMENT '排序',
+  `initials` varchar(1) DEFAULT NULL COMMENT '品牌名字首字母',
+  `initiation_amount` decimal(8,2) DEFAULT '0.00' COMMENT '品牌入驻费用',
+  `product_images` varchar(255) DEFAULT NULL COMMENT '产品图（多图）',
+  `terminal_images` varchar(255) DEFAULT NULL COMMENT '终端形象（多图）',
+  `delete_flag` smallint(1) DEFAULT NULL COMMENT '删除标识（0-未删除，1-已删除）',
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `remark1` varchar(255) DEFAULT NULL COMMENT '品牌方备注',
+  `remark2` varchar(255) DEFAULT NULL COMMENT '运营备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='品牌基本信息';
+
+-- ----------------------------
+-- Records of t_brand_basic_info
+-- ----------------------------
+INSERT INTO `t_brand_basic_info` VALUES ('1', '002020', '欧莱雅', 'oulaiya', '一般贸易', '1', '美国', '0', '0', '{\"存JSON串\"}', '经销商', '1', '品牌方', '2018-06-21 15:18:52', '0.00', '0.00', null, null, '0', null, null, null, '0.00', null, null, null, '2018-06-21 15:18:52', null, null);
+
+-- ----------------------------
+-- Table structure for t_brand_basic_info_history
+-- ----------------------------
+DROP TABLE IF EXISTS `t_brand_basic_info_history`;
+CREATE TABLE `t_brand_basic_info_history` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `brand_code` varchar(16) DEFAULT NULL COMMENT '品牌编码',
+  `brand_name` varchar(50) DEFAULT NULL COMMENT '品牌名称',
+  `brand_name_en` varchar(50) DEFAULT NULL COMMENT '英文名称',
+  `trade_types` varchar(11) DEFAULT NULL COMMENT '贸易种类（一般贸易，跨境贸易，国货）（数据字典）',
+  `country_code` int(11) NOT NULL COMMENT '品牌国籍',
   `production_address` varchar(50) DEFAULT NULL COMMENT '生产地址',
   `tmall_overseas_shop_flag` smallint(1) DEFAULT '0' COMMENT '天猫国际海外旗舰店（0 - 没有，1 - 有）',
   `tmall_shop_flag` smallint(1) DEFAULT '0' COMMENT '天猫旗舰店（0 - 没有，1 - 有）',
@@ -393,15 +493,17 @@ CREATE TABLE `t_brand_basic_info` (
   `sort` smallint(3) DEFAULT NULL COMMENT '排序',
   `initials` varchar(1) DEFAULT NULL COMMENT '品牌名字首字母',
   `initiation_amount` decimal(8,2) DEFAULT '0.00' COMMENT '品牌入驻费用',
+  `product_images` varchar(255) DEFAULT NULL COMMENT '产品图（多图）',
+  `terminal_images` varchar(255) DEFAULT NULL COMMENT '终端形象（多图）',
   `delete_flag` smallint(1) DEFAULT NULL COMMENT '删除标识（0-未删除，1-已删除）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `remark1` varchar(255) DEFAULT NULL COMMENT '品牌方备注',
   `remark2` varchar(255) DEFAULT NULL COMMENT '运营备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌基本信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌流水历史基本信息';
 
 -- ----------------------------
--- Records of t_brand_basic_info
+-- Records of t_brand_basic_info_history
 -- ----------------------------
 
 -- ----------------------------
@@ -442,6 +544,7 @@ CREATE TABLE `t_company` (
   `boss_name` varchar(20) DEFAULT NULL COMMENT '企业老板姓名',
   `boss_telephone` varchar(255) DEFAULT NULL COMMENT '老板电话',
   `boss_email` varchar(20) DEFAULT NULL COMMENT '老板邮箱',
+  `boss_we_chat` varchar(30) DEFAULT NULL COMMENT '老板微信',
   `company_name` varchar(50) DEFAULT NULL COMMENT '公司名字',
   `address` varchar(100) DEFAULT NULL COMMENT '公司地址',
   `company_size` varchar(20) DEFAULT NULL COMMENT '公司规模',
@@ -516,7 +619,7 @@ CREATE TABLE `t_dict_data` (
   `has_child` smallint(1) NOT NULL COMMENT '是否有子集',
   `parent_id` int(11) DEFAULT NULL COMMENT '父ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='字典表';
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COMMENT='字典表';
 
 -- ----------------------------
 -- Records of t_dict_data
@@ -526,6 +629,15 @@ INSERT INTO `t_dict_data` VALUES ('2', 'PAGE_TEMPLATE', 'APP_PAGE_INDEX', 'APP�
 INSERT INTO `t_dict_data` VALUES ('3', 'PAGE_TEMPLATE', 'APP_BOTTOM_TAB', 'APP底部模板', '0', null);
 INSERT INTO `t_dict_data` VALUES ('4', 'PAGE_TEMPLATE', 'APP_HEAD', 'APP头部模板', '0', null);
 INSERT INTO `t_dict_data` VALUES ('5', 'PAGE_TEMPLATE', 'APP_PAGE_BRANDS_INDEX', 'APP品牌页模板', '0', null);
+INSERT INTO `t_dict_data` VALUES ('6', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_OTHER', '其他国家', '0', null);
+INSERT INTO `t_dict_data` VALUES ('7', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_CHINA', '中国', '0', null);
+INSERT INTO `t_dict_data` VALUES ('8', 'AD', 'AD_APP_INDEX_BANNER', '手机端首页轮播图广告', '0', null);
+INSERT INTO `t_dict_data` VALUES ('9', 'AD', 'AD_APP_INDEX_MENU', '手机端首页分类广告', '0', null);
+INSERT INTO `t_dict_data` VALUES ('10', 'AD', 'AD_APP_INDEX_INFO_TOUTIAO', '手机端首页资讯头条广告', '0', null);
+INSERT INTO `t_dict_data` VALUES ('11', 'AD', 'AD_APP_INDEX_GOODS', '手机端首页商品广告', '0', null);
+INSERT INTO `t_dict_data` VALUES ('12', 'AD', 'AD_APP_INDEX_ZIXUN', '手机端首页资讯广告', '0', null);
+INSERT INTO `t_dict_data` VALUES ('13', 'AD', 'AD_APP_INDEX_ORDINARY', '手机端首页普通广告', '0', null);
+INSERT INTO `t_dict_data` VALUES ('14', 'AD', 'AD_APP_BRANDS_INDEX_BANNER', '手机端品牌首页轮播图广告', '0', null);
 
 -- ----------------------------
 -- Table structure for t_dict_type
@@ -536,7 +648,7 @@ CREATE TABLE `t_dict_type` (
   `dict_type` varchar(30) NOT NULL COMMENT '字典类型',
   `dict_type_name` varchar(255) NOT NULL COMMENT '字典类型名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
 
 -- ----------------------------
 -- Records of t_dict_type
@@ -544,6 +656,40 @@ CREATE TABLE `t_dict_type` (
 INSERT INTO `t_dict_type` VALUES ('1', 'APP', '手机端');
 INSERT INTO `t_dict_type` VALUES ('2', 'PC', 'PC端');
 INSERT INTO `t_dict_type` VALUES ('3', 'PAGE_TEMPLATE', '页面模板');
+INSERT INTO `t_dict_type` VALUES ('4', 'AD', '广告位');
+INSERT INTO `t_dict_type` VALUES ('5', 'PRODUCT_ADDRESS', '产地');
+
+-- ----------------------------
+-- Table structure for t_goods
+-- ----------------------------
+DROP TABLE IF EXISTS `t_goods`;
+CREATE TABLE `t_goods` (
+  `id` int(11) NOT NULL COMMENT '主键',
+  `good_name` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '商品名称',
+  `cate_id` int(11) DEFAULT NULL COMMENT '商品分类编号',
+  `seller_id` int(11) DEFAULT NULL COMMENT '卖家编号',
+  `spu_volume` bigint(20) DEFAULT NULL COMMENT 'spu销量',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='商品表';
+
+-- ----------------------------
+-- Records of t_goods
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_good_category
+-- ----------------------------
+DROP TABLE IF EXISTS `t_good_category`;
+CREATE TABLE `t_good_category` (
+  `id` int(11) NOT NULL COMMENT '主键',
+  `cate_name` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '商品分类名称',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父分类编号',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='商品分类';
+
+-- ----------------------------
+-- Records of t_good_category
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_invoice
@@ -597,7 +743,7 @@ CREATE TABLE `t_invoice_history` (
 DROP TABLE IF EXISTS `t_main_push_brand_product`;
 CREATE TABLE `t_main_push_brand_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `brand_id` int(11) DEFAULT NULL COMMENT '品牌ID',
+  `brand_code` varchar(16) DEFAULT NULL COMMENT '品牌编码',
   `brand_name` varchar(20) DEFAULT NULL COMMENT '品牌TOP5爆款明细（选填）',
   `brand_gross_profit` varchar(15) DEFAULT NULL COMMENT '品牌零售毛利预估（选填）',
   `brand_per_ticket_sales` decimal(8,2) DEFAULT NULL COMMENT '单品平均客单价（选填，金额）',
@@ -630,7 +776,7 @@ CREATE TABLE `t_member_detail` (
 DROP TABLE IF EXISTS `t_order`;
 CREATE TABLE `t_order` (
   `id` int(11) NOT NULL COMMENT '主键',
-  `order_code` varbinary(32) DEFAULT NULL COMMENT '订单编号',
+  `order_code` bigint(20) DEFAULT NULL COMMENT '订单编号',
   `payment` decimal(32,0) DEFAULT NULL COMMENT '实付金额',
   `pay_type` int(2) DEFAULT NULL COMMENT '支付类型(微信/支付宝)',
   `status` int(2) DEFAULT NULL COMMENT '订单状态(未付款/已付款/未发货/已发货/订单成功/订单关闭/取消交易)',
@@ -655,7 +801,7 @@ CREATE TABLE `t_order` (
 DROP TABLE IF EXISTS `t_order_item`;
 CREATE TABLE `t_order_item` (
   `id` int(11) NOT NULL COMMENT '主键',
-  `order_id` varbinary(32) DEFAULT NULL COMMENT '订单id',
+  `order_id` bigint(20) DEFAULT NULL COMMENT '订单id',
   `brand_code` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '品牌编码',
   `spu_id` int(11) DEFAULT NULL COMMENT 'spu_id',
   `sku_id` int(11) DEFAULT NULL COMMENT 'sku_id',
@@ -668,6 +814,24 @@ CREATE TABLE `t_order_item` (
 
 -- ----------------------------
 -- Records of t_order_item
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_order_trace
+-- ----------------------------
+DROP TABLE IF EXISTS `t_order_trace`;
+CREATE TABLE `t_order_trace` (
+  `id` int(11) NOT NULL COMMENT '主键',
+  `order_code` bigint(20) DEFAULT NULL COMMENT '订单编号',
+  `operate` varchar(64) COLLATE utf8_unicode_ci NOT NULL COMMENT '操作',
+  `ope_trace` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '历史操作轨迹',
+  `user_id` int(11) DEFAULT NULL COMMENT '用户id',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单操作轨迹表';
+
+-- ----------------------------
+-- Records of t_order_trace
 -- ----------------------------
 
 -- ----------------------------
@@ -4495,14 +4659,34 @@ CREATE TABLE `t_shop_info` (
   `main_category` varchar(255) DEFAULT NULL COMMENT '主营类目（护肤/彩妆/洗护/香水）',
   `main_brand` varchar(255) DEFAULT NULL COMMENT '主营品牌（综合/日韩/欧美/国货/东南亚/澳洲）',
   `shop_type` varchar(255) DEFAULT NULL COMMENT '店铺类型（品牌旗舰店or专营\\综合店\\红人店\\小众店\\细分品类店）',
+  `unit_price` decimal(8,2) DEFAULT NULL COMMENT '客单价',
   `shop_describe` varchar(40) DEFAULT NULL COMMENT '店铺经营特色',
   `logistics_methods` varchar(60) DEFAULT NULL COMMENT '物流方式（国内/保税仓/直邮）',
+  `user_id` int(11) DEFAULT NULL COMMENT '用户ID',
   `status` smallint(1) DEFAULT '0' COMMENT '店铺审核状态（0-未审核，1-已审核）',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='店铺信息';
 
 -- ----------------------------
 -- Records of t_shop_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_sku
+-- ----------------------------
+DROP TABLE IF EXISTS `t_sku`;
+CREATE TABLE `t_sku` (
+  `id` int(11) NOT NULL COMMENT '主键',
+  `good_id` int(11) DEFAULT NULL COMMENT '商品编号',
+  `sku_attr` int(11) DEFAULT NULL COMMENT 'sku属性',
+  `price` decimal(10,0) DEFAULT NULL COMMENT '价格',
+  `stock` bigint(20) DEFAULT NULL COMMENT '库存',
+  `sku_volume` bigint(20) DEFAULT NULL COMMENT 'sku销量',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='库存表';
+
+-- ----------------------------
+-- Records of t_sku
 -- ----------------------------
 
 -- ----------------------------
@@ -4573,26 +4757,11 @@ CREATE TABLE `t_sys_log` (
   `create_user_name` varchar(20) DEFAULT NULL COMMENT ' 用户名称',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='系统日志表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统日志表';
 
 -- ----------------------------
 -- Records of t_sys_log
 -- ----------------------------
-INSERT INTO `t_sys_log` VALUES ('6', '登录验证接口', 'com.ishop.controller.user.LoginController.loginPost()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"682p2\"]}', null, null, '2018-06-19 18:07:26');
-INSERT INTO `t_sys_log` VALUES ('7', '登录验证接口', 'com.ishop.controller.user.LoginController.loginPost()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"eey3d\"]}', null, null, '2018-06-19 18:07:53');
-INSERT INTO `t_sys_log` VALUES ('8', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', '1', 'liaobing', '2018-06-19 18:08:39');
-INSERT INTO `t_sys_log` VALUES ('9', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{}', null, null, '2018-06-21 10:23:02');
-INSERT INTO `t_sys_log` VALUES ('10', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"eey3d\"]}', null, null, '2018-06-21 10:24:08');
-INSERT INTO `t_sys_log` VALUES ('11', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"daxd6\"]}', null, null, '2018-06-21 10:24:27');
-INSERT INTO `t_sys_log` VALUES ('12', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', '1', 'liaobing', '2018-06-21 10:24:40');
-INSERT INTO `t_sys_log` VALUES ('13', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"b23wx\"]}', null, null, '2018-06-21 10:27:21');
-INSERT INTO `t_sys_log` VALUES ('14', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', '1', 'liaobing', '2018-06-21 10:27:25');
-INSERT INTO `t_sys_log` VALUES ('15', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', '1', 'liaobing', '2018-06-21 10:27:49');
-INSERT INTO `t_sys_log` VALUES ('16', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"y4648\"]}', null, null, '2018-06-21 11:12:46');
-INSERT INTO `t_sys_log` VALUES ('17', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', '1', 'liaobing', '2018-06-21 11:12:58');
-INSERT INTO `t_sys_log` VALUES ('18', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"bb2px\"]}', null, null, '2018-06-21 11:25:31');
-INSERT INTO `t_sys_log` VALUES ('19', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"bb2px\"]}', null, null, '2018-06-21 11:54:22');
-INSERT INTO `t_sys_log` VALUES ('20', '登录验证接口', 'com.ishop.controller.user.LoginController.loginAuth()', '0:0:0:0:0:0:0:1', '{\"userName\":[\"liaobing\"],\"passWord\":[\"123456\"],\"captcha\":[\"bb2px\"]}', null, null, '2018-06-21 11:54:42');
 
 -- ----------------------------
 -- Table structure for t_template
@@ -4627,7 +4796,7 @@ CREATE TABLE `t_user` (
   `grade` varchar(10) NOT NULL COMMENT '用户等级',
   `growth_value` int(11) NOT NULL DEFAULT '0' COMMENT '用户成长值',
   `integral` int(11) NOT NULL DEFAULT '0' COMMENT '用户积分',
-  `image_id` int(11) DEFAULT NULL COMMENT '头像地址（文件表Id）',
+  `image_url` varchar(50) DEFAULT NULL COMMENT '头像地址',
   `nick_name` varchar(20) DEFAULT NULL COMMENT '用户昵称',
   `user_name` varchar(20) DEFAULT NULL COMMENT '用户名称',
   `birthday` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '用户生日',
@@ -4695,9 +4864,14 @@ CREATE TABLE `t_user_label` (
 DROP TABLE IF EXISTS `t_user_subaccount`;
 CREATE TABLE `t_user_subaccount` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `user_id` int(11) DEFAULT NULL COMMENT '主账号ID',
-  `user_account` varchar(30) DEFAULT NULL COMMENT '子账号用户名',
-  `pass_word` varchar(100) DEFAULT NULL COMMENT '密码',
+  `user_id` int(11) NOT NULL COMMENT '主账号ID',
+  `user_account` varchar(30) NOT NULL COMMENT '子账号用户名',
+  `pass_word` varchar(100) NOT NULL COMMENT '密码',
+  `user_name` varchar(20) NOT NULL COMMENT '用户名字',
+  `phone` varchar(16) NOT NULL COMMENT '手机号',
+  `position` varchar(20) NOT NULL COMMENT '职位',
+  `we_chat` varchar(30) NOT NULL COMMENT '微信',
+  `email` varchar(30) NOT NULL COMMENT '邮箱',
   `to_ken` varchar(100) DEFAULT NULL COMMENT '子账号登录令牌',
   `status` smallint(1) DEFAULT '1' COMMENT '状态（0 - 禁用，1 - 启用）',
   `description` varchar(255) DEFAULT NULL COMMENT '描述',
