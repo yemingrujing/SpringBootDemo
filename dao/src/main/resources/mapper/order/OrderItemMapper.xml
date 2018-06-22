@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="brand_code" jdbcType="VARCHAR" property="brandCode" />
     <result column="spu_id" jdbcType="INTEGER" property="spuId" />
     <result column="sku_id" jdbcType="INTEGER" property="skuId" />
@@ -13,6 +14,22 @@
     <result column="act_price" jdbcType="DECIMAL" property="actPrice" />
     <result column="num" jdbcType="INTEGER" property="num" />
     <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
-    <result column="order_id" jdbcType="VARBINARY" property="orderId" />
   </resultMap>
+
+  <insert id="addOrderItemList" parameterType="java.util.List">
+    insert into t_order_item(order_id,brand_code,spu_id,sku_id,price,act_price,num,total_fee)
+    values
+      <foreach collection="orderItemList" item="item" index="index" separator=",">
+        (
+          #{item.orderId,
+          #{item.brandCode},
+          #{item.spuId},
+          #{item.skuId},
+          #{item.price},
+          #{item.actPrice}),
+          #{item.num},
+          #{item.totalFee}
+        )
+      </foreach>
+  </insert>
 </mapper>

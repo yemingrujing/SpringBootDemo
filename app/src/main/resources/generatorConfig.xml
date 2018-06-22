@@ -92,11 +92,11 @@
         <!-- 指定列的java数据类型 -->
         <!-- <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />-->
         <!-- </table>-->
-        <table tableName="t_order" domainObjectName="Order"/>
-        <table tableName="t_order_item" domainObjectName="OrderItem"/>
-        <table tableName="t_receipt_address" domainObjectName="ReceiptAddress"/>
-        <table tableName="t_region" domainObjectName="Region"/>
-        <table tableName="t_delivery_address" domainObjectName="DeliveryAddress"/>
+        <table tableName="t_attr_name" domainObjectName="AttrName"/>
+        <table tableName="t_attr_value" domainObjectName="AttrValue"/>
+        <table tableName="t_good_category" domainObjectName="GoodCateGory"/>
+        <table tableName="t_goods" domainObjectName="Goods"/>
+        <table tableName="t_sku" domainObjectName="Sku"/>
 
     </context>
 </generatorConfiguration>

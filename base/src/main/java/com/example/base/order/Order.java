@@ -82,7 +82,7 @@ public class Order {
      * 订单编号
      */
     @Column(name = "order_code")
-    private byte[] orderCode;
+    private Long orderCode;
 
     /**
      * 获取主键
@@ -305,7 +305,7 @@ public class Order {
      *
      * @return order_code - 订单编号
      */
-    public byte[] getOrderCode() {
+    public Long getOrderCode() {
         return orderCode;
     }
 
@@ -314,7 +314,7 @@ public class Order {
      *
      * @param orderCode 订单编号
      */
-    public void setOrderCode(byte[] orderCode) {
+    public void setOrderCode(Long orderCode) {
         this.orderCode = orderCode;
     }
 }

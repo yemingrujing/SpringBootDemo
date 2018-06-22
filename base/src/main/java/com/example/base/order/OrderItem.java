@@ -1,9 +1,7 @@
 package com.example.base.order;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.math.BigDecimal;
+import javax.persistence.*;
 
 @Table(name = "t_order_item")
 public class OrderItem {
@@ -12,6 +10,12 @@ public class OrderItem {
      */
     @Id
     private Integer id;
+
+    /**
+     * 订单id
+     */
+    @Column(name = "order_id")
+    private Long orderId;
 
     /**
      * 品牌编码
@@ -54,12 +58,6 @@ public class OrderItem {
     private BigDecimal totalFee;
 
     /**
-     * 订单id
-     */
-    @Column(name = "order_id")
-    private byte[] orderId;
-
-    /**
      * 获取主键
      *
      * @return id - 主键
@@ -75,6 +73,24 @@ public class OrderItem {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * 获取订单id
+     *
+     * @return order_id - 订单id
+     */
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    /**
+     * 设置订单id
+     *
+     * @param orderId 订单id
+     */
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     /**
@@ -201,23 +217,5 @@ public class OrderItem {
      */
     public void setTotalFee(BigDecimal totalFee) {
         this.totalFee = totalFee;
-    }
-
-    /**
-     * 获取订单id
-     *
-     * @return order_id - 订单id
-     */
-    public byte[] getOrderId() {
-        return orderId;
-    }
-
-    /**
-     * 设置订单id
-     *
-     * @param orderId 订单id
-     */
-    public void setOrderId(byte[] orderId) {
-        this.orderId = orderId;
     }
 }

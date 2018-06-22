@@ -17,6 +17,7 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="address" jdbcType="INTEGER" property="address" />
-    <result column="order_code" jdbcType="VARBINARY" property="orderCode" />
+    <result column="order_code" jdbcType="BIGINT" property="orderCode" />
   </resultMap>
+
 </mapper>

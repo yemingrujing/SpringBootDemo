@@ -1,7 +1,8 @@
-package com.example.service.wechat.order;
+package com.example.service.order;
 
-import com.example.base.order.Order;
+import com.example.base.order.OrderItem;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,7 +18,7 @@ public interface BuyerService {
      * @param order
      * @return
      */
-    Map<String, Object> create(Order order);
+    Map<String, Object> create(int userId, int addressId, List<OrderItem> orderItemList);
 
     /**
      * 订单列表

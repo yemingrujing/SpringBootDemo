@@ -178,7 +178,7 @@ public class LoginController {
         if (userName.matches(ph)) {
             User user = loginService.loginByPhone(userName);
             if (user != null) {
-                if(StringUtil.isBlank(passWord)){
+                if (StringUtil.isBlank(passWord)){
                     if (user.getToKen() != toKen){
                         model.addAttribute("error", "密码已过期，请重新登录");
                         return "login";
