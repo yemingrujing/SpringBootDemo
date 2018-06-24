@@ -17,4 +17,25 @@ public interface OrderService {
      * @param order
      */
     void addOrder(Order order);
+
+    /**
+     * 查询订单
+     * @param username
+     * @return
+     */
+    List<Order> selectOrder(Order order);
+
+    /**
+     * 根据订单号查询订单
+     * @param order
+     * @return
+     */
+    Order findOne(Order order);
+
+    /**
+     *  更新订单
+     * @param order
+     * @return
+     */
+    int updateOrder(Order order);
 }

@@ -21,6 +21,6 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods> implements GoodsSer
 
     @Override
     public Goods findOne(int goodsId) {
-        return findOne(goodsId);
+        return goodsMapper.findOne(goodsId);
     }
 }

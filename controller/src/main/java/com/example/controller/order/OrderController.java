@@ -28,7 +28,7 @@ public class OrderController {
     private BuyerService buyerService;
 
     @PostMapping("/order/create")
-    public Map<String, Object> create(int userId, int addressId, String orderForm) {
+    public Map<String, Object> create(String username, String phone, int addressId, String orderForm) {
         Map<String, Object> result = new HashMap<String, Object>();
         try {
             List<OrderItem> orderItemList = JacksonUtils.json2list(orderForm, OrderItem.class);
@@ -37,7 +37,7 @@ public class OrderController {
                 result.put("info", "订单列表不能为空！");
                 return result;
             }
-            buyerService.create(userId, addressId, orderItemList);
+            buyerService.create(username, phone, addressId, orderItemList);
         } catch (IOException e) {
             result.put("info", "订单创建失败,请联系管理员!");
             log.error("订单创建失败", e);

@@ -3,6 +3,7 @@ package com.example.base.order;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
 @Table(name = "t_sku")
 public class Sku {
@@ -27,7 +28,7 @@ public class Sku {
     /**
      * 价格
      */
-    private Long price;
+    private BigDecimal price;
 
     /**
      * 库存
@@ -99,7 +100,7 @@ public class Sku {
      *
      * @return price - 价格
      */
-    public Long getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -108,7 +109,7 @@ public class Sku {
      *
      * @param price 价格
      */
-    public void setPrice(Long price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

@@ -33,8 +33,7 @@ public class OrderTrace {
     /**
      * 用户id
      */
-    @Column(name = "user_id")
-    private Integer userId;
+    private String username;
 
     /**
      * 创建时间
@@ -117,19 +116,19 @@ public class OrderTrace {
     /**
      * 获取用户id
      *
-     * @return user_id - 用户id
+     * @return username - 用户id
      */
-    public Integer getUserId() {
-        return userId;
+    public String getUsername() {
+        return username;
     }
 
     /**
      * 设置用户id
      *
-     * @param userId 用户id
+     * @param username 用户id
      */
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**

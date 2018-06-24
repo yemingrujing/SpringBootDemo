@@ -6,18 +6,21 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_code" jdbcType="BIGINT" property="orderCode" />
     <result column="payment" jdbcType="DECIMAL" property="payment" />
     <result column="pay_type" jdbcType="INTEGER" property="payType" />
-    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+    <result column="order_type" jdbcType="INTEGER" property="orderType" />
+    <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
     <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime" />
     <result column="consign_time" jdbcType="TIMESTAMP" property="consignTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="over_time" jdbcType="TIMESTAMP" property="overTime" />
     <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="address" jdbcType="INTEGER" property="address" />
-    <result column="order_code" jdbcType="BIGINT" property="orderCode" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 
 </mapper>

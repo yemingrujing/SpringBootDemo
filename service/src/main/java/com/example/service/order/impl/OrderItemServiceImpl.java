@@ -23,4 +23,29 @@ public class OrderItemServiceImpl extends BaseServiceImpl<OrderItem> implements 
     public void addOrderItemList(List<OrderItem> orderItemList) {
 
     }
+
+    @Override
+    public void saveOrdeItem(OrderItem orderItem) {
+        save(orderItem);
+    }
+
+    @Override
+    public List<OrderItem> selectOrderItem(OrderItem orderItem) {
+        return list(orderItem);
+    }
+
+    @Override
+    public OrderItem selectOne(OrderItem orderItem) {
+        return get(orderItem);
+    }
+
+    @Override
+    public void increaseStock(List<OrderItem> cartDTOList) {
+
+    }
+
+    @Override
+    public void decreaseStock(List<OrderItem> cartDTOList) {
+
+    }
 }

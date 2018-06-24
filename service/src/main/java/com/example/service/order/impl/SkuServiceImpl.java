@@ -21,4 +21,9 @@ public class SkuServiceImpl extends BaseServiceImpl<Sku> implements SkuService {
     @Autowired
     private SkuMapper skuMapper;
 
+
+    @Override
+    public Sku findOne(int skuId) {
+        return skuMapper.findOne(skuId);
+    }
 }

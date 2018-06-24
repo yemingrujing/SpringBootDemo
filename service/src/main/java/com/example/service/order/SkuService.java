@@ -1,5 +1,7 @@
 package com.example.service.order;
 
+import com.example.base.order.Sku;
+
 /**
  * sku接口
  *
@@ -8,4 +10,5 @@ package com.example.service.order;
  **/
 public interface SkuService {
 
+    Sku findOne(int skuId);
 }

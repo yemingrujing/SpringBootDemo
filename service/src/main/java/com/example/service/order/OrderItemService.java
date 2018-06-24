@@ -17,4 +17,16 @@ public interface OrderItemService {
      * @param orderItemList
      */
     void addOrderItemList(List<OrderItem> orderItemList);
+
+    void saveOrdeItem(OrderItem orderItem);
+
+    List<OrderItem> selectOrderItem(OrderItem orderItem);
+
+    OrderItem selectOne(OrderItem orderItem);
+
+    //加库存
+    void increaseStock(List<OrderItem> cartDTOList);
+
+    //减库存
+    void decreaseStock(List<OrderItem> cartDTOList);
 }

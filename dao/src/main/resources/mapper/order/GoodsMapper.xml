@@ -11,4 +11,8 @@
     <result column="seller_id" jdbcType="INTEGER" property="sellerId" />
     <result column="spu_volume" jdbcType="BIGINT" property="spuVolume" />
   </resultMap>
+
+  <select id="findOne" resultType="goods">
+    select * from t_goods where id = #{goodsId}
+  </select>
 </mapper>
