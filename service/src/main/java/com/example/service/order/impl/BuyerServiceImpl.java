@@ -206,7 +206,7 @@ public class BuyerServiceImpl implements BuyerService {
         order.setOrderStatus(OrderStatusEnum.SUCCESS.getCode());
         int i = orderService.updateOrder(order);
         if (i <= 0) {
-            log.error("取消订单更新失败！");
+            log.error("订单更新失败！");
             throw new OrderException(OrderEnum.ORDER_UPDATE_FAIL);
         }
         //保存订单轨迹
