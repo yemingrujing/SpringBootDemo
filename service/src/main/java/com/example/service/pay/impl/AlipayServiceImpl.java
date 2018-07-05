@@ -74,8 +74,8 @@ public class AlipayServiceImpl implements AlipayService {
     public String aliPayNotify(Map requestParams) {
         String result = "success";
         System.out.println("支付宝支付结果通知：" + requestParams.toString());
-        Map<String,String> params = new HashMap<String,String>();
-        for(Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+        Map<String, String> params = new HashMap<String,String>();
+        for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             String[] values = (String[]) requestParams.get(name);
             String valueStr = "";
