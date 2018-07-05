@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.websocket.server.ServerEndpoint;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
@@ -76,7 +75,7 @@ public class AlipayServiceImpl implements AlipayService {
         String result = "success";
         System.out.println("支付宝支付结果通知：" + requestParams.toString());
         Map<String,String> params = new HashMap<String,String>();
-        for(Iterator iter = requestParams.keySet().iterator(); iter.hasNext()) {
+        for(Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             String[] values = (String[]) requestParams.get(name);
             String valueStr = "";
