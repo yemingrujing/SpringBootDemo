@@ -4,6 +4,8 @@ import com.example.base.login.User;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.util.List;
+
 public interface UserMapper extends Mapper<User> {
 
     /**
@@ -42,4 +44,10 @@ public interface UserMapper extends Mapper<User> {
      * @return
      */
     User loginByPhone(String phone);
+
+    /**
+     * 查询所有用户
+     * @return
+     */
+    List<User> findAll();
 }

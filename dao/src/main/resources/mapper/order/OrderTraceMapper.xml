@@ -6,16 +6,10 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_code" jdbcType="BIGINT" property="orderCode" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
     <result column="operate" jdbcType="VARCHAR" property="operate" />
     <result column="ope_trace" jdbcType="VARCHAR" property="opeTrace" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
-
-  <select id="selectHisTrace" resultType="string">
-    select GROUP_CONCAT(operate SEPARATOR "->")
-    from t_order_trace
-    where username = #{username} and order_code = #{orderCode}
-  </select>
 </mapper>

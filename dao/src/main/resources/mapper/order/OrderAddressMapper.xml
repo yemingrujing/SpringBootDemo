@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.order.OrderAddressMapper">
+  <resultMap id="BaseResultMap" type="com.example.base.order.OrderAddress">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="userTel" jdbcType="VARCHAR" property="usertel" />
+    <result column="area_province" jdbcType="INTEGER" property="areaProvince" />
+    <result column="area_city" jdbcType="INTEGER" property="areaCity" />
+    <result column="area_country" jdbcType="INTEGER" property="areaCountry" />
+    <result column="zip_code" jdbcType="VARCHAR" property="zipCode" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="de_select" jdbcType="TINYINT" property="deSelect" />
+    <result column="flag" jdbcType="TINYINT" property="flag" />
+    <result column="creat_time" jdbcType="TIMESTAMP" property="creatTime" />
+  </resultMap>
+</mapper>

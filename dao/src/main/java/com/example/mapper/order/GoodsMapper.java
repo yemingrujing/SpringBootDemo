@@ -6,5 +6,5 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface GoodsMapper extends Mapper<Goods> {
 
-    Goods findOne(@Param("goodsId") int goodsId);
+    Goods findOne(@Param("goodsId") Long goodsId);
 }

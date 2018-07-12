@@ -1,6 +1,7 @@
 package com.example.base.login;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -11,6 +12,7 @@ public class User {
      * 主键
      */
     @Id
+    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     /**
@@ -33,7 +35,7 @@ public class User {
     /**
      * 性别（男-0,1-女）
      */
-    private Byte sex;
+    private Short sex;
 
     /**
      * 用户等级
@@ -52,10 +54,10 @@ public class User {
     private Integer integral;
 
     /**
-     * 头像地址（文件表Id）
+     * 头像地址
      */
-    @Column(name = "image_id")
-    private Integer imageId;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     /**
      * 用户昵称
@@ -107,20 +109,9 @@ public class User {
     private String weiXin;
 
     /**
-     * 用户状态（0-注册用户，1-审核中，2-审核待付费，3-已付费成为会员，4-会员已过期）
-     */
-    private Short status;
-
-    /**
      * 用户余额
      */
     private Long balance;
-
-    /**
-     * 用户类别（商会会员，网红，品牌方）数据字典获取
-     */
-    @Column(name = "category_code")
-    private String categoryCode;
 
     /**
      * 会员类型（会员，会长）数据字典获取
@@ -140,10 +131,33 @@ public class User {
     private String toKen;
 
     /**
+     * 是否年缴费( 0 - 否，1 - 是) 第一次缴费后必须按年缴费
+     */
+    @Column(name = "is_year_payment")
+    private Byte isYearPayment;
+
+    /**
+     * 登录设备token
+     */
+    @Column(name = "device_token")
+    private String deviceToken;
+
+    /**
+     * 登录设备类型
+     */
+    @Column(name = "device_type")
+    private String deviceType;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
     private Date createTime;
+
+    /**
+     * 用户是否被锁定(0:未锁定，1:锁定)
+     */
+    private Short locked;
 
     /**
      * 获取主键
@@ -222,7 +236,7 @@ public class User {
      *
      * @return sex - 性别（男-0,1-女）
      */
-    public Byte getSex() {
+    public Short getSex() {
         return sex;
     }
 
@@ -231,7 +245,7 @@ public class User {
      *
      * @param sex 性别（男-0,1-女）
      */
-    public void setSex(Byte sex) {
+    public void setSex(Short sex) {
         this.sex = sex;
     }
 
@@ -290,21 +304,21 @@ public class User {
     }
 
     /**
-     * 获取头像地址（文件表Id）
+     * 获取头像地址
      *
-     * @return image_id - 头像地址（文件表Id）
+     * @return image_url - 头像地址
      */
-    public Integer getImageId() {
-        return imageId;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     /**
-     * 设置头像地址（文件表Id）
+     * 设置头像地址
      *
-     * @param imageId 头像地址（文件表Id）
+     * @param imageUrl 头像地址
      */
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     /**
@@ -470,24 +484,6 @@ public class User {
     }
 
     /**
-     * 获取用户状态（0-注册用户，1-审核中，2-审核待付费，3-已付费成为会员，4-会员已过期）
-     *
-     * @return status - 用户状态（0-注册用户，1-审核中，2-审核待付费，3-已付费成为会员，4-会员已过期）
-     */
-    public Short getStatus() {
-        return status;
-    }
-
-    /**
-     * 设置用户状态（0-注册用户，1-审核中，2-审核待付费，3-已付费成为会员，4-会员已过期）
-     *
-     * @param status 用户状态（0-注册用户，1-审核中，2-审核待付费，3-已付费成为会员，4-会员已过期）
-     */
-    public void setStatus(Short status) {
-        this.status = status;
-    }
-
-    /**
      * 获取用户余额
      *
      * @return balance - 用户余额
@@ -503,24 +499,6 @@ public class User {
      */
     public void setBalance(Long balance) {
         this.balance = balance;
-    }
-
-    /**
-     * 获取用户类别（商会会员，网红，品牌方）数据字典获取
-     *
-     * @return category_code - 用户类别（商会会员，网红，品牌方）数据字典获取
-     */
-    public String getCategoryCode() {
-        return categoryCode;
-    }
-
-    /**
-     * 设置用户类别（商会会员，网红，品牌方）数据字典获取
-     *
-     * @param categoryCode 用户类别（商会会员，网红，品牌方）数据字典获取
-     */
-    public void setCategoryCode(String categoryCode) {
-        this.categoryCode = categoryCode;
     }
 
     /**
@@ -578,6 +556,60 @@ public class User {
     }
 
     /**
+     * 获取是否年缴费( 0 - 否，1 - 是) 第一次缴费后必须按年缴费
+     *
+     * @return is_year_payment - 是否年缴费( 0 - 否，1 - 是) 第一次缴费后必须按年缴费
+     */
+    public Byte getIsYearPayment() {
+        return isYearPayment;
+    }
+
+    /**
+     * 设置是否年缴费( 0 - 否，1 - 是) 第一次缴费后必须按年缴费
+     *
+     * @param isYearPayment 是否年缴费( 0 - 否，1 - 是) 第一次缴费后必须按年缴费
+     */
+    public void setIsYearPayment(Byte isYearPayment) {
+        this.isYearPayment = isYearPayment;
+    }
+
+    /**
+     * 获取登录设备token
+     *
+     * @return device_token - 登录设备token
+     */
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    /**
+     * 设置登录设备token
+     *
+     * @param deviceToken 登录设备token
+     */
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
+    }
+
+    /**
+     * 获取登录设备类型
+     *
+     * @return device_type - 登录设备类型
+     */
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    /**
+     * 设置登录设备类型
+     *
+     * @param deviceType 登录设备类型
+     */
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    /**
      * 获取创建时间
      *
      * @return create_time - 创建时间
@@ -593,5 +625,23 @@ public class User {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    /**
+     * 获取用户是否被锁定(0:未锁定，1:锁定)
+     *
+     * @return locked - 用户是否被锁定(0:未锁定，1:锁定)
+     */
+    public Short getLocked() {
+        return locked;
+    }
+
+    /**
+     * 设置用户是否被锁定(0:未锁定，1:锁定)
+     *
+     * @param locked 用户是否被锁定(0:未锁定，1:锁定)
+     */
+    public void setLocked(Short locked) {
+        this.locked = locked;
     }
 }

@@ -1,9 +1,9 @@
 package com.example.service.order.impl;
 
+import com.example.base.order.OrderItem;
 import com.example.mapper.order.OrderItemMapper;
 import com.example.service.order.OrderItemService;
 import com.example.util.service.BaseServiceImpl;
-import com.example.base.order.OrderItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

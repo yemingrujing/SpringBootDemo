@@ -27,33 +27,33 @@ public interface BuyerService {
      */
     Map<String, Object> list(String username);
 
-    Map<String, Object> findOne(Long orderCOde);
+    Map<String, Object> findOne(String orderCOde);
 
     /**
      * 订单详情
      * @param orderCode
      * @return
      */
-    Map<String, Object> detail(Long orderCode);
+    Map<String, Object> detail(String orderCode);
 
     /**
      * 取消订单
      * @param orderCode
      * @return
      */
-    Map<String, Object> cancel(Long orderCode);
+    Map<String, Object> cancel(String orderCode);
 
     /**
      * 订单已完成
      * @param OrderCode
      * @return
      */
-    Map<String, Object> finsh(Long orderCode);
+    Map<String, Object> finsh(String orderCode);
 
     /**
      * 订单支付
      * @param orderCode
      * @return
      */
-    Map<String, Object> paid(Long orderCode);
+    Map<String, Object> paid(String orderCode);
 }

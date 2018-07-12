@@ -30,11 +30,11 @@ import java.util.Map;
 public class AlipayServiceImpl implements AlipayService {
 
 
-    @Autowired
-    private AlipayTradeAppPayResponse response;
+
 
     @Override
     public String getSign() {
+        AlipayTradeAppPayResponse response = new AlipayTradeAppPayResponse();
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayParam.GATE,
                 AlipayParam.APPID,
                 AlipayParam.APP_PRIVATE_KEY,

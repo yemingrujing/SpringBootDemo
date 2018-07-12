@@ -1,6 +1,8 @@
 package com.example.base.order;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -10,15 +12,19 @@ public class Order {
      * 主键
      */
     @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "JDBC")
     private Integer id;
 
     /**
      * 订单编号
      */
     @Column(name = "order_code")
-    private Long orderCode;
+    private String orderCode;
+
+    /**
+     * 商品总价
+     */
+    @Column(name = "total_fee")
+    private BigDecimal totalFee;
 
     /**
      * 实付金额
@@ -29,25 +35,25 @@ public class Order {
      * 支付类型(0支付宝/1微信)
      */
     @Column(name = "pay_type")
-    private Integer payType;
+    private Short payType;
 
     /**
-     * 付款状态(0未付款/已付款)
+     * 付款状态(0未付款/1正在付款/2已付款/3退款/4支付超时)
      */
     @Column(name = "pay_status")
-    private Integer payStatus;
+    private Short payStatus;
 
     /**
-     * 订单类型(0新订单/1历史订单)
+     * 订单类型(0普通/1活动/2集采)
      */
     @Column(name = "order_type")
-    private Integer orderType;
+    private Short orderType;
 
     /**
-     * 订单状态(0未发货/1已发货/2订单成功/3订单关闭/4取消交易)
+     * 订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      */
     @Column(name = "order_status")
-    private Integer orderStatus;
+    private Short orderStatus;
 
     /**
      * 付款时间
@@ -102,6 +108,18 @@ public class Order {
     private Date createTime;
 
     /**
+     * 物流公司编号
+     */
+    @Column(name = "logistics_num")
+    private String logisticsNum;
+
+    /**
+     * 快递单号
+     */
+    @Column(name = "courier_num")
+    private String courierNum;
+
+    /**
      * 获取主键
      *
      * @return id - 主键
@@ -124,7 +142,7 @@ public class Order {
      *
      * @return order_code - 订单编号
      */
-    public Long getOrderCode() {
+    public String getOrderCode() {
         return orderCode;
     }
 
@@ -133,8 +151,26 @@ public class Order {
      *
      * @param orderCode 订单编号
      */
-    public void setOrderCode(Long orderCode) {
+    public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
+    }
+
+    /**
+     * 获取商品总价
+     *
+     * @return total_fee - 商品总价
+     */
+    public BigDecimal getTotalFee() {
+        return totalFee;
+    }
+
+    /**
+     * 设置商品总价
+     *
+     * @param totalFee 商品总价
+     */
+    public void setTotalFee(BigDecimal totalFee) {
+        this.totalFee = totalFee;
     }
 
     /**
@@ -160,7 +196,7 @@ public class Order {
      *
      * @return pay_type - 支付类型(0支付宝/1微信)
      */
-    public Integer getPayType() {
+    public Short getPayType() {
         return payType;
     }
 
@@ -169,61 +205,61 @@ public class Order {
      *
      * @param payType 支付类型(0支付宝/1微信)
      */
-    public void setPayType(Integer payType) {
+    public void setPayType(Short payType) {
         this.payType = payType;
     }
 
     /**
-     * 获取付款状态(0未付款/已付款)
+     * 获取付款状态(0未付款/1正在付款/2已付款/3退款/4支付超时)
      *
-     * @return pay_status - 付款状态(0未付款/已付款)
+     * @return pay_status - 付款状态(0未付款/1正在付款/2已付款/3退款/4支付超时)
      */
-    public Integer getPayStatus() {
+    public Short getPayStatus() {
         return payStatus;
     }
 
     /**
-     * 设置付款状态(0未付款/已付款)
+     * 设置付款状态(0未付款/1正在付款/2已付款/3退款/4支付超时)
      *
-     * @param payStatus 付款状态(0未付款/已付款)
+     * @param payStatus 付款状态(0未付款/1正在付款/2已付款/3退款/4支付超时)
      */
-    public void setPayStatus(Integer payStatus) {
+    public void setPayStatus(Short payStatus) {
         this.payStatus = payStatus;
     }
 
     /**
-     * 获取订单类型(0新订单/1历史订单)
+     * 获取订单类型(0普通/1活动/2集采)
      *
-     * @return order_type - 订单类型(0新订单/1历史订单)
+     * @return order_type - 订单类型(0普通/1活动/2集采)
      */
-    public Integer getOrderType() {
+    public Short getOrderType() {
         return orderType;
     }
 
     /**
-     * 设置订单类型(0新订单/1历史订单)
+     * 设置订单类型(0普通/1活动/2集采)
      *
-     * @param orderType 订单类型(0新订单/1历史订单)
+     * @param orderType 订单类型(0普通/1活动/2集采)
      */
-    public void setOrderType(Integer orderType) {
+    public void setOrderType(Short orderType) {
         this.orderType = orderType;
     }
 
     /**
-     * 获取订单状态(0未发货/1已发货/2订单成功/3订单关闭/4取消交易)
+     * 获取订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      *
-     * @return order_status - 订单状态(0未发货/1已发货/2订单成功/3订单关闭/4取消交易)
+     * @return order_status - 订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      */
-    public Integer getOrderStatus() {
+    public Short getOrderStatus() {
         return orderStatus;
     }
 
     /**
-     * 设置订单状态(0未发货/1已发货/2订单成功/3订单关闭/4取消交易)
+     * 设置订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      *
-     * @param orderStatus 订单状态(0未发货/1已发货/2订单成功/3订单关闭/4取消交易)
+     * @param orderStatus 订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      */
-    public void setOrderStatus(Integer orderStatus) {
+    public void setOrderStatus(Short orderStatus) {
         this.orderStatus = orderStatus;
     }
 
@@ -387,5 +423,41 @@ public class Order {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    /**
+     * 获取物流公司编号
+     *
+     * @return logistics_num - 物流公司编号
+     */
+    public String getLogisticsNum() {
+        return logisticsNum;
+    }
+
+    /**
+     * 设置物流公司编号
+     *
+     * @param logisticsNum 物流公司编号
+     */
+    public void setLogisticsNum(String logisticsNum) {
+        this.logisticsNum = logisticsNum;
+    }
+
+    /**
+     * 获取快递单号
+     *
+     * @return courier_num - 快递单号
+     */
+    public String getCourierNum() {
+        return courierNum;
+    }
+
+    /**
+     * 设置快递单号
+     *
+     * @param courierNum 快递单号
+     */
+    public void setCourierNum(String courierNum) {
+        this.courierNum = courierNum;
     }
 }

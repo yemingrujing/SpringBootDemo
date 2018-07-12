@@ -10,5 +10,5 @@ import com.example.base.order.Goods;
  **/
 public interface GoodsService {
 
-    Goods findOne(int goodsId);
+    Goods findOne(Long goodsId);
 }

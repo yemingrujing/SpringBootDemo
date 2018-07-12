@@ -17,7 +17,7 @@ public class OrderTrace {
      * 订单编号
      */
     @Column(name = "order_code")
-    private Long orderCode;
+    private String orderCode;
 
     /**
      * 操作
@@ -31,7 +31,7 @@ public class OrderTrace {
     private String opeTrace;
 
     /**
-     * 用户id
+     * 用户名称
      */
     private String username;
 
@@ -64,7 +64,7 @@ public class OrderTrace {
      *
      * @return order_code - 订单编号
      */
-    public Long getOrderCode() {
+    public String getOrderCode() {
         return orderCode;
     }
 
@@ -73,7 +73,7 @@ public class OrderTrace {
      *
      * @param orderCode 订单编号
      */
-    public void setOrderCode(Long orderCode) {
+    public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
 
@@ -114,18 +114,18 @@ public class OrderTrace {
     }
 
     /**
-     * 获取用户id
+     * 获取用户名称
      *
-     * @return username - 用户id
+     * @return username - 用户名称
      */
     public String getUsername() {
         return username;
     }
 
     /**
-     * 设置用户id
+     * 设置用户名称
      *
-     * @param username 用户id
+     * @param username 用户名称
      */
     public void setUsername(String username) {
         this.username = username;

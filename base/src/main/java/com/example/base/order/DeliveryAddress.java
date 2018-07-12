@@ -17,13 +17,13 @@ public class DeliveryAddress {
      * 订单编号
      */
     @Column(name = "order_code")
-    private Integer orderCode;
+    private String orderCode;
 
     /**
      * 收货人姓名
      */
     @Column(name = "receiver_name")
-    private Integer receiverName;
+    private String receiverName;
 
     /**
      * 移动号码
@@ -96,7 +96,7 @@ public class DeliveryAddress {
      *
      * @return order_code - 订单编号
      */
-    public Integer getOrderCode() {
+    public String getOrderCode() {
         return orderCode;
     }
 
@@ -105,7 +105,7 @@ public class DeliveryAddress {
      *
      * @param orderCode 订单编号
      */
-    public void setOrderCode(Integer orderCode) {
+    public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
 
@@ -114,7 +114,7 @@ public class DeliveryAddress {
      *
      * @return receiver_name - 收货人姓名
      */
-    public Integer getReceiverName() {
+    public String getReceiverName() {
         return receiverName;
     }
 
@@ -123,7 +123,7 @@ public class DeliveryAddress {
      *
      * @param receiverName 收货人姓名
      */
-    public void setReceiverName(Integer receiverName) {
+    public void setReceiverName(String receiverName) {
         this.receiverName = receiverName;
     }
 

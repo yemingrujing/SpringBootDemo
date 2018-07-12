@@ -52,7 +52,7 @@ public class BuyerServiceImpl implements BuyerService {
     public Map<String, Object> create(String username, String phone, int addressId, List<OrderItem> orderItemList) {
         Map<String, Object> result = new HashMap<String, Object>();
         Order order = new Order();
-        Long orderCode = redisService.incrementHash("ORDER", "CREATE", 11L);
+        String orderCode = redisService.incrementHash("ORDER", "CREATE", 11L).toString();
         BigDecimal orderAmount = new BigDecimal(BigInteger.ZERO);
 
         if (CollectionUtils.isEmpty(orderItemList)) {
@@ -79,7 +79,7 @@ public class BuyerServiceImpl implements BuyerService {
             orderAmount = orderItem.getActPrice()
                     .multiply(new BigDecimal(orderItem.getNum()))
                     .add(orderAmount);
-            orderItem.setOrderId(orderCode);
+            orderItem.setOrderCode(orderCode);
             //订单详情入库
             orderItemService.saveOrdeItem(orderItem);
             //扣库存
@@ -108,7 +108,6 @@ public class BuyerServiceImpl implements BuyerService {
         Map<String, Object> result = new HashMap<String, Object>();
         Order order =  new Order();
         order.setUserName(username);
-        order.setOrderType(0);
         List<Order> list = orderService.selectOrder(order);
         result.put("flag", "0");
         result.put("orderItemList", list);
@@ -116,7 +115,7 @@ public class BuyerServiceImpl implements BuyerService {
     }
 
     @Override
-    public Map<String, Object> findOne(Long orderCode) {
+    public Map<String, Object> findOne(String orderCode) {
         Map<String, Object> result = new HashMap<String, Object>();
         if (orderCode == null) {
             throw new OrderException(OrderEnum.ORDER_NOT_EXIST);
@@ -131,14 +130,14 @@ public class BuyerServiceImpl implements BuyerService {
 
 
     @Override
-    public Map<String, Object> detail(Long orderCode) {
+    public Map<String, Object> detail(String orderCode) {
         Map<String, Object> result = new HashMap<String, Object>();
         if (orderCode == null) {
             log.error("订单不存在！");
             throw new OrderException(OrderEnum.ORDERDETAIL_NOT_EXIST);
         }
         OrderItem orderItem = new OrderItem();
-        orderItem.setOrderId(orderCode);
+        orderItem.setOrderCode(orderCode);
         List<OrderItem> list = orderItemService.selectOrderItem(orderItem);
         if (CollectionUtils.isEmpty(list)) {
             log.error("订单详情为空！");
@@ -150,7 +149,7 @@ public class BuyerServiceImpl implements BuyerService {
     }
 
     @Override
-    public Map<String, Object> cancel(Long orderCode) {
+    public Map<String, Object> cancel(String orderCode) {
         Map<String, Object> result = new HashMap<String, Object>();
         if (orderCode == null) {
             log.error("订单不存在！");
@@ -167,8 +166,7 @@ public class BuyerServiceImpl implements BuyerService {
         }
 
         //修改订单状态
-        order.setOrderType(OrderTypeEnum.CANCEL.getCode());
-        order.setOrderStatus(OrderStatusEnum.COLSED.getCode());
+        order.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         int i = orderService.updateOrder(order);
         if (i <= 0) {
             log.error("取消订单更新失败！");
@@ -186,7 +184,7 @@ public class BuyerServiceImpl implements BuyerService {
     }
 
     @Override
-    public Map<String, Object> finsh(Long orderCode) {
+    public Map<String, Object> finsh(String orderCode) {
         Map<String, Object> result = new HashMap<String, Object>();
         if (orderCode == null) {
             log.error("订单不存在！");
@@ -217,7 +215,7 @@ public class BuyerServiceImpl implements BuyerService {
     }
 
     @Override
-    public Map<String, Object> paid(Long orderCode) {
+    public Map<String, Object> paid(String orderCode) {
         Map<String, Object> result = new HashMap<String, Object>();
         if (orderCode == null) {
             log.error("订单不存在！");
@@ -238,7 +236,7 @@ public class BuyerServiceImpl implements BuyerService {
         }
 
         //修改支付状态
-        order.setPayStatus(PayStatusEnum.SUCCESS.getCode());
+        order.setPayStatus(PayStatusEnum.PAID.getCode());
         orderService.updateOrder(order);
         //保存订单轨迹
         orderTraceService.saveTrace(order.getUserName(), orderCode, OrderTraceEnum.PAID.getMessage());

@@ -23,7 +23,7 @@ public class SkuServiceImpl extends BaseServiceImpl<Sku> implements SkuService {
 
 
     @Override
-    public Sku findOne(int skuId) {
+    public Sku findOne(Long skuId) {
         return skuMapper.findOne(skuId);
     }
 }

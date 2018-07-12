@@ -20,7 +20,7 @@ public class GoodsServiceImpl extends BaseServiceImpl<Goods> implements GoodsSer
     private GoodsMapper goodsMapper;
 
     @Override
-    public Goods findOne(int goodsId) {
+    public Goods findOne(Long goodsId) {
         return goodsMapper.findOne(goodsId);
     }
 }

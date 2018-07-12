@@ -10,16 +10,15 @@ import lombok.Getter;
  **/
 @Getter
 public enum OrderTypeEnum {
-    NEW(0, "新订单"),
-    FINISHED(1, "已完成"),
-    CANCEL(2, "已取消"),
-    ;
+    ALL((short) -1, "全部"),
+    NEW((short) 0, "普通"),
+    FINISHED((short) 1, "活动"),
+    CANCEL((short) 2, "集采");
 
-    private Integer code;
-
+    private Short code;
     private String message;
 
-    OrderTypeEnum(Integer code, String message) {
+    OrderTypeEnum(Short code, String message) {
         this.code = code;
         this.message = message;
     }

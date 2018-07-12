@@ -1,7 +1,9 @@
 package com.example.base.order;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
-import javax.persistence.*;
 
 @Table(name = "t_order_item")
 public class OrderItem {
@@ -14,26 +16,29 @@ public class OrderItem {
     /**
      * 订单id
      */
-    @Column(name = "order_id")
-    private Long orderId;
+    @Column(name = "order_code")
+    private String orderCode;
 
     /**
      * 品牌编码
      */
-    @Column(name = "brand_code")
-    private String brandCode;
+    @Column(name = "brand_id")
+    private Integer brandId;
 
     /**
      * spu_id
      */
     @Column(name = "spu_id")
-    private Integer spuId;
+    private Long spuId;
 
     /**
      * sku_id
      */
     @Column(name = "sku_id")
-    private Integer skuId;
+    private Long skuId;
+
+    @Column(name = "sku_name")
+    private String skuName;
 
     /**
      * 商品单价
@@ -50,12 +55,6 @@ public class OrderItem {
      * 商品数量
      */
     private Integer num;
-
-    /**
-     * 商品总价
-     */
-    @Column(name = "total_fee")
-    private BigDecimal totalFee;
 
     /**
      * 获取主键
@@ -78,37 +77,37 @@ public class OrderItem {
     /**
      * 获取订单id
      *
-     * @return order_id - 订单id
+     * @return order_code - 订单id
      */
-    public Long getOrderId() {
-        return orderId;
+    public String getOrderCode() {
+        return orderCode;
     }
 
     /**
      * 设置订单id
      *
-     * @param orderId 订单id
+     * @param orderCode 订单id
      */
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
     }
 
     /**
      * 获取品牌编码
      *
-     * @return brand_code - 品牌编码
+     * @return brand_id - 品牌编码
      */
-    public String getBrandCode() {
-        return brandCode;
+    public Integer getBrandId() {
+        return brandId;
     }
 
     /**
      * 设置品牌编码
      *
-     * @param brandCode 品牌编码
+     * @param brandId 品牌编码
      */
-    public void setBrandCode(String brandCode) {
-        this.brandCode = brandCode;
+    public void setBrandId(Integer brandId) {
+        this.brandId = brandId;
     }
 
     /**
@@ -116,7 +115,7 @@ public class OrderItem {
      *
      * @return spu_id - spu_id
      */
-    public Integer getSpuId() {
+    public Long getSpuId() {
         return spuId;
     }
 
@@ -125,7 +124,7 @@ public class OrderItem {
      *
      * @param spuId spu_id
      */
-    public void setSpuId(Integer spuId) {
+    public void setSpuId(Long spuId) {
         this.spuId = spuId;
     }
 
@@ -134,7 +133,7 @@ public class OrderItem {
      *
      * @return sku_id - sku_id
      */
-    public Integer getSkuId() {
+    public Long getSkuId() {
         return skuId;
     }
 
@@ -143,8 +142,22 @@ public class OrderItem {
      *
      * @param skuId sku_id
      */
-    public void setSkuId(Integer skuId) {
+    public void setSkuId(Long skuId) {
         this.skuId = skuId;
+    }
+
+    /**
+     * @return sku_name
+     */
+    public String getSkuName() {
+        return skuName;
+    }
+
+    /**
+     * @param skuName
+     */
+    public void setSkuName(String skuName) {
+        this.skuName = skuName;
     }
 
     /**
@@ -199,23 +212,5 @@ public class OrderItem {
      */
     public void setNum(Integer num) {
         this.num = num;
-    }
-
-    /**
-     * 获取商品总价
-     *
-     * @return total_fee - 商品总价
-     */
-    public BigDecimal getTotalFee() {
-        return totalFee;
-    }
-
-    /**
-     * 设置商品总价
-     *
-     * @param totalFee 商品总价
-     */
-    public void setTotalFee(BigDecimal totalFee) {
-        this.totalFee = totalFee;
     }
 }

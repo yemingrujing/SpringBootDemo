@@ -6,8 +6,8 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_code" jdbcType="INTEGER" property="orderCode" />
-    <result column="receiver_name" jdbcType="INTEGER" property="receiverName" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
     <result column="receiver_mobile" jdbcType="VARCHAR" property="receiverMobile" />
     <result column="receiver_phone" jdbcType="VARCHAR" property="receiverPhone" />
     <result column="receiver_province" jdbcType="INTEGER" property="receiverProvince" />

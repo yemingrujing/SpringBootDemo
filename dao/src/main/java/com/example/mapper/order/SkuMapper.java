@@ -6,5 +6,5 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface SkuMapper extends Mapper<Sku> {
 
-    Sku findOne(@Param("skuId") int SkuId);
+    Sku findOne(@Param("skuId") Long SkuId);
 }

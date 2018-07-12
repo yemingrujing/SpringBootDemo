@@ -22,7 +22,7 @@ public class OrderTraceServiceImpl extends BaseServiceImpl<OrderTrace> implement
     private OrderTraceMapper orderTraceMapper;
 
     @Override
-    public void saveTrace(String username, Long orderCode, String operate) {
+    public void saveTrace(String username, String orderCode, String operate) {
         OrderTrace orderTrace = new OrderTrace();
         String hisTrace = orderTraceMapper.selectHisTrace(username, orderCode);
         Date date = new Date();

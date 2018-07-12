@@ -1,7 +1,10 @@
 package com.example.service.order;
 
 import com.example.base.order.Order;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -38,4 +41,21 @@ public interface OrderService {
      * @return
      */
     int updateOrder(Order order);
+
+    /**
+     * 导入订单信息
+     */
+    void importExcel(MultipartFile file);
+
+    /**
+     * 导出订单信息
+     * @param response
+     */
+    void export(HttpServletResponse response);
+
+    /**
+     * 导出模板
+     * @param response
+     */
+    void downTemplate(HttpServletResponse response);
 }

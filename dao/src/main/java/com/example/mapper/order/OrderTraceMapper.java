@@ -6,5 +6,5 @@ import tk.mybatis.mapper.common.Mapper;
 
 public interface OrderTraceMapper extends Mapper<OrderTrace> {
 
-    String selectHisTrace(@Param("username") String username, @Param("orderCode") Long orderCode);
+    String selectHisTrace(@Param("username") String username, @Param("orderCode") String orderCode);
 }

@@ -1,7 +1,5 @@
 package com.example.service.order;
 
-import com.example.base.order.OrderTrace;
-
 /**
  * 订单轨迹接口
  *
@@ -16,5 +14,5 @@ public interface OrderTraceService {
      * @param orderCode
      * @param operate
      */
-    void saveTrace(String username, Long orderCode, String operate);
+    void saveTrace(String username, String orderCode, String operate);
 }

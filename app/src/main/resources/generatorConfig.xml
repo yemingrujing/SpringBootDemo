@@ -92,7 +92,7 @@
         <!-- 指定列的java数据类型 -->
         <!-- <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />-->
         <!-- </table>-->
-        <table tableName="t_order_trace" domainObjectName="OrderTrace"/>
+        <table tableName="t_order" domainObjectName="Order"/>
 
     </context>
 </generatorConfiguration>

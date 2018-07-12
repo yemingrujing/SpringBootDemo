@@ -10,5 +10,5 @@ import com.example.base.order.Sku;
  **/
 public interface SkuService {
 
-    Sku findOne(int skuId);
+    Sku findOne(Long skuId);
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form class="form-horizontal" id="form_table" action="#" th:action="@{/user/import}" enctype="multipart/form-data"
+      method="post">
+    <input class="form-input" type="file" name="filename"></input>
+    <br/>
+    <button type="submit" class="btn">开始导入</button>
+</form>
+
+<a href="/user/export" class="btn btn-success">导出报表</a>
+
+<form class="form-horizontal" id="order_table" action="#" th:action="@{/order/import}" enctype="multipart/form-data"
+      method="post">
+    <input class="form-input" type="file" name="filename"></input>
+    <br/>
+    <button type="submit" class="btn">开始导入</button>
+</form>
+
+<a href="/order/export" class="btn btn-success">导出订单物流信息</a>
+<a href="/order/downTemplate" class="btn btn-success">导出模板</a>
+</body>
+</html>

@@ -10,16 +10,18 @@ import lombok.Getter;
  **/
 @Getter
 public enum OrderTraceEnum {
-    CREATE(0, "创建订单"),
-    PAID(1, "订单支付"),
-    DELIVERED(2, "订单发货"),
-    SUCCESS(3, "订单完成"),
-    CANCEL(4, "取消订单");
+    CREATE((short) 0, "创建订单"),
+    PAID((short) 1, "订单支付"),
+    DELIVERED((short) 2, "订单发货"),
+    SUCCESS((short) 3, "订单完成"),
+    CANCEL((short) 4, "取消订单"),
+    REFUND((short) 5, "退款"),
+    REFUNDREFUND((short) 6, "退货"),;
 
-    private Integer code;
+    private Short code;
     private String message;
 
-    OrderTraceEnum(int code, String message) {
+    OrderTraceEnum(Short code, String message) {
         this.code = code;
         this.message = message;
     }
