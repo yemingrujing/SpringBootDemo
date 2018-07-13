@@ -258,7 +258,7 @@ public class CertUtil {
 		FileInputStream in = null;
 		try {
 			cf = CertificateFactory.getInstance("X.509", "BC");
-			in = new FileInputStream(path);
+			in = new FileInputStream(CertUtil.class.getClassLoader().getResource(path).getPath());
 			encryptCertTemp = (X509Certificate) cf.generateCertificate(in);
 			// 打印证书加载信息,供测试阶段调试
 			LogUtil.writeLog("[" + path + "][CertId="
@@ -464,7 +464,7 @@ public class CertUtil {
 		try {
 			KeyStore ks = KeyStore.getInstance(type, "BC");
 			LogUtil.writeLog("Load RSA CertPath=[" + pfxkeyfile + "],Pwd=[" + keypwd + "],type=[" + type + "]");
-			fis = new FileInputStream(pfxkeyfile);
+			fis = new FileInputStream(CertUtil.class.getClassLoader().getResource(pfxkeyfile).getPath());
 			char[] nPassword = null;
 			nPassword = null == keypwd || "".equals(keypwd.trim()) ? null: keypwd.toCharArray();
 			if (null != ks) {

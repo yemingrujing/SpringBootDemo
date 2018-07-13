@@ -33,7 +33,9 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
         CertUtil.init();
     }
 
-    //先取商户号
+    /**
+     * 先取商户号
+     */
     private String merId = "777290058110048";
 
     private String redictUrl = "http://www.baidu.com";
@@ -51,16 +53,22 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
         request.setCharacterEncoding(DemoBase.encoding);
         response.setContentType("text/html; charset=" + DemoBase.encoding);
 
-        String orderId = String.valueOf(System.currentTimeMillis()); //实际上是orderSn
-        String txnAmt = null;  //订单金额
-        String txnTime = null; //订单发送时间
-        //交易金额，单位分，不要带小数点
-        BigDecimal amount = new BigDecimal("0.01");
-        amount = amount.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP);
-        txnAmt = amount.toString();
-        //订单发送时间用于查询用
-        Date sendPaymentDate = new Date();
-        txnTime = formatTime(sendPaymentDate);
+//        String orderId = String.valueOf(System.currentTimeMillis()); //实际上是orderSn
+//        String txnAmt = null;  //订单金额
+//        String txnTime = null; //订单发送时间
+
+//        //交易金额，单位分，不要带小数点
+//        BigDecimal amount = new BigDecimal("0.01");
+//        amount = amount.multiply(new BigDecimal(100)).setScale(0, BigDecimal.ROUND_HALF_UP);
+//        txnAmt = amount.toString();
+//        //订单发送时间用于查询用
+//        Date sendPaymentDate = new Date();
+//        txnTime = formatTime(sendPaymentDate);
+
+        String merAppId = request.getParameter("merId");
+        String txnAmt = request.getParameter("txnAmt");
+        String orderId = request.getParameter("orderId");
+        String txnTime = request.getParameter("txnTime");
 
         Map<String, String> requestData = new HashMap<>();
 
@@ -74,13 +82,14 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
         requestData.put("channelType", "08");                      //渠道类型，这个字段区分B2C网关支付和手机wap支付；07：PC,平板  08：手机
 
         /***商户接入参数***/
-        requestData.put("merId", merId);                              //商户号码，请改成自己申请的正式商户号或者open上注册得来的777测试商户号
+        requestData.put("merId", merAppId);                              //商户号码，请改成自己申请的正式商户号或者open上注册得来的777测试商户号
         requestData.put("accessType", "0");                          //接入类型，0：直连商户
         requestData.put("orderId", orderId);                          //商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则
         requestData.put("txnTime", txnTime);        //订单发送时间，取系统时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效
         requestData.put("currencyCode", "156");                      //交易币种（境内商户一般是156 人民币）
         requestData.put("txnAmt", txnAmt);                              //交易金额，单位分，不要带小数点
-        //requestData.put("reqReserved", "透传字段");        		      //请求方保留域，如需使用请启用即可；透传字段（可以实现商户自定义参数的追踪）本交易的后台通知,对本交易的交易状态查询交易、对账文件中均会原样返回，商户可以按需上传，长度为1-1024个字节。出现&={}[]符号时可能导致查询接口应答报文解析失败，建议尽量只传字母数字并使用|分割，或者可以最外层做一次base64编码(base64编码之后出现的等号不会导致解析失败可以不用管)。
+        //请求方保留域，如需使用请启用即可；透传字段（可以实现商户自定义参数的追踪）本交易的后台通知,对本交易的交易状态查询交易、对账文件中均会原样返回，商户可以按需上传，长度为1-1024个字节。出现&={}[]符号时可能导致查询接口应答报文解析失败，建议尽量只传字母数字并使用|分割，或者可以最外层做一次base64编码(base64编码之后出现的等号不会导致解析失败可以不用管)。
+        // requestData.put("reqReserved", "透传字段");
 
         //前台通知地址 （需设置为外网能访问 http https均可），支付成功后的页面 点击“返回商户”按钮的时候将异步通知报文post到该地址
         //如果想要实现过几秒中自动跳转回商户页面权限，需联系银联业务申请开通自动返回商户权限
@@ -107,14 +116,51 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
         //////////////////////////////////////////////////
 
         /**请求参数设置完毕，以下对请求参数进行签名并生成html表单，将表单写入浏览器跳转打开银联页面**/
-        Map<String, String> submitFromData = AcpService.sign(requestData, DemoBase.encoding);  //报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+        /*
+        app支付
+         */
+        //发送请求报文并接受同步应答（默认连接超时时间30秒，读取返回结果超时时间30秒）;这里调用signData之后，调用submitUrl之前不能对submitFromData中的键值对做任何修改，如果修改会导致验签不通过
+        Map<String, String> reqData = AcpService.sign(requestData, DemoBase.encoding);
+        String requestAppUrl = SDKConfig.getConfig().getAppRequestUrl();
+        Map<String, String> rspData = AcpService.post(reqData, requestAppUrl, DemoBase.encoding);
+        /**对应答码的处理，请根据您的业务逻辑来编写程序,以下应答码处理逻辑仅供参考------------->**/
+        //应答码规范参考open.unionpay.com帮助中心 下载  产品接口规范  《平台接入接口规范-第5部分-附录》
+        if (!rspData.isEmpty()) {
+            if (AcpService.validate(rspData, DemoBase.encoding)) {
+                LogUtil.writeLog("验证签名成功");
+                String respCode = rspData.get("respCode");
+                if (("00").equals(respCode)) {
+                    //成功,获取tn号
+                    //String tn = resmap.get("tn");
+                    //TODO
+                } else {
+                    //其他应答码为失败请排查原因或做失败处理
+                    //TODO
+                }
+            } else {
+                LogUtil.writeErrorLog("验证签名失败");
+                //TODO 检查验证签名失败的原因
+            }
+        } else {
+            //未返回正确的http状态
+            LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+        }
+        String reqMessage = DemoBase.genHtmlResult(reqData);
+        String rspMessage = DemoBase.genHtmlResult(rspData);
+        response.getWriter().write("请求报文:<br/>" + reqMessage + "<br/>" + "应答报文:</br>" + rspMessage + "");
 
-        String requestFrontUrl = SDKConfig.getConfig().getFrontRequestUrl();  //获取请求银联的前台地址：对应属性文件acp_sdk.properties文件中的acpsdk.frontTransUrl
-        String html = AcpService.createAutoFormHtml(requestFrontUrl, submitFromData, DemoBase.encoding);   //生成自动跳转的Html表单
-
-        LogUtil.writeLog("打印请求HTML，此为请求报文，为联调排查问题的依据：" + html);
-        //将生成的html写到浏览器中完成自动跳转打开银联支付页面；这里调用signData之后，将html写到浏览器跳转到银联页面之前均不能对html中的表单项的名称和值进行修改，如果修改会导致验签不通过
-        response.getWriter().write(html);
+        /*
+        网关支付
+         */
+//        //报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+//        Map<String, String> submitFromData = AcpService.sign(requestData, DemoBase.encoding);
+//        //获取请求银联的前台地址：对应属性文件acp_sdk.properties文件中的acpsdk.frontTransUrl
+//        String requestFrontUrl = SDKConfig.getConfig().getFrontRequestUrl();
+//        //生成自动跳转的Html表单
+//        String html = AcpService.createAutoFormHtml(requestFrontUrl, submitFromData, DemoBase.encoding);
+//        LogUtil.writeLog("打印请求HTML，此为请求报文，为联调排查问题的依据：" + html);
+//        //将生成的html写到浏览器中完成自动跳转打开银联支付页面；这里调用signData之后，将html写到浏览器跳转到银联页面之前均不能对html中的表单项的名称和值进行修改，如果修改会导致验签不通过
+//        response.getWriter().write(html);
 
 
     }
@@ -337,10 +383,12 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
 
         /**请求参数设置完毕，以下对请求参数进行签名并发送http post请求，接收同步应答报文------------->**/
 
-        Map<String, String> reqData = AcpService.sign(data, DemoBase.encoding);//报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+        //报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+        Map<String, String> reqData = AcpService.sign(data, DemoBase.encoding);
         LogUtil.writeLog("查询请求数据： " + reqData.toString());
 
-        String url = SDKConfig.getConfig().getSingleQueryUrl();// 交易请求url从配置文件读取对应属性文件acp_sdk.properties中的 acpsdk.singleQueryUrl
+        // 交易请求url从配置文件读取对应属性文件acp_sdk.properties中的 acpsdk.singleQueryUrl
+        String url = SDKConfig.getConfig().getSingleQueryUrl();
         //这里调用signData之后，调用submitUrl之前不能对submitFromData中的键值对做任何修改，如果修改会导致验签不通过
         Map<String, String> rspData = AcpService.post(reqData, url, DemoBase.encoding);
         LogUtil.writeLog("查询响应数据： " + rspData.toString());
@@ -350,7 +398,8 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
         if (!rspData.isEmpty()) {
             if (AcpService.validate(rspData, DemoBase.encoding)) {
                 LogUtil.writeLog("验证签名成功");
-                if ("00".equals(rspData.get("respCode"))) {//如果查询交易成功
+                //如果查询交易成功
+                if ("00".equals(rspData.get("respCode"))) {
                     //处理被查询交易的应答码逻辑
                     String origRespCode = rspData.get("origRespCode");
                     if ("00".equals(origRespCode)) {
@@ -383,7 +432,8 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
                         //其他应答码为失败请排查原因
                         throw new RuntimeException("查询结果：订单号" + orderId + "交易失败，应答码为“" + origRespCode + "”");
                     }
-                } else {//查询交易本身失败，或者未查到原交易，检查查询交易报文要素
+                } else {
+                    //查询交易本身失败，或者未查到原交易，检查查询交易报文要素
                     throw new RuntimeException("查询失败");
                 }
             } else {
@@ -477,9 +527,7 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
                 e.printStackTrace();
                 return null;
             }
-
         }
-
     }
 
 
