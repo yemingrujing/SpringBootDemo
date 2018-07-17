@@ -188,7 +188,7 @@ public class ImportBaseService {
 
     public void saveThisExcel(ImportParams params, Class<?> pojoClass, boolean isXSSFWorkbook,
                               Workbook book) throws Exception {
-        String path = PoiPublicUtil.getWebRootPath(getSaveExcelUrl(params, pojoClass));
+        String path = getSaveExcelUrl(params, pojoClass);
         File savefile = new File(path);
         if (!savefile.exists()) {
             savefile.mkdirs();
@@ -213,7 +213,7 @@ public class ImportBaseService {
         String url = "";
         if ("upload/excelUpload".equals(params.getSaveUrl())) {
             url = pojoClass.getName().split("\\.")[pojoClass.getName().split("\\.").length - 1];
-            return params.getSaveUrl() + "/" + url;
+            return PoiPublicUtil.getWebRootPath(params.getSaveUrl() + "/" + url);
         }
         return params.getSaveUrl();
     }

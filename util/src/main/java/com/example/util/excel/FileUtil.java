@@ -108,7 +108,7 @@ public class FileUtil {
         }
         ImportParams params = new ImportParams();
         params.setNeedSave(true);
-
+        params.setSaveUrl("D:\\images\\excel");
         params.setTitleRows(titleRows);
         params.setHeadRows(headerRows);
         List<T> list = null;

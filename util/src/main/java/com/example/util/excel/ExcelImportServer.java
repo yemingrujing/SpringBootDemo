@@ -115,7 +115,7 @@ public class ExcelImportServer extends ImportBaseService {
             }
             url = object.getClass().getName()
                     .split("\\.")[object.getClass().getName().split("\\.").length - 1];
-            return excelImportEntity.getSaveUrl() + "/" + url;
+            return PoiPublicUtil.getWebRootPath(excelImportEntity.getSaveUrl() + "/" + url);
         }
         return excelImportEntity.getSaveUrl();
     }
