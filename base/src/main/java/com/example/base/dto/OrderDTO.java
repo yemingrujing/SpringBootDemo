@@ -24,6 +24,6 @@ public class OrderDTO {
     @Excel(name = "物流公司编号", width = 25, orderNum = "0")
     private String logisticsNum;
 
-    @Excel(name = "快递单号", width = 25, orderNum = "0")
+    @Excel(name = "快递单号", width = 25, orderNum = "0", type = 2, savePath = "D:\\images")
     private String courierNum;
 }

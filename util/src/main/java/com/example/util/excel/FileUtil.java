@@ -1,7 +1,6 @@
-package com.example.util.common;
+package com.example.util.excel;
 
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.ExcelImportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.entity.enmus.ExcelType;
@@ -108,6 +107,7 @@ public class FileUtil {
             return null;
         }
         ImportParams params = new ImportParams();
+        params.setNeedSave(true);
 
         params.setTitleRows(titleRows);
         params.setHeadRows(headerRows);

@@ -32,9 +32,9 @@ public class UnipayController {
      * @throws IOException
      */
     @RequestMapping(value = "/pay", method = {RequestMethod.POST, RequestMethod.GET})
-    public void pay(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public String pay(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
-        service.pay(request, response);
+        return service.pay(request, response);
 
     }
 

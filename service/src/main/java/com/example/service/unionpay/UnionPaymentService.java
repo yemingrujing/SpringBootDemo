@@ -13,7 +13,7 @@ public interface UnionPaymentService {
      * @param request
      * @param response
      */
-    void pay(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    String pay(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     /**
      * 后台回调

@@ -48,8 +48,8 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
      * @param response
      */
     @Override
-    public void pay(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
+    public String pay(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String tn = "";
         request.setCharacterEncoding(DemoBase.encoding);
         response.setContentType("text/html; charset=" + DemoBase.encoding);
 
@@ -131,18 +131,21 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
                 String respCode = rspData.get("respCode");
                 if (("00").equals(respCode)) {
                     //成功,获取tn号
-                    //String tn = resmap.get("tn");
+                    tn = rspData.get("tn");
                     //TODO
                 } else {
                     //其他应答码为失败请排查原因或做失败处理
+                    tn = "";
                     //TODO
                 }
             } else {
                 LogUtil.writeErrorLog("验证签名失败");
+                tn = "";
                 //TODO 检查验证签名失败的原因
             }
         } else {
             //未返回正确的http状态
+            tn = "";
             LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
         }
         String reqMessage = DemoBase.genHtmlResult(reqData);
@@ -162,7 +165,7 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
 //        //将生成的html写到浏览器中完成自动跳转打开银联支付页面；这里调用signData之后，将html写到浏览器跳转到银联页面之前均不能对html中的表单项的名称和值进行修改，如果修改会导致验签不通过
 //        response.getWriter().write(html);
 
-
+        return tn;
     }
 
     /**
@@ -314,9 +317,11 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
 
         /**请求参数设置完毕，以下对请求参数进行签名并发送http post请求，接收同步应答报文------------->**/
 
-        Map<String, String> reqData = AcpService.sign(data, DemoBase.encoding);//报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+        //报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+        Map<String, String> reqData = AcpService.sign(data, DemoBase.encoding);
 
-        String url = SDKConfig.getConfig().getSingleQueryUrl();// 交易请求url从配置文件读取对应属性文件acp_sdk.properties中的 acpsdk.singleQueryUrl
+        // 交易请求url从配置文件读取对应属性文件acp_sdk.properties中的 acpsdk.singleQueryUrl
+        String url = SDKConfig.getConfig().getSingleQueryUrl();
         //这里调用signData之后，调用submitUrl之前不能对submitFromData中的键值对做任何修改，如果修改会导致验签不通过
         Map<String, String> rspData = AcpService.post(reqData, url, DemoBase.encoding);
 
@@ -325,7 +330,8 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
         if (!rspData.isEmpty()) {
             if (AcpService.validate(rspData, DemoBase.encoding)) {
                 LogUtil.writeLog("验证签名成功");
-                if ("00".equals(rspData.get("respCode"))) {//如果查询交易成功
+                //如果查询交易成功
+                if ("00".equals(rspData.get("respCode"))) {
                     //处理被查询交易的应答码逻辑
                     String origRespCode = rspData.get("origRespCode");
                     if ("00".equals(origRespCode)) {
@@ -340,7 +346,8 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
                         //其他应答码为失败请排查原因
                         //TODO
                     }
-                } else {//查询交易本身失败，或者未查到原交易，检查查询交易报文要素
+                } else {
+                    //查询交易本身失败，或者未查到原交易，检查查询交易报文要素
                     //TODO
                 }
             } else {
@@ -482,7 +489,13 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
     }
 
 
-    //收费比率 精确到分保留两位小数四舍五入
+    /**
+     * 收费比率 精确到分保留两位小数四舍五入
+     * @param amount
+     * @param feeRatio
+     * @param feeMax
+     * @return
+     */
     private BigDecimal getFeeAmount(BigDecimal amount, BigDecimal feeRatio, BigDecimal feeMax) {
         BigDecimal fee = new BigDecimal(0);
         if (null == amount || null == feeRatio) {

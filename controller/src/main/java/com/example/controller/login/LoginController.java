@@ -14,6 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -23,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.util.Map;
 
 /**
  * 登录
@@ -32,7 +32,7 @@ import java.util.Map;
  * @create 2018-06-06 17:14
  **/
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/user")
 @Slf4j
 public class LoginController {
 
@@ -54,15 +54,45 @@ public class LoginController {
     @Autowired
     private WeixinAuthService weixinAuthService;
 
+//    /**
+//     * 登陆首页
+//     * @param model
+//     * @return
+//     */
+//    @RequestMapping(value = {"", "/", "/index"})
+//    public String login(Model model){
+//        String index = "/login";
+//        model.addAttribute("name", index);
+//        return "login";
+//    }
+
     /**
-     * 登陆首页
-     * @param model
+     * welcome跳转
      * @return
      */
-    @RequestMapping(value = {"", "/", "/index"})
-    public String login(Model model){
-        String index = "/login";
-        model.addAttribute("name", index);
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public String index() {
+        return "index";
+    }
+
+    /**
+     * welcome跳转
+     * @return
+     */
+    @RequestMapping(value = "/welcome", method = RequestMethod.GET)
+    public String welcome() {
+        return "welcome";
+    }
+
+    /**
+     * login跳转
+     * @param model
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public String login(Model model, @ModelAttribute("user") User user) {
+        model.addAttribute("user", user);
         return "login";
     }
 

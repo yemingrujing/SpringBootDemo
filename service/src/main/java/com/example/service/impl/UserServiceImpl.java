@@ -5,7 +5,7 @@ import com.example.base.dto.UserDTO;
 import com.example.base.login.User;
 import com.example.mapper.login.UserMapper;
 import com.example.service.UserService;
-import com.example.util.common.FileUtil;
+import com.example.util.excel.FileUtil;
 import com.example.util.service.BaseServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

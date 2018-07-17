@@ -30,7 +30,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <springboot.version>2.0.0.RELEASE</springboot.version>
+        <springboot.version>2.0.3.RELEASE</springboot.version>
         <mybatis.version>1.3.2</mybatis.version>
         <commons.lang3.version>3.7</commons.lang3.version>
         <pagehelper.mybatis.version>1.2.3</pagehelper.mybatis.version>
