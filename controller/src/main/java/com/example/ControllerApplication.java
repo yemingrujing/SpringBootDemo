@@ -7,7 +7,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 
 
 @SpringBootApplication
-@MapperScan("com.example.mapper")
 @EnableAsync
 public class ControllerApplication {
 
