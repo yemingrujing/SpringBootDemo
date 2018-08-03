@@ -148,9 +148,9 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
             tn = "";
             LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
         }
-        String reqMessage = DemoBase.genHtmlResult(reqData);
-        String rspMessage = DemoBase.genHtmlResult(rspData);
-        response.getWriter().write("请求报文:<br/>" + reqMessage + "<br/>" + "应答报文:</br>" + rspMessage + "");
+//        String reqMessage = DemoBase.genHtmlResult(reqData);
+//        String rspMessage = DemoBase.genHtmlResult(rspData);
+//        response.getWriter().write("请求报文:<br/>" + reqMessage + "<br/>" + "应答报文:</br>" + rspMessage + "");
 
         /*
         网关支付

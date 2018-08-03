@@ -74,7 +74,8 @@ public class ExcelImportServer extends ImportBaseService {
                 .getValue(object, param.getName());
         Object entity = PoiPublicUtil.createObject(param.getType(), targetId);
         String picId;
-        boolean isUsed = false;// 是否需要加上这个对象
+        // 是否需要加上这个对象
+        boolean isUsed = false;
         for (int i = row.getFirstCellNum(); i < titlemap.size(); i++) {
             Cell cell = row.getCell(i);
             String titleString = (String) titlemap.get(i);
@@ -105,6 +106,10 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 获取保存的真实路径
+     * @param excelImportEntity
+     * @param object
+     * @return
+     * @throws Exception
      */
     private String getSaveUrl(ExcelImportEntity excelImportEntity, Object object) throws Exception {
         String url = "";
@@ -302,6 +307,9 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 获取这个名称对应的集合信息
+     * @param excelCollection
+     * @param collectionName
+     * @return
      */
     private ExcelCollectionParams getCollectionParams(List<ExcelCollectionParams> excelCollection,
                                                       String collectionName) {
@@ -315,6 +323,11 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * Excel 导入 field 字段类型 Integer,Long,Double,Date,String,Boolean
+     * @param inputstream
+     * @param pojoClass
+     * @param params
+     * @return
+     * @throws Exception
      */
     public ExcelImportResult importExcelByIs(InputStream inputstream, Class<?> pojoClass,
                                              ImportParams params) throws Exception {
@@ -391,6 +404,9 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 按照键值对的方式取得Excel里面的数据
+     * @param result
+     * @param sheet
+     * @param params
      */
     private void readSingleCell(ExcelImportResult result, Sheet sheet, ImportParams params) {
         if (result.getMap() == null) {
@@ -428,6 +444,10 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 检查是不是合法的模板
+     * @param titlemap
+     * @param excelParams
+     * @param params
+     * @param excelCollection
      */
     private void checkIsValidTemplate(Map<Integer, String> titlemap,
                                       Map<String, ExcelImportEntity> excelParams,
@@ -480,6 +500,13 @@ public class ExcelImportServer extends ImportBaseService {
 
     /**
      * 保存字段值(获取值,校验值,追加错误信息)
+     * @param params
+     * @param object
+     * @param cell
+     * @param excelParams
+     * @param titleString
+     * @param row
+     * @throws Exception
      */
     private void saveFieldValue(ImportParams params, Object object, Cell cell,
                                 Map<String, ExcelImportEntity> excelParams, String titleString,
