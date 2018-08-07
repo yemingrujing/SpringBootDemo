@@ -37,7 +37,9 @@ public class MainDataSourceConfig {
     public SqlSessionFactory mainSqlSessionFactory(@Qualifier("mainDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
-        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:mapper/**/*.xml"));
+        bean.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:mapper/**/*.xml"));
+        //实体类可以在mapper.xml中使用别名
+        bean.setTypeAliasesPackage("com.example.base");
         return bean.getObject();
     }
 
