@@ -3,6 +3,7 @@ package com.example.controller.login;
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.login.OUserInfo;
 import com.example.base.login.User;
+import com.example.service.annotation.MyLogAnnotation;
 import com.example.service.wechat.LoginService;
 import com.example.service.wechat.WeixinAuthService;
 import com.example.util.chat.CheckoutUtil;
@@ -80,6 +81,7 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
+    @MyLogAnnotation("welcome跳转")
     public String welcome() {
         return "welcome";
     }
@@ -91,6 +93,7 @@ public class LoginController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @MyLogAnnotation("login登录")
     public String login(Model model, @ModelAttribute("user") User user) {
         model.addAttribute("user", user);
         return "login";

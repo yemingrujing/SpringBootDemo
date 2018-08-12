@@ -1,8 +1,11 @@
 package com.example;
 
+import com.example.util.common.SpringUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableAsync;
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -10,6 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @SpringBootApplication
 @EnableAsync
 @EnableAspectJAutoProxy
+@Import(SpringUtil.class)
 public class ControllerApplication {
 
     public static void main(String[] args) {
