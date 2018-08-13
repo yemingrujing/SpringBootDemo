@@ -1,7 +1,10 @@
 package com.example.service.annotation;
 
+import com.example.util.common.ScanUtils;
 import org.reflections.Reflections;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,17 +20,21 @@ public class AnnoManageUtils {
 
     static {
         // 反射工具包，指明扫描路径
-        Reflections reflections = new Reflections("com.example.service.annotation.Handler");
+        Reflections reflections = ScanUtils.init();
         // 获取带Handler注解的类
         Set<Class<?>> classList = reflections.getTypesAnnotatedWith(Handler.class);
-        for (Class clazz : classList) {
+        classList.stream().forEach(clazz -> {
             Handler t = (Handler) clazz.getAnnotation(Handler.class);
             String[] valueList = t.value();
             // 获取注解的值并循环
-            for (String value : valueList) {
-                // 注解值为key，类名为value
-                map.put(Integer.valueOf(value), clazz.getSimpleName());
-            }
+            Arrays.asList(valueList).stream().forEach(value -> map.put(Integer.valueOf(value), clazz.getSimpleName()));
+        });
+        Iterator<Map.Entry<Integer, String>> entries = map.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry entry = entries.next();
+            Integer key = (Integer) entry.getKey();
+            String value = (String) entry.getValue();
+            System.out.println("Key = " + key + ", Value = " + value);
         }
     }
 

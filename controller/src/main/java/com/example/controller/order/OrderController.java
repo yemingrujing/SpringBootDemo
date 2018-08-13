@@ -1,6 +1,7 @@
 package com.example.controller.order;
 
 import com.example.base.order.OrderItem;
+import com.example.service.annotation.Handler;
 import com.example.service.order.OrderService;
 import com.example.util.common.JacksonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -32,16 +33,19 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping(value = "/order/export")
+    @Handler
     public void export(HttpServletResponse response) {
         orderService.export(response);
     }
 
     @PostMapping(value = "/order/import")
+    @Handler
     public void importExcel(@RequestParam("filename") MultipartFile filename) {
         orderService.importExcel(filename);
     }
 
     @GetMapping(value = "/order/downTemplate")
+    @Handler
     public void downTemplate(HttpServletResponse response) {
         orderService.downTemplate(response);
     }

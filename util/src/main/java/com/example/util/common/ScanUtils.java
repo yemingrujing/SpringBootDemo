@@ -31,7 +31,7 @@ public class ScanUtils {
     private static Reflections reflections = null;
 
     static {
-        InputStream in = ScanUtils.class.getClassLoader().getResourceAsStream("reflections.properties");
+        InputStream in = ScanUtils.class.getClassLoader().getResourceAsStream("properties/reflections.properties");
         pro = new Properties();
         try {
             pro.load(in);

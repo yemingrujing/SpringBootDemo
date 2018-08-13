@@ -3,6 +3,7 @@ package com.example.controller.login;
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.login.OUserInfo;
 import com.example.base.login.User;
+import com.example.service.annotation.AnnoManageUtils;
 import com.example.service.annotation.MyLogAnnotation;
 import com.example.service.wechat.LoginService;
 import com.example.service.wechat.WeixinAuthService;
@@ -95,6 +96,7 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @MyLogAnnotation("login登录")
     public String login(Model model, @ModelAttribute("user") User user) {
+        AnnoManageUtils.getBeanNameByEventType(1);
         model.addAttribute("user", user);
         return "login";
     }
@@ -106,7 +108,6 @@ public class LoginController {
      */
     @RequestMapping(value = {"/register"}, method = RequestMethod.GET)
     public String register(Model model) {
-
         return "register";
     }
 

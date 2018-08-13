@@ -10,10 +10,299 @@ Target Server Type    : MYSQL
 Target Server Version : 50722
 File Encoding         : 65001
 
-Date: 2018-07-05 16:53:22
+Date: 2018-08-13 11:33:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for t_activity
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity`;
+CREATE TABLE `t_activity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动主键',
+  `title` varchar(255) NOT NULL COMMENT '活动标题',
+  `main_image` varchar(300) NOT NULL COMMENT '活动主图',
+  `activity_type` varchar(50) NOT NULL COMMENT '活动类型 code详细见字典表 品牌活动  会员活动  综合活动等',
+  `activity_way` varchar(50) NOT NULL COMMENT '活动方式  详细见字典表  峰会  月会  分享会等',
+  `start_time` datetime NOT NULL COMMENT '活动开始时间',
+  `end_time` datetime NOT NULL COMMENT '活动结束时间',
+  `refund_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否允许退款  0否 1是',
+  `refund_limit_time` datetime DEFAULT NULL COMMENT '最晚退款时间',
+  `hotel_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否包含酒店 0不包含  1包含酒店 ',
+  `hotel_id` int(11) DEFAULT NULL COMMENT '酒店ID',
+  `province` varchar(50) DEFAULT NULL COMMENT '省份',
+  `city` varchar(50) DEFAULT NULL COMMENT '城市',
+  `region` varchar(50) DEFAULT NULL COMMENT '区域',
+  `address` varchar(350) DEFAULT NULL COMMENT '活动地址',
+  `member_num` int(11) DEFAULT '0' COMMENT '会员申请人数 （注：审核通过且付款成功会员）',
+  `process` text COMMENT '会议流程',
+  `introduction` text COMMENT '活动介绍',
+  `fee_remark` text COMMENT '费用说明/须知',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  `publish_status` smallint(1) NOT NULL DEFAULT '0' COMMENT '上下架标识 1上架 0下架',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='活动表';
+
+-- ----------------------------
+-- Records of t_activity
+-- ----------------------------
+INSERT INTO `t_activity` VALUES ('1', '2018年终峰会', '/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg', 'COMPLEX_ACTIVITY', 'SUMMIT_MEETING', '2018-08-13 00:00:00', '2018-08-15 23:59:59', '1', '2018-08-20 23:59:59', '1', '1', '上海', '上海市', '嘉定区市', '上海嘉定区发放大发放', '0', '1、发打发打发', '活动介绍', '活动费用说明', '2018-08-12 15:43:38', '2018-08-12 15:49:18', '1', '1');
+
+-- ----------------------------
+-- Table structure for t_activity_brand_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_brand_setting`;
+CREATE TABLE `t_activity_brand_setting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动品牌设置表主键ID',
+  `activity_id` int(11) NOT NULL COMMENT '活动ID',
+  `brand_start_time` datetime DEFAULT NULL COMMENT '品牌招商开始时间',
+  `brand_end_time` datetime DEFAULT NULL COMMENT '品牌招商结束时间 ',
+  `user_type` varchar(300) DEFAULT NULL COMMENT '报名用户资格 保存json数组',
+  `title_fee` decimal(8,2) DEFAULT NULL COMMENT '冠名费用',
+  `title_work_limit_num` int(11) DEFAULT NULL COMMENT '冠名工作人员数限制',
+  `title_room_num` int(11) DEFAULT NULL COMMENT '冠名赠送房间数 注：活动有酒店才配置',
+  `titile_num` int(11) DEFAULT NULL COMMENT '冠名数量限制',
+  `sponsorship_fee` decimal(8,2) DEFAULT NULL COMMENT '联合赞助费',
+  `sponsorship_work_limit_num` int(11) DEFAULT NULL COMMENT '联合赞助工作人员数限制',
+  `sponsorship_room_num` int(11) DEFAULT NULL COMMENT '联合赞助赠送房间数  注：活动有酒店才配置',
+  `sponsorship_num` int(11) DEFAULT NULL COMMENT '联合赞助数量限制',
+  `booth_fee` decimal(8,2) DEFAULT NULL COMMENT '展位费/个',
+  `booth_work_limit_num` int(11) DEFAULT NULL COMMENT '参展工作人员数限制',
+  `booth_brand_num` int(11) DEFAULT NULL COMMENT '展位品牌数限制',
+  `booth_room_num` int(11) DEFAULT NULL COMMENT '展位赠送房间数  注：活动有酒店才配置',
+  `booth_num` int(11) DEFAULT NULL COMMENT '参展数量限制',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `delete_flag` smallint(1) DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  `agreement` varchar(500) DEFAULT NULL COMMENT '协议',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动品牌设置表';
+
+-- ----------------------------
+-- Records of t_activity_brand_setting
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_brand_signup
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_brand_signup`;
+CREATE TABLE `t_activity_brand_signup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `signup_id` int(11) NOT NULL COMMENT '活动报名Id',
+  `investment_type` smallint(1) DEFAULT NULL COMMENT '招商类型 1冠名 2联合赞助 3参展',
+  `booth_number` int(11) DEFAULT NULL COMMENT '展位号 审核通过用户支付成功回写',
+  `contact` varchar(20) NOT NULL COMMENT '联系人(预留字段)',
+  `contact_phone` varchar(20) NOT NULL COMMENT '联系人手机号(预留字段)',
+  `work_num` int(5) NOT NULL COMMENT '工作人员数(预留字段)',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动招商报名记录表';
+
+-- ----------------------------
+-- Records of t_activity_brand_signup
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_brand_signup_flow
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_brand_signup_flow`;
+CREATE TABLE `t_activity_brand_signup_flow` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动品牌招商申请表主键Id',
+  `brand_signup_id` int(11) NOT NULL COMMENT '活动招商报名记录Id',
+  `source` smallint(1) NOT NULL COMMENT '来源  1已入驻品牌  2流水待审核',
+  `brand_id` int(11) DEFAULT NULL COMMENT '报名品牌池ID   来源已入驻品牌',
+  `brand_history_id` int(11) DEFAULT NULL COMMENT '品牌流水ID 来源为流水',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `audit_status` smallint(1) DEFAULT NULL COMMENT '审核状态 0初始化 1通过 2不通过',
+  `audit_time` datetime DEFAULT NULL COMMENT '审核时间',
+  `audit_admin` int(11) DEFAULT NULL COMMENT '审核人ID',
+  `audit_remark` varchar(255) DEFAULT NULL COMMENT '审核备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动品牌招商申请流水表';
+
+-- ----------------------------
+-- Records of t_activity_brand_signup_flow
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_collect
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_collect`;
+CREATE TABLE `t_activity_collect` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动收藏表主键',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `activity_id` int(11) NOT NULL COMMENT '收藏活动Id',
+  `collect_time` datetime NOT NULL COMMENT '收藏时间',
+  `cancel_time` datetime NOT NULL COMMENT '取消收藏时间',
+  `delete_flag` smallint(1) NOT NULL COMMENT '是否有效 1有效 0无效',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动收藏表';
+
+-- ----------------------------
+-- Records of t_activity_collect
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_comment
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_comment`;
+CREATE TABLE `t_activity_comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `activity_id` int(11) NOT NULL COMMENT '活动ID',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `content` varchar(300) DEFAULT NULL COMMENT '评论内容',
+  `overall_satisfaction` smallint(1) DEFAULT NULL COMMENT '总体满意度分数',
+  `content_satisfaction` smallint(1) DEFAULT NULL COMMENT '内容满意度分数',
+  `service_satisfaction` smallint(1) DEFAULT NULL COMMENT '服务满意度分数',
+  `hotle_service_satisfaction` smallint(1) DEFAULT NULL COMMENT '酒店服务满意度分数',
+  `audit_status` smallint(1) NOT NULL COMMENT '审核状态 0初始化 1通过 2不通过',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '修改时间',
+  `top_flag` smallint(1) NOT NULL COMMENT '置顶标识 1置顶 0不置顶',
+  `delete_flag` smallint(1) NOT NULL COMMENT '是否有效标识 1有效 0无效',
+  `like_num` int(11) NOT NULL DEFAULT '0' COMMENT '评论点赞总数',
+  PRIMARY KEY (`id`),
+  KEY `key_a_comment` (`activity_id`,`audit_status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动评论表';
+
+-- ----------------------------
+-- Records of t_activity_comment
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_member_setting
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_member_setting`;
+CREATE TABLE `t_activity_member_setting` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动会员设置表主键ID',
+  `activity_id` int(11) NOT NULL COMMENT '活动ID',
+  `member_start_time` datetime DEFAULT NULL COMMENT '会员开始报名时间',
+  `member_end_time` datetime DEFAULT NULL COMMENT '会员报名结束时间',
+  `user_type` varchar(300) DEFAULT NULL COMMENT '报名用户资格 保存json数组',
+  `audit_flag` smallint(1) DEFAULT '1' COMMENT '报名是否需要审核 1需要 0不需要',
+  `member_limit_num` int(11) DEFAULT NULL COMMENT '会员申请总人数限制',
+  `enter_limit` int(11) DEFAULT NULL COMMENT '会员参会人数限制',
+  `enter_fee_num` int(11) DEFAULT '0' COMMENT '会员免费参会人数',
+  `enter_fee_deposit` decimal(8,2) DEFAULT '0.00' COMMENT '免费参会人押金（单位：每人/元）',
+  `free_listen_num` int(11) DEFAULT NULL COMMENT '会员可带免费旁听数',
+  `listen_limit_num` int(11) DEFAULT NULL COMMENT '旁听总人数限制',
+  `listen_price` decimal(8,2) DEFAULT '0.00' COMMENT '旁听费用（单位：每人/元）',
+  `activity_price` decimal(8,2) DEFAULT '0.00' COMMENT '活动价格',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `agreement` varchar(400) DEFAULT NULL COMMENT '协议',
+  `delete_flag` smallint(1) DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动会员设置表';
+
+-- ----------------------------
+-- Records of t_activity_member_setting
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_member_signup
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_member_signup`;
+CREATE TABLE `t_activity_member_signup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动会员报名申请表明细主键',
+  `sign_up_id` int(11) NOT NULL COMMENT '活动报名ID',
+  `enter_type` smallint(1) NOT NULL COMMENT '会员报名类型  1参会 2旁听',
+  `hotel_goods_id` int(11) DEFAULT NULL COMMENT '酒店商品ID',
+  `sign_up_name` varchar(20) DEFAULT NULL COMMENT '报名人姓名',
+  `sign_up_sex` varchar(6) DEFAULT NULL COMMENT '报名人性别',
+  `sign_up_phone` varchar(20) DEFAULT NULL COMMENT '报名人手机号',
+  `build_room_flag` smallint(1) DEFAULT '0' COMMENT '是否拼房  1是  0否',
+  `build_room_shop` varchar(50) DEFAULT NULL COMMENT '拼房店铺名称',
+  `build_room_person` varchar(20) DEFAULT NULL COMMENT '备注和谁拼房',
+  `remark` varchar(255) DEFAULT NULL COMMENT '留言',
+  `audit_status` smallint(1) DEFAULT '0' COMMENT '审核状态 0初始化 1通过 2不通过',
+  `sign_up_time` datetime DEFAULT NULL COMMENT '报名时间',
+  `audit_time` datetime DEFAULT NULL COMMENT '审核时间',
+  `audit_admin` int(11) DEFAULT NULL COMMENT '审核人',
+  `audit_remark` varchar(255) DEFAULT NULL COMMENT '审核备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动会员报名申请明细表';
+
+-- ----------------------------
+-- Records of t_activity_member_signup
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_order
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_order`;
+CREATE TABLE `t_activity_order` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动报名订单表主键ID',
+  `activity_id` int(11) NOT NULL COMMENT '活动ID',
+  `user_id` int(11) DEFAULT NULL COMMENT '用户ID',
+  `signup_type` smallint(1) DEFAULT NULL COMMENT '活动报名类型  1会员 2招商',
+  `sign_up_id` int(11) NOT NULL COMMENT '活动报名ID  ',
+  `before_amount_total` decimal(8,2) DEFAULT NULL COMMENT '审核前总金额（=审核前明细总金额）',
+  `amount_total` decimal(8,2) NOT NULL COMMENT '审核后实际应付总金额（=审核后明细总金额）',
+  `status` smallint(2) NOT NULL DEFAULT '0' COMMENT '状态 0待审核 1通过 2不通过 3部分通过  （审核通过或者部分通过向订单下单）  4已支付 5取消 6退款中 7退款成功',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `audit_time` datetime DEFAULT NULL COMMENT '审核时间',
+  `order_code` varchar(25) DEFAULT NULL COMMENT '订单编号（向订单下单后回写订单表单号）',
+  `pay_time` datetime DEFAULT NULL COMMENT '付款时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动报名订单表';
+
+-- ----------------------------
+-- Records of t_activity_order
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_order_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_order_detail`;
+CREATE TABLE `t_activity_order_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动订单明细',
+  `activity_order_id` int(11) NOT NULL COMMENT '活动报名订单ID',
+  `prod_type` varchar(50) DEFAULT NULL COMMENT '活动产品类型  参会 旁听 参展 冠名 联合赞助 详细见字典表',
+  `prod_subtype` varchar(50) DEFAULT NULL COMMENT '活动产品子类型  会员参会下有酒店 活动费 押金等  详细见字典',
+  `hotel_id` int(11) DEFAULT NULL COMMENT '酒店ID',
+  `hotel_goods_id` int(11) DEFAULT NULL COMMENT '酒店商品ID',
+  `unit_price` decimal(8,2) DEFAULT NULL COMMENT '明细单价',
+  `before_number` int(11) DEFAULT NULL COMMENT '审核前申请数量',
+  `before_subtotal` decimal(8,2) DEFAULT NULL COMMENT '审核前小计金额(=审核前申请数量*明细单价)',
+  `real_number` int(11) DEFAULT NULL COMMENT '审核后实际数量',
+  `real_subtotal` decimal(8,2) DEFAULT NULL COMMENT '审核后实际小计金额(=审核后实际数量*明细单价)',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动报名订单明细表';
+
+-- ----------------------------
+-- Records of t_activity_order_detail
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_activity_signup
+-- ----------------------------
+DROP TABLE IF EXISTS `t_activity_signup`;
+CREATE TABLE `t_activity_signup` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活动报名主表主键Id',
+  `activity_id` int(11) NOT NULL COMMENT '活动ID',
+  `user_id` int(11) NOT NULL COMMENT '报名用户ID',
+  `signup_type` smallint(3) DEFAULT NULL COMMENT '活动报名类型  1会员 2招商',
+  `sign_up_time` datetime DEFAULT NULL COMMENT '报名时间',
+  `contact` varchar(20) DEFAULT NULL COMMENT '联系人',
+  `contact_phone` varchar(20) DEFAULT NULL COMMENT '联系人手机号',
+  `work_num` int(5) DEFAULT NULL COMMENT '工作人员数',
+  `audit_status` smallint(1) DEFAULT '0' COMMENT '审核状态 0初始化 1通过 2不通过 3部分通过 4已支付 5取消 6退款中 7退款成功',
+  `audit_time` datetime DEFAULT NULL COMMENT '审核时间',
+  `audit_admin` int(11) DEFAULT NULL COMMENT '审核人',
+  `audit_remark` varchar(255) DEFAULT NULL COMMENT '审核备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动报名主表';
+
+-- ----------------------------
+-- Records of t_activity_signup
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_admin_menu
@@ -121,20 +410,22 @@ CREATE TABLE `t_advertising` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='广告信息';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='广告信息';
 
 -- ----------------------------
 -- Records of t_advertising
 -- ----------------------------
-INSERT INTO `t_advertising` VALUES ('1', 'AD_APP_INDEX_BANNER', '淘美妆上线', '0', 'http://img', 'http://link', '广告文字', '2018-06-22 09:34:15', '2019-08-30 14:48:38', '1', '2018-06-30 14:48:38', '2018-06-15 14:48:38', '1');
-INSERT INTO `t_advertising` VALUES ('2', 'AD_APP_INDEX_MENU', '商会介绍', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:08:45', '2018-06-15 17:08:45', '1');
-INSERT INTO `t_advertising` VALUES ('3', 'AD_APP_INDEX_MENU', '会员', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:09:18', '2018-06-15 17:09:18', '1');
-INSERT INTO `t_advertising` VALUES ('4', 'AD_APP_INDEX_MENU', '品牌', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:09:26', '2018-06-15 17:09:26', '1');
-INSERT INTO `t_advertising` VALUES ('5', 'AD_APP_INDEX_MENU', '红人', '0', 'http://img', 'http://link', '', '2018-06-15 00:00:00', '2018-06-30 23:59:59', '1', '2018-06-15 17:26:24', '2018-06-15 17:26:24', '1');
-INSERT INTO `t_advertising` VALUES ('6', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '1', '', 'http://aticle/1.html', '找货：TOP 20面膜出炉 ，全球最好卖的面膜在这儿', '2018-06-19 18:57:43', '2019-06-19 23:59:59', '1', '2018-06-19 18:56:37', '2018-06-19 18:56:37', '1');
-INSERT INTO `t_advertising` VALUES ('7', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '1', '', 'http://aticle/1.html', '科普贴：干性皮肤如何处理', '2018-06-19 18:57:45', '2019-06-19 23:59:59', '1', '2018-06-19 18:57:20', '2018-06-19 18:57:20', '1');
-INSERT INTO `t_advertising` VALUES ('8', 'AD_APP_INDEX_GOODS', '芙丽芳丝面膜团购开始了', '1', '', 'http://goods/1.html', '分类：芦荟、蓝莓、香梨', '2018-06-22 00:00:00', '2019-06-22 23:59:59', '1', '2018-06-22 09:32:35', '2018-06-22 09:32:35', '1');
+INSERT INTO `t_advertising` VALUES ('1', 'AD_APP_INDEX_BANNER', '淘美妆上线', '0', 'http://img', 'http://link', '广告文字', '2018-07-24 16:15:41', '2019-08-30 14:48:38', '1', '2018-06-30 14:48:38', '2018-06-15 14:48:38', '1', '1');
+INSERT INTO `t_advertising` VALUES ('2', 'AD_APP_INDEX_MENU', '商会介绍', '0', 'http://img', 'http://link', '', '2018-07-24 16:15:08', '2018-06-30 23:59:59', '1', '2018-06-15 17:08:45', '2018-06-15 17:08:45', '1', '1');
+INSERT INTO `t_advertising` VALUES ('3', 'AD_APP_INDEX_MENU', '会员', '0', 'http://img', 'http://link', '', '2018-07-24 16:15:09', '2018-06-30 23:59:59', '1', '2018-06-15 17:09:18', '2018-06-15 17:09:18', '1', '2');
+INSERT INTO `t_advertising` VALUES ('4', 'AD_APP_INDEX_MENU', '品牌', '0', 'http://img', 'http://link', '', '2018-07-24 16:15:09', '2018-06-30 23:59:59', '1', '2018-06-15 17:09:26', '2018-06-15 17:09:26', '1', '3');
+INSERT INTO `t_advertising` VALUES ('5', 'AD_APP_INDEX_MENU', '红人', '0', 'http://img', 'http://link', '', '2018-07-24 17:30:02', '2018-06-30 23:59:59', '1', '2018-06-15 17:26:24', '2018-06-15 17:26:24', '1', '6');
+INSERT INTO `t_advertising` VALUES ('6', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '1', '', 'http://aticle/1.html', '找货：TOP 20面膜出炉 ，全球最好卖的面膜在这儿', '2018-07-24 16:15:35', '2019-06-19 23:59:59', '1', '2018-06-19 18:56:37', '2018-06-19 18:56:37', '1', '1');
+INSERT INTO `t_advertising` VALUES ('7', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '1', '', 'http://aticle/1.html', '科普贴：干性皮肤如何处理', '2018-07-24 16:15:37', '2019-06-19 23:59:59', '1', '2018-06-19 18:57:20', '2018-06-19 18:57:20', '1', '2');
+INSERT INTO `t_advertising` VALUES ('8', 'AD_APP_INDEX_GOODS', '芙丽芳丝面膜团购开始了', '1', '', 'http://goods/1.html', '分类：芦荟、蓝莓、香梨', '2018-07-24 16:15:39', '2019-06-22 23:59:59', '1', '2018-06-22 09:32:35', '2018-06-22 09:32:35', '1', '1');
+INSERT INTO `t_advertising` VALUES ('9', 'AD_APP_INDEX_MENU', '集采', '0', 'http://link', 'http://', '', '2018-07-24 17:30:02', '2019-06-19 23:59:59', '1', '2018-07-24 16:14:42', '2018-07-24 16:14:42', '1', '5');
 
 -- ----------------------------
 -- Table structure for t_advertising_site
@@ -159,7 +450,7 @@ CREATE TABLE `t_advertising_site` (
 -- Records of t_advertising_site
 -- ----------------------------
 INSERT INTO `t_advertising_site` VALUES ('1', 'AD_APP_INDEX_BANNER', '', '', '0', '0', '6', '280', '750', '手机端APP首页轮播图', '1');
-INSERT INTO `t_advertising_site` VALUES ('2', 'AD_APP_INDEX_MENU', '', '', '0', '0', '6', '280', '750', '手机端APP首页分类', '1');
+INSERT INTO `t_advertising_site` VALUES ('2', 'AD_APP_INDEX_MENU', '菜单分类', '', '0', '1', '8', '280', '750', '手机端APP首页分类', '1');
 INSERT INTO `t_advertising_site` VALUES ('3', 'AD_APP_INDEX_INFO_TOUTIAO', '资讯头条', '更多', '1', '0', '6', '280', '750', '手机端APP首页资讯头条', '1');
 INSERT INTO `t_advertising_site` VALUES ('4', 'AD_APP_INDEX_GOODS', '', null, '0', '0', '1', '280', '750', '手机端首页商品广告', '1');
 
@@ -178,9 +469,12 @@ CREATE TABLE `t_article` (
   `article_url` varchar(500) DEFAULT NULL COMMENT '类型为链接得文章保存链接地址',
   `author` varchar(50) DEFAULT NULL COMMENT '作者',
   `source` smallint(1) NOT NULL COMMENT '文章来源 1淘美妆 2微信',
-  `comment_num` int(11) NOT NULL DEFAULT '0' COMMENT '评论数',
-  `like_num` int(11) NOT NULL DEFAULT '0' COMMENT '点赞数',
-  `view_num` int(11) NOT NULL DEFAULT '0' COMMENT '浏览数',
+  `comment_num` int(11) DEFAULT '0' COMMENT '页面显示评论数',
+  `like_num` int(11) DEFAULT '0' COMMENT '页面显示点赞数',
+  `view_num` int(11) DEFAULT '0' COMMENT '页面显示浏览数',
+  `real_comment_num` int(11) NOT NULL DEFAULT '0' COMMENT '真实评论数',
+  `real_like_num` int(11) NOT NULL DEFAULT '0' COMMENT '真实点赞数',
+  `real_view_num` int(11) NOT NULL DEFAULT '0' COMMENT '真实浏览数',
   `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -188,32 +482,52 @@ CREATE TABLE `t_article` (
   `top_flag` smallint(1) DEFAULT NULL COMMENT '是否置顶 1是 0否',
   `top_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '置顶时间',
   `view_main_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '文章内是否显示图文封面图 1显示 0不现实',
+  `collect_count` int(11) NOT NULL DEFAULT '0' COMMENT '收藏数',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COMMENT='文章表';
 
 -- ----------------------------
 -- Records of t_article
 -- ----------------------------
-INSERT INTO `t_article` VALUES ('1', '1', '1', '文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '1', '3', '2', '1', '2018-06-25 18:37:32', '2018-06-12 16:29:26', '1', '0', '2018-06-12 16:29:26', '0');
-INSERT INTO `t_article` VALUES ('2', '1', '1', '测试文章2文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-25 18:37:35', '2018-06-12 16:30:11', '1', '0', '2018-06-12 16:30:11', '0');
-INSERT INTO `t_article` VALUES ('3', '1', null, '测试文章3文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:30:18', '2018-06-12 16:30:18', '1', '0', '2018-06-12 16:30:18', '0');
-INSERT INTO `t_article` VALUES ('4', '1', null, '测试文章4文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:03', '2018-06-12 16:33:03', '1', '0', '2018-06-12 16:33:03', '0');
-INSERT INTO `t_article` VALUES ('5', '1', null, '测试文章5文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:07', '2018-06-12 16:33:07', '1', '0', '2018-06-12 16:33:07', '0');
-INSERT INTO `t_article` VALUES ('6', '1', null, '测试文章6文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:12', '2018-06-12 16:33:12', '1', '0', '2018-06-12 16:33:12', '0');
-INSERT INTO `t_article` VALUES ('7', '1', null, '测试文章7文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:17', '2018-06-12 16:33:17', '1', '0', '2018-06-12 16:33:17', '0');
-INSERT INTO `t_article` VALUES ('8', '1', null, '测试文章8文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:21', '2018-06-12 16:33:21', '1', '0', '2018-06-12 16:33:21', '0');
-INSERT INTO `t_article` VALUES ('9', '1', null, '测试文章9文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:26', '2018-06-12 16:33:26', '1', '0', '2018-06-12 16:33:26', '0');
-INSERT INTO `t_article` VALUES ('10', '1', null, '测试文章10文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:35', '2018-06-12 16:33:35', '1', '0', '2018-06-12 16:33:35', '0');
-INSERT INTO `t_article` VALUES ('11', '1', null, '测试文章11文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '2018-06-12 16:33:42', '2018-06-12 16:33:42', '1', '0', '2018-06-12 16:33:42', '0');
-INSERT INTO `t_article` VALUES ('12', '3', '1', '1个中国彩妆品牌到泰国卖彩妆 开会引千人参加', 'LCHEAR蕾琪集团22年来一直专注于彩妆的研发、生产及销售服务。', 'http://image.pinguan.com/upload/article/201806/5b30641fadaa91.46647740.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 16:25:13', '2018-06-26 16:25:13', '1', '0', '2018-06-26 16:25:13', '0');
-INSERT INTO `t_article` VALUES ('13', '3', '1', '有个韩国品牌用5年研发1款抗衰老产品 为啥？', '全球抗衰老市场将在2021年达到2160亿美元，同比增长7.5%', 'http://image.pinguan.com/upload/article/201806/5b304c051bf635.65573936.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 16:35:15', '2018-06-26 16:35:15', '1', '0', '2018-06-26 16:35:15', '0');
-INSERT INTO `t_article` VALUES ('14', '3', '1', '韩国消费者钱包收紧 韩妆盯上中国人爱去的免税店', '受到中国游客欢迎的网上渠道和免税店正成为韩国化妆品的主要零售渠道。', 'http://image.pinguan.com/upload/article/201806/5b2cbf989b7186.58659775.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 16:44:06', '2018-06-26 16:44:06', '1', '0', '2018-06-26 16:44:06', '0');
-INSERT INTO `t_article` VALUES ('16', '3', '1', '倒立敷面膜是什么新玩法？伊贝诗携手孙坚搞事情', '&ldquo;倒立敷面膜&rdquo;打造了一种护肤减压的新方式。', 'http://image.hzpgc.com/upload/article/content/20180622/1529671710978716.png@85q_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 16:59:30', '2018-06-26 16:59:30', '1', '0', '2018-06-26 16:59:30', '0');
-INSERT INTO `t_article` VALUES ('17', '3', '1', '涂了防晒霜还被晒伤？你需要先了解防晒的3个常识', '&ldquo;别让你的化妆品防晒打了折扣。', 'http://image.pinguan.com/upload/article/201806/5b2cc3c2a0fe74.81160708.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 17:11:50', '2018-06-26 17:11:50', '1', '0', '2018-06-26 17:11:50', '0');
-INSERT INTO `t_article` VALUES ('18', '3', '1', '这12个在电商渠道卖得火热的进口品牌，今悉数布局CS店', '为更高效的化妆品供需对接而生。', 'http://image.pinguan.com/upload/article/201806/5b2ccd3c8bd768.70494038.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 17:13:35', '2018-06-26 17:13:35', '1', '0', '2018-06-26 17:13:35', '0');
-INSERT INTO `t_article` VALUES ('19', '3', '1', '卖不好彩妆的店有救了！它帮你把顾客拽回来！', '顾客不进店，彩妆BA是关键。', 'http://image.pinguan.com/upload/article/201806/5b2c5e559450b1.13268763.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 17:14:52', '2018-06-26 17:14:52', '1', '0', '2018-06-26 17:14:52', '0');
-INSERT INTO `t_article` VALUES ('20', '3', '1', '特写｜娇兰佳人发力的药妆市场 还有多少玩家在抢', '强大的市场需求给了这一品类在中国市场立足的机会。', 'http://image.pinguan.com/upload/article/201806/5b2b2171d0b330.56302253.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 17:17:38', '2018-06-26 17:17:38', '1', '0', '2018-06-26 17:17:38', '0');
-INSERT INTO `t_article` VALUES ('21', '3', '1', '增长原力丨雅诗兰黛/欧莱雅是如何成就百年企业的', '信念的力量强大无比，甚至是最核心的力量。', 'http://image.pinguan.com/upload/article/201806/5b2b7f624d66f3.44572164.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '1', '2018-06-26 17:19:23', '2018-06-26 17:19:23', '1', '0', '2018-06-26 17:19:23', '0');
+INSERT INTO `t_article` VALUES ('1', '1', '1', '文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '1', '3', '2', '1', '2018-08-03 10:40:50', '2018-07-12 15:54:17', '1', '0', '2018-06-12 16:29:26', '0', '1');
+INSERT INTO `t_article` VALUES ('2', '1', '1', '测试文章2文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:50', '2018-06-12 16:30:11', '1', '0', '2018-06-12 16:30:11', '0', '0');
+INSERT INTO `t_article` VALUES ('3', '1', null, '测试文章3文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:51', '2018-06-12 16:30:18', '1', '0', '2018-06-12 16:30:18', '0', '0');
+INSERT INTO `t_article` VALUES ('4', '1', null, '测试文章4文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:51', '2018-06-12 16:33:03', '1', '0', '2018-06-12 16:33:03', '0', '0');
+INSERT INTO `t_article` VALUES ('5', '1', null, '测试文章5文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:53', '2018-06-12 16:33:07', '1', '0', '2018-06-12 16:33:07', '0', '0');
+INSERT INTO `t_article` VALUES ('6', '1', null, '测试文章6文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '/article/727d0c39-e85a-40a1-818e-e097ff363ef0.jpg', '1', '', 'lxl', '1', '0', '2', '0', '0', '1', '0', '1', '2018-08-03 10:41:15', '2018-06-12 16:33:12', '1', '0', '2018-06-12 16:33:12', '0', '0');
+INSERT INTO `t_article` VALUES ('7', '1', null, '测试文章7文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '/article/2db2bcd6-3342-4569-a88f-72b9761d1dda.jpg', '1', '', 'lxl', '1', '0', '0', '0', '0', '1', '1', '1', '2018-08-03 10:40:53', '2018-06-12 16:33:17', '1', '0', '2018-06-12 16:33:17', '0', '0');
+INSERT INTO `t_article` VALUES ('8', '1', null, '测试文章8文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:54', '2018-06-12 16:33:21', '1', '0', '2018-06-12 16:33:21', '0', '0');
+INSERT INTO `t_article` VALUES ('9', '1', null, '测试文章9文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:54', '2018-06-12 16:33:26', '1', '0', '2018-06-12 16:33:26', '0', '0');
+INSERT INTO `t_article` VALUES ('10', '1', null, '测试文章10文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:55', '2018-06-12 16:33:35', '1', '0', '2018-06-12 16:33:35', '0', '0');
+INSERT INTO `t_article` VALUES ('11', '1', null, '测试文章11文章测试标题啊啊啊啊啊啊反对反对', '文章测试摘要啵啵啵宝宝f', '', '1', '', 'lxl', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:56', '2018-06-12 16:33:42', '1', '0', '2018-06-12 16:33:42', '0', '0');
+INSERT INTO `t_article` VALUES ('12', '3', '1', '1个中国彩妆品牌到泰国卖彩妆 开会引千人参加', 'LCHEAR蕾琪集团22年来一直专注于彩妆的研发、生产及销售服务。', '/article/f2d6f885-2156-4ecf-9a64-23e171b7d577.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:56', '2018-06-26 16:25:13', '1', '0', '2018-06-26 16:25:13', '0', '0');
+INSERT INTO `t_article` VALUES ('13', '3', '1', '有个韩国品牌用5年研发1款抗衰老产品 为啥？', '全球抗衰老市场将在2021年达到2160亿美元，同比增长7.5%', '/article/6257ef6f-3ec9-4aee-b143-196be636cc50.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:57', '2018-06-26 16:35:15', '1', '0', '2018-06-26 16:35:15', '0', '0');
+INSERT INTO `t_article` VALUES ('14', '3', '1', '韩国消费者钱包收紧 韩妆盯上中国人爱去的免税店', '受到中国游客欢迎的网上渠道和免税店正成为韩国化妆品的主要零售渠道。', '/article/d09eb7ff-40d8-4df9-9ac8-1cb2690ab738.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:58', '2018-06-26 16:44:06', '1', '0', '2018-06-26 16:44:06', '0', '0');
+INSERT INTO `t_article` VALUES ('16', '3', '1', '倒立敷面膜是什么新玩法？伊贝诗携手孙坚搞事情', '&ldquo;倒立敷面膜&rdquo;打造了一种护肤减压的新方式。', '/article/57c3192c-f4ae-4745-815f-85d602756e6b.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:58', '2018-06-26 16:59:30', '1', '0', '2018-06-26 16:59:30', '0', '0');
+INSERT INTO `t_article` VALUES ('17', '3', '1', '涂了防晒霜还被晒伤？你需要先了解防晒的3个常识', '&ldquo;别让你的化妆品防晒打了折扣。', '/article/8e9f93e9-0002-4bf1-92e8-ed8a90c0bf38.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:59', '2018-06-26 17:11:50', '1', '0', '2018-06-26 17:11:50', '0', '0');
+INSERT INTO `t_article` VALUES ('18', '3', '1', '这12个在电商渠道卖得火热的进口品牌，今悉数布局CS店', '为更高效的化妆品供需对接而生。', 'http://image.pinguan.com/upload/article/201806/5b2ccd3c8bd768.70494038.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:40:59', '2018-06-26 17:13:35', '1', '0', '2018-06-26 17:13:35', '0', '0');
+INSERT INTO `t_article` VALUES ('19', '3', '1', '卖不好彩妆的店有救了！它帮你把顾客拽回来！', '顾客不进店，彩妆BA是关键。', 'http://image.pinguan.com/upload/article/201806/5b2c5e559450b1.13268763.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:41:00', '2018-06-26 17:14:52', '1', '0', '2018-06-26 17:14:52', '0', '0');
+INSERT INTO `t_article` VALUES ('20', '3', '1', '特写｜娇兰佳人发力的药妆市场 还有多少玩家在抢', '强大的市场需求给了这一品类在中国市场立足的机会。', 'http://image.pinguan.com/upload/article/201806/5b2b2171d0b330.56302253.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:41:00', '2018-06-26 17:17:38', '1', '0', '2018-06-26 17:17:38', '0', '0');
+INSERT INTO `t_article` VALUES ('21', '3', '1', '增长原力丨雅诗兰黛/欧莱雅是如何成就百年企业的', '信念的力量强大无比，甚至是最核心的力量。', 'http://image.pinguan.com/upload/article/201806/5b2b7f624d66f3.44572164.jpg@122h_175w_1e_1c_1wh.jpg', '1', '', '淘美妆APP', '1', '0', '0', '0', '0', '0', '0', '1', '2018-08-03 10:41:03', '2018-06-26 17:19:23', '1', '0', '2018-06-26 17:19:23', '0', '0');
+
+-- ----------------------------
+-- Table structure for t_article_collect
+-- ----------------------------
+DROP TABLE IF EXISTS `t_article_collect`;
+CREATE TABLE `t_article_collect` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '资讯收藏表主键',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `article_id` int(11) NOT NULL COMMENT '收藏文章',
+  `collect_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
+  `cancel_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '取消收藏时间',
+  `delete_flag` smallint(1) NOT NULL COMMENT '是否有效 1有效 0无效',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='资讯收藏表';
+
+-- ----------------------------
+-- Records of t_article_collect
+-- ----------------------------
+INSERT INTO `t_article_collect` VALUES ('2', '1', '1', '2018-07-12 15:54:17', '2018-07-12 15:54:17', '1');
 
 -- ----------------------------
 -- Table structure for t_article_comment
@@ -223,7 +537,7 @@ CREATE TABLE `t_article_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `article_id` int(11) NOT NULL COMMENT '文章ID',
   `user_id` int(11) NOT NULL COMMENT '用户ID',
-  `content` varchar(1000) DEFAULT NULL COMMENT '评论内容',
+  `content` varchar(300) DEFAULT NULL COMMENT '评论内容',
   `audit_status` smallint(1) NOT NULL COMMENT '审核状态 0初始化 1通过 2不通过',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
@@ -312,12 +626,36 @@ CREATE TABLE `t_article_like` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='文章点赞记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='文章点赞记录表';
 
 -- ----------------------------
 -- Records of t_article_like
 -- ----------------------------
 INSERT INTO `t_article_like` VALUES ('1', '1', '1', '1', '2018-06-12 16:34:51', '2018-06-12 16:34:51');
+INSERT INTO `t_article_like` VALUES ('2', '7', '1', '1', '2018-08-03 10:38:15', '2018-08-03 10:38:15');
+INSERT INTO `t_article_like` VALUES ('3', '6', '1', '1', '2018-08-03 10:41:15', '2018-08-03 10:41:15');
+
+-- ----------------------------
+-- Table structure for t_article_recommend
+-- ----------------------------
+DROP TABLE IF EXISTS `t_article_recommend`;
+CREATE TABLE `t_article_recommend` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '文章推荐表主键',
+  `recommend_type` varchar(50) NOT NULL COMMENT '推荐类型 详细见字典表',
+  `article_id` int(11) NOT NULL COMMENT '推荐文章ID',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '删除标识 0：无效 1：有效',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='资讯文章推荐表';
+
+-- ----------------------------
+-- Records of t_article_recommend
+-- ----------------------------
+INSERT INTO `t_article_recommend` VALUES ('1', 'APP_HOT_ARTICLE', '7', '2018-07-10 18:40:48', '1', '2', '2018-07-10 18:40:48');
+INSERT INTO `t_article_recommend` VALUES ('2', 'APP_HOT_ARTICLE', '6', '2018-07-10 18:40:48', '1', '1', '2018-07-10 18:40:48');
+INSERT INTO `t_article_recommend` VALUES ('3', 'APP_HOT_ARTICLE', '1', '2018-07-10 18:41:39', '0', '3', '2018-07-10 18:24:49');
 
 -- ----------------------------
 -- Table structure for t_attr_template_config
@@ -366,32 +704,84 @@ CREATE TABLE `t_bank_card` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for t_brand_apply
+-- ----------------------------
+DROP TABLE IF EXISTS `t_brand_apply`;
+CREATE TABLE `t_brand_apply` (
+  `id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL COMMENT '用户iD',
+  `brand_ids` varchar(150) DEFAULT NULL COMMENT '品牌IDs',
+  `detail` varchar(500) DEFAULT NULL COMMENT '品牌描述',
+  `status` smallint(6) DEFAULT NULL COMMENT '0待审核  1已审核  2审核未通过',
+  `apply_time` date DEFAULT NULL COMMENT '申请时间',
+  `audit_time` date DEFAULT NULL COMMENT '审核时间',
+  `create_time` date DEFAULT NULL,
+  `update_time` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌申请';
+
+-- ----------------------------
+-- Records of t_brand_apply
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for t_brand_aptitude
 -- ----------------------------
 DROP TABLE IF EXISTS `t_brand_aptitude`;
 CREATE TABLE `t_brand_aptitude` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `brand_id` int(11) NOT NULL COMMENT '品牌基本信息ID',
-  `record_certificate` varchar(150) DEFAULT NULL COMMENT '化妆品备案凭证（多图）',
-  `overseas_brand_business_license` varchar(150) DEFAULT NULL COMMENT '境外品牌所有者营业执照 (图）',
-  `quarantine_certificate` varchar(150) DEFAULT NULL COMMENT '进口检验检疫证明（多图）',
-  `complete_auth_chain` varchar(150) DEFAULT NULL COMMENT '完整授权链 品牌方（选填）代理商（必填）（多图）',
-  `trade_mark_paper_internal` varchar(150) DEFAULT NULL COMMENT '商标注册证-国内（多图）（跨境贸易选填）',
-  `trade_mark_paper_overseas` varchar(150) DEFAULT NULL COMMENT '商标注册证-海外（多图）',
-  `bill_sales` varchar(150) DEFAULT NULL COMMENT '出货单（多图）',
-  `customs_declaration` varchar(150) DEFAULT NULL COMMENT '报关单（多图）',
-  `cosmetic_permit` varchar(150) DEFAULT NULL COMMENT '化妆品许可证',
+  `record_certificate` tinytext COMMENT '化妆品备案凭证（多图）',
+  `overseas_brand_business_license` tinytext COMMENT '境外品牌所有者营业执照 (图）',
+  `quarantine_certificate` tinytext COMMENT '进口检验检疫证明（多图）',
+  `complete_auth_chain` tinytext COMMENT '完整授权链 品牌方（选填）代理商（必填）（多图）',
+  `trade_mark_paper_internal` tinytext COMMENT '商标注册证-国内（多图）（跨境贸易选填）',
+  `trade_mark_paper_overseas` tinytext COMMENT '商标注册证-海外（多图）',
+  `bill_sales` tinytext COMMENT '出货单（多图）',
+  `customs_declaration` tinytext COMMENT '报关单（多图）',
+  `cosmetic_permit` tinytext COMMENT '化妆品许可证（图）',
   `knowledge_complaint` smallint(1) DEFAULT NULL COMMENT '是否有知识产权投诉权利（0 - 未有，1 - 有）',
-  `special_certificate` varchar(150) DEFAULT NULL COMMENT '是否有特证（多图）',
+  `special_certificate` tinytext COMMENT '是否有特证（多图）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='品牌资质表';
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COMMENT='品牌资质表';
 
 -- ----------------------------
 -- Records of t_brand_aptitude
 -- ----------------------------
 INSERT INTO `t_brand_aptitude` VALUES ('3', '3', '化妆品备案凭证（多图）', '境外品牌所有者营业执照 (图）', '进口检验检疫证明（多图）', '完整授权链 品牌方（选填）代理商（必填）（多图）', '商标注册证-国内（多图）（跨境贸易选填）', '商标注册证-海外（多图）', '出货单（多图）', '报关单（多图）', null, '1', '是否有特证（多图）', '2018-07-02 18:01:28');
 INSERT INTO `t_brand_aptitude` VALUES ('4', '4', '化妆品备案凭证（多图）', '境外品牌所有者营业执照 (图）', '进口检验检疫证明（多图）', '完整授权链 品牌方（选填）代理商（必填）（多图）', '商标注册证-国内（多图）（跨境贸易选填）', '商标注册证-海外（多图）', '出货单（多图）', '报关单（多图）', null, '1', '是否有特证（多图）', '2018-07-02 18:01:55');
+INSERT INTO `t_brand_aptitude` VALUES ('10', '11', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('11', '12', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('12', '13', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('13', '14', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('14', '15', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('15', '16', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('16', '17', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('17', '18', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('18', '19', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('19', '20', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('20', '21', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('21', '22', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('22', '23', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('23', '24', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('24', '25', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('25', '26', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('26', '27', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('27', '28', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('28', '29', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('29', '30', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('30', '31', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('31', '32', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('32', '33', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('33', '34', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('34', '35', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('35', '36', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('36', '37', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('37', '38', null, null, null, null, null, null, null, null, null, '1', null, null);
+INSERT INTO `t_brand_aptitude` VALUES ('38', '39', '2b100010-332b-47b3-b4b4-e901129c822f.jpg,b9e9c0df-8279-4be1-aaa3-9533e21453f3.jpg', '1b6fdbb3-912b-4dfb-a09a-0a7842f657fb.jpg', 'a3e8d447-4366-4576-87b4-e13251182d73.jpg,345d310b-3fdd-4a15-bdca-339b3a05e40d.jpg', '1d414f43-b238-41e7-9f5c-e17c8ede0695.jpg,74673b7c-7bdc-4ab9-8529-38ded816bd24.jpg', 'd5afacab-4200-4a30-88b6-296752b3893c.jpg,92abd327-03b2-41f9-92e8-40b2453bd05f.jpg', '04d107bc-cf43-4b7e-adce-bebf9aab4db4.jpg,01261444-2f94-4682-93ca-0f3f591be4af.jpg', '5344db7f-987f-4e65-b92d-f40a92ccf740.jpg,f1907a79-82d3-483f-a909-a89f1485bf8c.jpg', 'b0affd84-fa65-46f9-b4ae-34632dcd0b45.jpg,636c7bac-c435-450f-950d-fdce0e16eb47.jpg', '7cc895f0-d57d-417d-9441-24eca13dbacd.jpg,6e9d4608-729f-4740-b103-302065776e14.jpg', '1', '9f89a6bd-5356-4cbf-9f26-da593b9b59d9.jpg,409bc4b6-90d3-4d46-a2a4-1b9a37be09ec.jpg', '2018-08-12 17:26:37');
+INSERT INTO `t_brand_aptitude` VALUES ('39', '40', '69569c23-5090-45d5-8842-a34a102313d5.jpg,e600e467-6547-4312-a2b2-eddb9fd2fec5.jpg', '15ba91c5-8141-4d39-93d2-c0c1cfa7e9a0.jpg', '22fdfe4a-f4db-42c0-83d4-c0580648dfde.jpg,28e95672-daaa-454a-938f-d481c0deedd1.jpg', 'db73cb47-f045-4832-8707-04cc5be6587a.jpg,1ca8b5c5-08fe-4f8b-a8af-9c5bbfcb3225.jpg', '16d1833b-958c-4ae4-ad8d-ff4ae7f9780d.jpg,795304dc-5bf8-4600-8405-fa6c7abe0b49.jpg', 'fbc63ee6-c8ac-452b-ba79-678d57e01ac8.jpg,1dcdb6b0-f755-441c-baa8-0badaf8d95bd.jpg', '3dbe3cfd-e147-4e91-b536-117de1788cf7.jpg,0b5050c2-ee8e-4666-b8f4-72d89bf509e5.jpg', '5a8181d5-fb64-429f-8b59-daf3501a1811.jpg,b6dc28ce-42b9-45ce-94a1-4f166ac4a2a4.jpg', '5ef354c9-cd1a-49a8-879b-77cb8cf4e3f3.jpg,56cd5a5e-f551-4f54-b756-534c85a3c0da.jpg', '1', 'f0b5858d-6385-4ea6-923f-1cb5a39b36ef.jpg,7900cbde-c520-48cb-92c5-a8beaab71fd0.jpg', '2018-08-12 17:26:37');
+INSERT INTO `t_brand_aptitude` VALUES ('40', '41', '518df1f7-a0c9-4a78-a9e9-640468c7682e.jpg,adde94d6-983d-4f45-97fa-b90c092fcaf3.jpg', 'd6be173d-8381-408f-892b-8711ba870a3d.jpg', '742076bc-5f71-4e83-86b5-2a62c6f8f09f.jpg,fe513740-6a4d-4666-985f-750451344d5f.jpg', '0dd4ccee-ef99-4a7e-81ad-5144b0e66769.jpg,1ca14d74-cfbf-4cfc-a032-e446dec8be86.jpg', 'd7f63f7e-ba32-4012-94c5-a02bd3a8d3c8.jpg,4f9e7fbf-9c82-4723-a9b7-1165a706b35e.jpg', '93ad4f8f-9577-4d9f-8481-a4fd841c1c38.jpg,8de1a471-4f46-4440-aebb-472cce351931.jpg', 'c023b115-8110-4790-8cae-fdff65cc094c.jpg,4b180c46-dd48-4ff8-b0c7-ca3eebb67d7c.jpg', '042a9dcf-3c3a-4c64-9a8a-82f84a3aa733.jpg,2a75ee12-baa5-4c93-b935-818193faa0be.jpg', '15bd1bdc-f390-4022-8784-e206976c176e.jpg,5501b90b-3b4c-4368-8440-1ae42c726032.jpg', '1', 'c814cd89-339f-40d7-80b7-35ae38caa36f.jpg,7f3f89c8-1cd5-42e7-9543-d429c518b3da.jpg', '2018-08-12 17:26:37');
+INSERT INTO `t_brand_aptitude` VALUES ('41', '42', '1b213507-4f95-4f5f-ab30-a5be5d3525d1.jpg,eecfeb58-1e96-460c-a6ed-288bb01b061b.jpg', '3d7c27e4-09ec-406a-b952-fa49951e52be.jpg', 'a4747cf5-74ee-4be5-adbb-a0f1cd99498e.jpg,69844b3f-d3db-4cb0-9825-9e487cc0649a.jpg', '7adf46f2-63d5-48e8-8d00-0000a6823a7e.jpg,a7fb915e-0e74-4bce-834d-f6f3744131c4.jpg', 'f80b86ef-1870-490a-ada4-cf39696ce7f4.jpg,2078913e-ca77-4566-bca4-cbd400220736.jpg', 'cf0f8a6c-7079-4fc7-802e-59777edc3c31.jpg,092551dc-07b1-4ccc-9b5c-c50a06c3b086.jpg', '4a491806-15d4-4874-a934-a5f4857528ed.jpg,60801aaa-2f8c-4471-b64e-212cd77f025e.jpg', 'afe0f4de-9dc4-486c-a2b7-b6005421c407.jpg,7bbe37f4-506c-44b2-822b-406b7fb0408c.jpg', '68f3c51f-f84d-46d8-8430-8c3fdf9a30ea.jpg,d87600fe-b671-4f3c-8ff1-49e454ebfb08.jpg', '1', '83d1e6f7-e0e0-4474-bc2f-e54c6ce57179.jpg,f3832b81-2ce6-493b-b45d-8c4d94303b73.jpg', '2018-08-12 17:26:37');
 
 -- ----------------------------
 -- Table structure for t_brand_aptitude_history
@@ -400,20 +790,20 @@ DROP TABLE IF EXISTS `t_brand_aptitude_history`;
 CREATE TABLE `t_brand_aptitude_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `brand_id` int(11) NOT NULL COMMENT '品牌基本信息ID',
-  `record_certificate` varchar(150) DEFAULT NULL COMMENT '化妆品备案凭证（多图）',
-  `overseas_brand_business_license` varchar(150) DEFAULT NULL COMMENT '境外品牌所有者营业执照 (图）',
-  `quarantine_certificate` varchar(150) DEFAULT NULL COMMENT '进口检验检疫证明（多图）',
-  `complete_auth_chain` varchar(150) DEFAULT NULL COMMENT '完整授权链 品牌方（选填）代理商（必填）（多图）',
-  `trade_mark_paper_internal` varchar(150) DEFAULT NULL COMMENT '商标注册证-国内（多图）（跨境贸易选填）',
-  `trade_mark_paper_overseas` varchar(150) DEFAULT NULL COMMENT '商标注册证-海外（多图）',
-  `bill_sales` varchar(150) DEFAULT NULL COMMENT '出货单（多图）',
-  `customs_declaration` varchar(150) DEFAULT NULL COMMENT '报关单（多图）',
-  `cosmetic_permit` varchar(150) DEFAULT NULL COMMENT '化妆品许可证',
+  `record_certificate` tinytext COMMENT '化妆品备案凭证（多图）',
+  `overseas_brand_business_license` tinytext COMMENT '境外品牌所有者营业执照 (图）',
+  `quarantine_certificate` tinytext COMMENT '进口检验检疫证明（多图）',
+  `complete_auth_chain` tinytext COMMENT '完整授权链 品牌方（选填）代理商（必填）（多图）',
+  `trade_mark_paper_internal` tinytext COMMENT '商标注册证-国内（多图）（跨境贸易选填）',
+  `trade_mark_paper_overseas` tinytext COMMENT '商标注册证-海外（多图）',
+  `bill_sales` tinytext COMMENT '出货单（多图）',
+  `customs_declaration` tinytext COMMENT '报关单（多图）',
+  `cosmetic_permit` tinytext COMMENT '化妆品许可证',
   `knowledge_complaint` smallint(1) DEFAULT NULL COMMENT '是否有知识产权投诉权利（0 - 未有，1 - 有）',
-  `special_certificate` varchar(150) DEFAULT NULL COMMENT '是否有特证（多图）',
+  `special_certificate` tinytext COMMENT '是否有特证（多图）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8mb4 COMMENT='品牌流水历史资质表';
+) ENGINE=InnoDB AUTO_INCREMENT=110 DEFAULT CHARSET=utf8mb4 COMMENT='品牌流水历史资质表';
 
 -- ----------------------------
 -- Records of t_brand_aptitude_history
@@ -438,6 +828,9 @@ INSERT INTO `t_brand_aptitude_history` VALUES ('103', '108', '化妆品备案凭
 INSERT INTO `t_brand_aptitude_history` VALUES ('104', '109', '化妆品备案凭证（多图）', '境外品牌所有者营业执照 (图）', '进口检验检疫证明（多图）', '完整授权链 品牌方（选填）代理商（必填）（多图）', '商标注册证-国内（多图）（跨境贸易选填）', '商标注册证-海外（多图）', '出货单（多图）', '报关单（多图）', null, '1', '是否有特证（多图）', null);
 INSERT INTO `t_brand_aptitude_history` VALUES ('105', '110', '化妆品备案凭证（多图）', '境外品牌所有者营业执照 (图）', '进口检验检疫证明（多图）', '完整授权链 品牌方（选填）代理商（必填）（多图）', '商标注册证-国内（多图）（跨境贸易选填）', '商标注册证-海外（多图）', '出货单（多图）', '报关单（多图）', null, '1', '是否有特证（多图）', null);
 INSERT INTO `t_brand_aptitude_history` VALUES ('106', '111', '化妆品备案凭证（多图）', '境外品牌所有者营业执照 (图）', '进口检验检疫证明（多图）', '完整授权链 品牌方（选填）代理商（必填）（多图）', '商标注册证-国内（多图）（跨境贸易选填）', '商标注册证-海外（多图）', '出货单（多图）', '报关单（多图）', null, '1', '是否有特证（多图）', null);
+INSERT INTO `t_brand_aptitude_history` VALUES ('107', '112', 'brand/9908fcd8-c8ee-4bf3-8ade-31151ee49299.jpg', '', 'brand/ea8abf1b-cabd-4926-949e-769ae04d8aeb.jpg', 'brand/809a1214-ae12-4a28-8bad-fca2741ee1c5.jpg', 'brand/70d57cea-cbc1-4209-ac14-4264d826c3d7.jpg', '', '', 'brand/bd8ce2f9-a8a1-4f9c-a9b7-92ad8a89e63f.jpg', '', '1', 'brand/6175cc6a-9090-45bb-8879-16480315f968.jpg', null);
+INSERT INTO `t_brand_aptitude_history` VALUES ('108', '113', 'brand/64b5db78-2b8f-4e26-b2bf-f4bde6a920cb.jpg', '', 'brand/75459853-86eb-470f-a17b-b41cef137415.jpg', 'brand/5b11a71f-9381-450e-999a-47b401f73498.jpg', 'brand/32b479ce-56e3-441c-9d89-37c9c37a8871.jpg', '', '', 'brand/f7943b9b-3974-4471-918b-be01b6b88ea2.jpg', '', '1', 'brand/67f78e27-a5aa-4f03-93d5-7d9fb7828a9e.jpg', null);
+INSERT INTO `t_brand_aptitude_history` VALUES ('109', '114', '化妆品备案凭证（多图）', '境外品牌所有者营业执照 (图）', '进口检验检疫证明（多图）', '完整授权链 品牌方（选填）代理商（必填）（多图）', '商标注册证-国内（多图）（跨境贸易选填）', '商标注册证-海外（多图）', '出货单（多图）', '报关单（多图）', null, '1', '是否有特证（多图）', null);
 
 -- ----------------------------
 -- Table structure for t_brand_basic_info
@@ -455,8 +848,9 @@ CREATE TABLE `t_brand_basic_info` (
   `tmall_shop_flag` smallint(1) DEFAULT '0' COMMENT '天猫旗舰店（0 - 没有，1 - 有）',
   `main_category` varchar(255) DEFAULT NULL COMMENT '主营类目（存JSON串）',
   `auth_channel` varchar(20) DEFAULT NULL COMMENT '授权渠道',
-  `channel_type` varchar(20) NOT NULL COMMENT '渠道类型（品牌方/代理商）',
+  `channel_type` varchar(20) DEFAULT NULL COMMENT '渠道类型（品牌方/代理商）',
   `channel_company_name` varchar(50) DEFAULT NULL COMMENT '渠道公司名称',
+  `brand_auth_start_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '品牌授权开始时间',
   `brand_auth_expire_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '品牌授权过期时间',
   `sales_amount_on_line` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '全球品牌市场销售概况-线上',
   `sales_amount_under_line` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '全球品牌市场销售概况-线下',
@@ -467,26 +861,57 @@ CREATE TABLE `t_brand_basic_info` (
   `initials` varchar(1) DEFAULT NULL COMMENT '品牌名字首字母',
   `initiation_amount` decimal(8,2) DEFAULT '0.00' COMMENT '品牌入驻费用',
   `product_images` varchar(255) DEFAULT NULL COMMENT '产品图（多图）',
-  `terminal_images` varchar(255) DEFAULT NULL COMMENT '终端形象（多图）',
+  `terminal_images` text COMMENT '明星单品（多图）',
   `interval_min` decimal(8,2) DEFAULT '0.00' COMMENT '产品价格最小值',
   `interval_max` decimal(8,2) DEFAULT '0.00' COMMENT '产品价格最大值',
   `page_view` int(8) DEFAULT '0' COMMENT '浏览量',
   `follower_num` int(8) DEFAULT '0' COMMENT '关注人数量',
-  `delete_flag` smallint(1) DEFAULT NULL COMMENT '删除标识（0-未删除，1-已删除）',
-  `is_main_shop` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否是主店铺（0,- 否，1- 是）',
+  `delete_flag` smallint(1) DEFAULT '0' COMMENT '删除标识（0-未删除，1-已删除）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `create_user_id` int(11) DEFAULT NULL COMMENT '用户Id',
   `remark1` varchar(255) DEFAULT NULL COMMENT '品牌方备注',
   `remark2` varchar(255) DEFAULT NULL COMMENT '运营备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='品牌基本信息';
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COMMENT='品牌基本信息';
 
 -- ----------------------------
 -- Records of t_brand_basic_info
 -- ----------------------------
-INSERT INTO `t_brand_basic_info` VALUES ('3', '1', '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-07-04 16:55:15', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '1', null, 'B', '5000.00', '产品图', '终端形象', '0.00', '0.00', '0', '0', null, '0', '2018-07-04 16:55:15', '1', '备注', null);
-INSERT INTO `t_brand_basic_info` VALUES ('4', '2', '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-07-04 16:55:17', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '1', null, 'A', '5000.00', '产品图', '终端形象', '0.00', '0.00', '0', '0', null, '0', '2018-07-04 16:55:17', '1', '备注', null);
-INSERT INTO `t_brand_basic_info` VALUES ('5', '3', '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-07-05 00:00:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '1', null, 'A', '5000.00', '产品图', '终端形象', '0.00', '0.00', '0', '0', null, '0', '2018-07-05 14:21:12', '1', '备注', null);
+INSERT INTO `t_brand_basic_info` VALUES ('3', '1', '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-07-12 17:51:59', '2018-07-12 17:51:59', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', null, 'B', '5000.00', '产品图', '终端形象', '0.00', '0.00', '0', '1', null, '2018-07-12 17:51:59', '1', '备注', null);
+INSERT INTO `t_brand_basic_info` VALUES ('4', '2', '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', null, '2018-07-05 17:41:16', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', null, 'A', '5000.00', '产品图', '终端形象', '0.00', '0.00', '0', '0', null, '2018-07-05 17:41:16', '1', '备注', null);
+INSERT INTO `t_brand_basic_info` VALUES ('5', '3', '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', null, '2018-07-06 00:00:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', null, 'A', '5000.00', '产品图', '终端形象', '0.00', '0.00', '0', '0', null, '2018-07-06 00:00:00', '1', '备注', null);
+INSERT INTO `t_brand_basic_info` VALUES ('11', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'O', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 16:49:38', '74', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('12', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'Y', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 16:49:38', '74', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('13', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'O', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 17:49:53', '75', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('14', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'Y', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 17:49:53', '75', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('15', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'O', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 17:53:43', '76', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('16', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'Y', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 17:53:43', '76', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('17', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'L', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 17:53:43', '77', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('18', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'F', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-10 17:53:43', '77', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('19', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'O', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 14:52:06', '78', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('20', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'Y', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 14:52:06', '78', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('21', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'L', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 14:52:06', '79', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('22', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'F', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 14:52:06', '79', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('23', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'O', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 15:42:00', '80', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('24', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'Y', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 15:42:01', '80', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('25', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'L', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 15:42:01', '81', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('26', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'F', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 15:42:01', '81', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('27', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'O', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 16:02:34', '82', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('28', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'Y', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 16:02:34', '82', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('29', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'L', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 16:02:34', '83', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('30', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-01-01 00:00:00', '2019-10-10 00:00:00', '10000.00', '2000.00', '品牌理念', null, '1', null, 'F', '0.00', null, null, '0.00', '0.00', '0', '0', '0', '2018-08-12 16:02:34', '83', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('31', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', '6d15f0fd-dd89-4f7e-a80a-2745282ea59f.jpg', '0', null, 'O', '0.00', null, 'e2d9ffb3-93a5-4d02-9cbb-be164b698bd8.jpg,953eab6f-73fe-40e6-a9ce-0833a439f98d.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '84', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('32', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'd4a8746c-19fb-4ab3-a702-833a7d2605a4.jpg', '0', null, 'Y', '0.00', null, '7f59ba51-73c7-4923-ac41-459c4da8f663.jpg,6c1b45b7-b436-4b76-9bbc-3a583854585d.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '84', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('33', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', '86fc257c-a300-4616-85d2-3a58b9ade06a.jpg', '0', null, 'L', '0.00', null, 'ec9bff73-b634-429e-95e6-9641990c44bf.jpg,4b1603cd-a576-4917-b0c2-7c3e96ebf1b3.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '85', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('34', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'cdd9a7f7-475f-4e25-afdf-ef9648c31fc7.jpg', '0', null, 'F', '0.00', null, '3d9ef284-f731-45be-a090-e860df3652da.jpg,19a51dbb-177a-4f80-a9cd-107faa130730.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '85', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('35', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'cc380d4c-0df9-46fa-b923-5cda0b906bb4.jpg', '0', null, 'O', '0.00', null, 'ee1ec90a-7746-4e69-9e75-fc8089bd4f96.jpg,c8d70aa5-4700-4b37-860b-8998dfed0fbd.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '86', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('36', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'd86472b7-03d3-43e3-87ec-6bc91ada3240.jpg', '0', null, 'Y', '0.00', null, 'bea52eef-aa4f-43c5-9de2-a5d8575cf560.jpg,e3ecbc77-860e-4083-a6b6-42a62e6e0d71.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '86', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('37', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', '8ec28ef0-fe76-46a7-a0cd-240c80655cf5.jpg', '0', null, 'L', '0.00', null, '83ce83de-209d-4ae7-843b-b9a30a7db70c.jpg,e9cec928-b476-4f80-92ae-4eb480a39948.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '87', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('38', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'a64ece3f-fb42-4179-a2d5-b307be7fd8b0.jpg', '0', null, 'F', '0.00', null, '2c103955-f091-48b4-ab6a-29e3937e3e66.jpg,4ef71d5b-7ff1-4883-8836-324c99ba3bd3.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '87', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('39', null, '欧莱雅', 'OULAIYA', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', '4339f900-0450-4572-807a-30bd2563bed1.jpg', '0', null, 'O', '0.00', null, '0b111a55-7939-434a-aaa0-1c30c225b78d.jpg,ff9158d8-55cb-44b9-bc67-f822ea7bc693.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '88', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('40', null, '雅诗兰', 'YASHILAN', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', '3a67d6f9-5cd5-4c2f-816d-4f9ab185d1e6.jpg', '0', null, 'Y', '0.00', null, '79a932fe-92e8-45d9-a2de-ea07e8712dbe.jpg,40fb7e5d-ca48-4dbd-978e-93645ccf6543.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '88', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('41', null, '兰蔻', 'LK', 'CENERAL_TRADE', 'Japan', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'da5b09d6-cd08-419d-8dae-49ac776fa016.jpg', '0', null, 'L', '0.00', null, '21f847b0-ba5a-4adc-95a9-f299f892b9df.jpg,cf7866f8-b416-4438-87f6-47730b2fabc0.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '89', null, null);
+INSERT INTO `t_brand_basic_info` VALUES ('42', null, '芙丽芳丝', 'FLFS', 'CENERAL_TRADE_COUNTRY', 'China', 'PROD_ADDRESS_CHINA', '0', '1', '[5,7]', 'AUTH_CHANNEL_DZH', null, null, '2018-08-13 00:00:00', '2018-08-13 00:00:00', '10000.00', '2000.00', '品牌理念', 'a837a98c-f22b-4110-909d-9ee005912819.jpg', '0', null, 'F', '0.00', null, 'dcb544cd-fec3-4069-8588-05c23d357f5c.jpg,92ef94ed-1c5f-4a4c-bf6b-7996557341f4.jpg', '0.00', '0.00', '0', '0', '0', '2018-08-13 00:00:00', '89', null, null);
 
 -- ----------------------------
 -- Table structure for t_brand_basic_info_history
@@ -494,7 +919,7 @@ INSERT INTO `t_brand_basic_info` VALUES ('5', '3', '品牌名称', '英文名称
 DROP TABLE IF EXISTS `t_brand_basic_info_history`;
 CREATE TABLE `t_brand_basic_info_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `brand_pool_id` int(11) DEFAULT NULL COMMENT '品牌池ID',
+  `brand_pool_id` int(11) DEFAULT NULL COMMENT '品牌池Id',
   `brand_name` varchar(50) DEFAULT NULL COMMENT '品牌名称',
   `brand_name_en` varchar(50) DEFAULT NULL COMMENT '英文名称',
   `trade_types` varchar(60) DEFAULT NULL COMMENT '贸易种类（一般贸易，跨境贸易，国货）（数据字典）',
@@ -504,7 +929,7 @@ CREATE TABLE `t_brand_basic_info_history` (
   `tmall_shop_flag` smallint(1) DEFAULT '0' COMMENT '天猫旗舰店（0 - 没有，1 - 有）',
   `main_category` varchar(255) DEFAULT NULL COMMENT '主营类目（存JSON串）',
   `auth_channel` varchar(20) DEFAULT NULL COMMENT '授权渠道（数据字典）',
-  `channel_type` varchar(20) NOT NULL COMMENT '渠道类型（品牌方/代理商）',
+  `channel_type` varchar(20) DEFAULT NULL COMMENT '渠道类型（品牌方/代理商）',
   `channel_company_name` varchar(50) DEFAULT NULL COMMENT '渠道公司名称',
   `brand_auth_expire_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '品牌授权过期时间',
   `sales_amount_on_line` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '全球品牌市场销售概况-线上',
@@ -517,39 +942,61 @@ CREATE TABLE `t_brand_basic_info_history` (
   `initials` varchar(1) DEFAULT NULL COMMENT '品牌名字首字母',
   `initiation_amount` decimal(8,2) DEFAULT '0.00' COMMENT '品牌入驻费用',
   `product_images` varchar(255) DEFAULT NULL COMMENT '产品图（多图）',
-  `terminal_images` varchar(255) DEFAULT NULL COMMENT '终端形象（多图）',
+  `terminal_images` text COMMENT '明星单品（多图）',
   `delete_flag` smallint(1) DEFAULT NULL COMMENT '删除标识（0-未删除，1-已删除）',
-  `is_main_shop` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否是主店铺（0,- 否，1- 是）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `remark1` varchar(255) DEFAULT NULL COMMENT '品牌方备注',
   `remark2` varchar(255) DEFAULT NULL COMMENT '运营备注',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb4 COMMENT='品牌流水历史基本信息';
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COMMENT='品牌流水历史基本信息';
 
 -- ----------------------------
 -- Records of t_brand_basic_info_history
 -- ----------------------------
-INSERT INTO `t_brand_basic_info_history` VALUES ('55', null, '老婆老婆老婆', '老婆老婆老婆', 'ceneral_trade', '品牌国籍', 'MP57k7k', '0', '0', '主营类目（存JSON串）', 'ceneral_trade', 'agents', null, '2018-07-07 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', '45a874a4-641b-4416-9b1f-1b19a34ec08d.jpg', '0', '1', null, 'L', '500.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('92', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-07-02 18:00:37', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '2', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', '2018-07-02 18:00:37', '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('93', null, 'jgjvjvvj', 'nvnvjvn n vj', 'ceneral_trade', 'Alex', 'vhhvjvjvjv', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-07 00:00:00', '8000.20', '8000.20', 'hcvhvhvhvhhv', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'J', '0.00', null, null, null, '0', null, null, null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('94', null, 'guvjvj', 'hvhvjvvjjv', 'ceneral_trade', '中国', 'hvvhvhvjvj', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', 'vjjvjvvj', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'G', '0.00', null, null, null, '0', null, null, null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('95', null, 'vjvjbj', 'bjbjbbj', 'ceneral_trade', '中国', 'hvvjvj', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'V', '0.00', null, null, null, '0', null, null, null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('96', null, 'vjvjbj', 'bjbjbbj', 'ceneral_trade', '中国', 'hvvjvj', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'V', '0.00', null, null, null, '0', null, null, null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('97', null, 'hxhxhxhx', 'jxjxhxh', 'ceneral_trade', 'Candy', 'xhhxhxhxhx', '0', '0', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/f01a31ad-6eae-4ae3-a044-c94998fc745d.jpg', '0', '1', null, 'H', '0.00', null, null, null, '0', null, null, null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('98', null, 'hxhxhxhx', 'jxjxhxh', 'ceneral_trade', 'Candy', 'xhhxhxhxhx', '0', '0', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/f01a31ad-6eae-4ae3-a044-c94998fc745d.jpg', '0', '1', null, 'H', '0.00', null, null, null, '0', null, null, null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('99', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('100', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('101', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('102', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('103', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('104', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('105', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('106', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('107', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('108', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('109', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('110', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
-INSERT INTO `t_brand_basic_info_history` VALUES ('111', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-04 00:00:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '0', null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('55', null, '老婆老婆老婆', '老婆老婆老婆', 'ceneral_trade', '品牌国籍', 'MP57k7k', '0', '0', '主营类目（存JSON串）', 'ceneral_trade', 'agents', null, '2018-07-07 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', '45a874a4-641b-4416-9b1f-1b19a34ec08d.jpg', '0', '1', null, 'L', '500.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('92', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-07-02 18:00:37', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '2', '1', null, 'P', '5000.00', '产品图', '终端形象', null, '2018-07-02 18:00:37', '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('93', null, 'jgjvjvvj', 'nvnvjvn n vj', 'ceneral_trade', 'Alex', 'vhhvjvjvjv', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-07 00:00:00', '8000.20', '8000.20', 'hcvhvhvhvhhv', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'J', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('94', null, 'guvjvj', 'hvhvjvvjjv', 'ceneral_trade', '中国', 'hvvhvhvjvj', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', 'vjjvjvvj', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'G', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('95', null, 'vjvjbj', 'bjbjbbj', 'ceneral_trade', '中国', 'hvvjvj', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'V', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('96', null, 'vjvjbj', 'bjbjbbj', 'ceneral_trade', '中国', 'hvvjvj', '1', '1', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/09125654-5554-46a1-bc32-2a4592deb992.jpg', '0', '1', null, 'V', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('97', null, 'hxhxhxhx', 'jxjxhxh', 'ceneral_trade', 'Candy', 'xhhxhxhxhx', '0', '0', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/f01a31ad-6eae-4ae3-a044-c94998fc745d.jpg', '0', '1', null, 'H', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('98', null, 'hxhxhxhx', 'jxjxhxh', 'ceneral_trade', 'Candy', 'xhhxhxhxhx', '0', '0', 'null', '大中华区代理', 'agents', null, '2018-07-03 00:00:00', '8000.20', '8000.20', '100字123456123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890', 'brand/f01a31ad-6eae-4ae3-a044-c94998fc745d.jpg', '0', '1', null, 'H', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('99', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('100', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('101', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('102', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('103', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('104', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('105', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('106', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('107', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('108', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('109', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('110', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-03 00:12:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('111', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-04 00:00:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('112', null, 'hvvvh', 'vhhvvhhb', 'ceneral_trade', 'Daniel', 'hvhvvhvvhv', '0', '0', 'null', '大中华区代理', 'agents', null, '2018-07-06 00:00:00', '8000.20', '8000.20', '1234567890', 'brand/067bbaf6-ec66-4adb-ba3f-ae095e3d478d.jpg', '0', '1', null, 'H', '0.00', null, null, null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('113', null, '他不踏踏', '路路通', 'ceneral_trade', 'Christina', '辣条夸夸', '0', '0', 'null', '大中华区代理', 'agents', null, '2018-07-09 00:00:00', '8000.20', '8000.20', '1234567890', 'brand/5bc5367a-90bf-4baf-ab49-9e4419389188.jpg', '0', '1', null, 'T', '0.00', 'brand/63d29822-c8cc-4f29-8f79-0c44f3b30e9a.jpg,brand/3055c31f-fe71-46a8-a886-c5090058e107.jpg', 'brand/0ef01fbf-9be4-43d4-bf01-e53a332fc25d.jpg,brand/751782ae-e56e-4bd8-9bbe-ae6d97c727cb.jpg,brand/be737de8-a8b4-4399-aa5d-13c93a7802af.jpg,brand/0623f4d1-2505-4f7f-9c83-8e2114107936.jpg,brand/4e0647ec-a758-4992-b2c6-849f1b5dff6c.jpg', null, null, null, null);
+INSERT INTO `t_brand_basic_info_history` VALUES ('114', null, '品牌名称', '英文名称', 'ceneral_trade', '品牌国籍', '生产地址', '0', '0', '主营类目（存JSON串）', '授权渠道', 'agents', '渠道公司名称', '2018-03-04 00:00:00', '8000.20', '3000.30', '品牌理念', '/brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '0', '1', null, 'P', '5000.00', '产品图', '终端形象', null, null, '备注', null);
+
+-- ----------------------------
+-- Table structure for t_brand_cooperation_intention
+-- ----------------------------
+DROP TABLE IF EXISTS `t_brand_cooperation_intention`;
+CREATE TABLE `t_brand_cooperation_intention` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) DEFAULT NULL COMMENT '合作类型（发布会/海外溯源-数据字典）',
+  `barnds_name` varchar(100) DEFAULT NULL COMMENT '品牌名称',
+  `coopera_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '合作时间',
+  `address` varchar(255) DEFAULT NULL COMMENT '地点',
+  `range_num` varchar(50) DEFAULT NULL COMMENT '人数范围',
+  `budget` decimal(10,2) DEFAULT '0.00' COMMENT '预算',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='品牌合作意向联系表';
+
+-- ----------------------------
+-- Records of t_brand_cooperation_intention
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_brand_follow
@@ -560,12 +1007,13 @@ CREATE TABLE `t_brand_follow` (
   `brand_pool_id` int(11) NOT NULL COMMENT '品牌池ID',
   `user_id` int(11) NOT NULL COMMENT '用户ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COMMENT='品牌关注人列表';
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COMMENT='品牌关注人列表';
 
 -- ----------------------------
 -- Records of t_brand_follow
 -- ----------------------------
 INSERT INTO `t_brand_follow` VALUES ('28', '2020', '1');
+INSERT INTO `t_brand_follow` VALUES ('29', '1', '1');
 
 -- ----------------------------
 -- Table structure for t_brand_pool
@@ -580,13 +1028,12 @@ CREATE TABLE `t_brand_pool` (
   `is_delete` smallint(1) DEFAULT '0' COMMENT '是否删除（0 - 否， 1 - 是）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='品牌池';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='品牌池';
 
 -- ----------------------------
 -- Records of t_brand_pool
 -- ----------------------------
-INSERT INTO `t_brand_pool` VALUES ('1', '欧莱雅', 'K', null, 'P', '0', '2018-07-02 18:28:06');
-INSERT INTO `t_brand_pool` VALUES ('2', '欧莱雅', 'K', null, 'P', '0', '2018-07-02 18:01:55');
+INSERT INTO `t_brand_pool` VALUES ('3', '欧莱雅', 'oulaiya', '/pool/9c2e81f4-1342-4632-be9a-f590ca625717.jpg', 'O', '0', '2018-07-17 15:12:33');
 
 -- ----------------------------
 -- Table structure for t_category
@@ -601,7 +1048,7 @@ CREATE TABLE `t_category` (
   `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效  1有效 0无效',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
-  `type` smallint(1) DEFAULT '1' COMMENT '类型 1资讯',
+  `type` smallint(1) DEFAULT '1' COMMENT '类型 1资讯 2品牌主营类目 3商品类目',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
   `img_url` varchar(500) DEFAULT NULL COMMENT '类目主图',
   `publish_status` smallint(1) NOT NULL COMMENT '上下架标识 1上架 0下架',
@@ -628,119 +1075,71 @@ CREATE TABLE `t_company` (
   `company_type` smallint(1) DEFAULT '0' COMMENT '公司类型（公司 - 0 / 个体户 - 1）',
   `user_id` int(11) NOT NULL COMMENT '用户Id',
   `boss_name` varchar(20) DEFAULT NULL COMMENT '企业老板姓名',
-  `boss_telephone` varchar(255) DEFAULT NULL COMMENT '老板电话',
-  `boss_email` varchar(20) DEFAULT NULL COMMENT '老板邮箱',
+  `boss_telephone` varchar(20) DEFAULT NULL COMMENT '老板电话',
+  `boss_email` varchar(30) DEFAULT NULL COMMENT '老板邮箱',
   `boss_we_chat` varchar(30) DEFAULT NULL COMMENT '老板微信',
   `company_name` varchar(50) DEFAULT NULL COMMENT '公司名字',
-  `address` varchar(100) DEFAULT NULL COMMENT '公司地址',
-  `company_size` varchar(20) DEFAULT NULL COMMENT '公司规模',
+  `address` varchar(200) DEFAULT NULL COMMENT '公司地址',
+  `company_size` varchar(20) DEFAULT NULL COMMENT '公司规模（数据字典）',
   `alipay_account` varchar(20) DEFAULT NULL COMMENT '支付宝账号',
   `company_role` varchar(20) DEFAULT NULL COMMENT '所在公司角色（CEO、财务、运营、商会对接人、其他）',
-  `business_licence_url` varchar(50) DEFAULT NULL COMMENT '营业执照地址',
-  `commerce_personnel` varchar(20) DEFAULT NULL COMMENT '商会对接人员',
+  `business_licence_url` varchar(100) DEFAULT NULL COMMENT '营业执照地址',
   `credit_code` varchar(50) DEFAULT NULL COMMENT '统一社会信用代码',
-  `coc_email` varchar(20) DEFAULT NULL COMMENT '商会对接人员邮箱',
+  `coc_name` varchar(30) DEFAULT NULL COMMENT '商会对接人名字',
+  `coc_email` varchar(30) DEFAULT NULL COMMENT '商会对接人员邮箱',
   `coc_telephone` varchar(20) DEFAULT NULL COMMENT '商会对接人员电话',
   `coc_weixin` varchar(20) DEFAULT NULL COMMENT '商会对接人员微信',
   `proxy_brand` varchar(150) DEFAULT NULL COMMENT '代理品牌',
   `autonomy_brand` varchar(150) DEFAULT NULL COMMENT '自主品牌',
   `status` smallint(1) DEFAULT '0' COMMENT '状态（0-填写，1-申请，2-审核中，3-已通过，4-已拒绝）',
+  `province` int(8) DEFAULT NULL COMMENT '省份',
+  `city` int(8) DEFAULT NULL COMMENT '市',
+  `district` int(8) DEFAULT NULL COMMENT '区',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8mb4 COMMENT='公司信息';
+) ENGINE=InnoDB AUTO_INCREMENT=137 DEFAULT CHARSET=utf8mb4 COMMENT='公司信息';
 
 -- ----------------------------
 -- Records of t_company
 -- ----------------------------
-INSERT INTO `t_company` VALUES ('1', null, '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('4', null, '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('11', '0', '1', '老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名称', '公司地址', '公司规模', '支付宝账号', '公司角色（CEO、财务）', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('13', '0', '13', '老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名称', '公司地址', '公司规模', '支付宝账号', '公司角色（CEO、财务）', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', '2018-06-29 13:57:04');
-INSERT INTO `t_company` VALUES ('15', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('16', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('17', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('18', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('19', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('20', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('21', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('22', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('23', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('24', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('25', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('26', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('27', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('28', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('29', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('30', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('31', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('32', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('33', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('34', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('35', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('36', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('37', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('38', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('39', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', '代理品牌', null, '0', null);
-INSERT INTO `t_company` VALUES ('40', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', 'CEO', '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('41', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', '老板微信', '套路诺', '来PK婆说', '100', '13023189972', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('42', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('43', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('44', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('45', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('46', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('47', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('48', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('49', '0', '1', '1公司老板姓名', '18046438383', '307422620', null, '1公司名称', '1公司地址', '0', null, null, 'brand/72ff3315-be1a-4dee-97b9-5c84d5b6bf62.jpg', '阿姐lack', null, '噜噜噜', '路吕天露露', 'UK路UK路', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('50', '0', '1', '1公司老板姓名', '18046438383', '307422620', null, '1公司名称', '1公司地址', '0', null, null, 'brand/72ff3315-be1a-4dee-97b9-5c84d5b6bf62.jpg', '阿姐lack', null, '噜噜噜', '路吕天露露', 'UK路UK路', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('51', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('52', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('53', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('54', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('55', '0', '1', '老婆老婆老婆', '575757', '老婆老婆老婆', null, '套路诺', '来PK婆说', '0', '0', null, '475176a8-ce3c-4e85-9768-61a3e3a18a26.jpg', '时间就是金钱', null, '老婆老婆老婆', '可人咯人咯人咯', '可人咯啦说', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('56', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('57', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('58', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('59', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('60', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('61', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('62', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('63', '0', '1', '噢7k7k7k7k', '57576757', '可人咯人咯人咯人', null, '投诉', '他宿舍啦说', '0', null, null, 'brand/5bc30434-d040-4d34-93c4-06efa04d281d.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('64', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('65', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('66', '0', '1', '老板姓名', '18046438383', '邮箱', null, '公司名称', '公司地址', '0', null, null, 'brand/8498048f-61f7-4b6f-b5a5-2a4cf48f250f.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('67', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('68', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('69', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('70', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('71', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('72', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('73', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('74', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('75', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('76', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('77', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('78', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('79', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('80', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('81', '0', '1', '老板姓名', '1804643838', '邮箱', null, '公司名称', '公司地址', '0', null, null, 'brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('82', '0', '1', '老板姓名', '1804643838', '邮箱', null, '公司名称', '公司地址', '0', null, null, 'brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('83', '0', '1', '老板姓名', '1804643838', 'vjjv', null, '公司名称', '公司地址', '0', null, null, 'brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('84', '0', '1', '老板姓名', '1804643838', 'vjjv', null, '公司名称', '公司地址', '0', null, null, 'brand/e371ab44-60d5-41ec-aafb-c42f465eccb1.jpg', '', null, '', '', '', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('85', '0', '1', 'hxhxhxhx', '676767', 'hxhxhxhxhx', null, 'hxhxh', 'hxhxhx', '0', null, null, 'brand/3e880328-21ee-459c-a564-68fc37466404.jpg', 'hxhxhxhx', null, 'hxhxhxhc', '76766768', 'xjhchchchc', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('86', '0', '1', 'hxhxhxhx', '676767', 'hxhxhxhxhx', null, 'hxhxh', 'hxhxhx', '0', null, null, 'brand/3e880328-21ee-459c-a564-68fc37466404.jpg', 'hxhxhxhx', null, 'hxhxhxhc', '76766768', 'xjhchchchc', null, null, '0', null);
-INSERT INTO `t_company` VALUES ('87', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('88', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('89', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('90', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('91', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('92', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('93', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('94', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('95', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('96', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('97', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('98', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
-INSERT INTO `t_company` VALUES ('99', '0', '1', '企业老板姓名', '老板电话', '老板邮箱', '老板微信', '公司名字', '公司地址', '100', '13023189972', 'CEO', '营业执照地址', '商会对接人员', null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '代理品牌', '自主品牌', '0', null);
+INSERT INTO `t_company` VALUES ('1', null, '1', '哈哈', '13023189972', '老板邮箱', '老板微信', '亦非品牌', '公司地址', '100~500', '13023189972', 'CEO', '/mine/8d88910a-f797-456c-9f44-9e332da72816.jpg', null, null, '商会对接人员邮箱', '商会对接人员电话', '商会对接人员微信', '加多宝', '自主品牌', '1', '1000', '100001', '2000101', '2018-07-24 18:04:04');
+INSERT INTO `t_company` VALUES ('117', '0', '70', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 13:49:52');
+INSERT INTO `t_company` VALUES ('118', '0', '71', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 14:11:00');
+INSERT INTO `t_company` VALUES ('119', '0', '72', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 14:12:04');
+INSERT INTO `t_company` VALUES ('120', '0', '73', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 14:24:12');
+INSERT INTO `t_company` VALUES ('121', '0', '74', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 16:49:38');
+INSERT INTO `t_company` VALUES ('122', '0', '75', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 17:49:52');
+INSERT INTO `t_company` VALUES ('123', '0', '76', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 17:53:43');
+INSERT INTO `t_company` VALUES ('124', '0', '77', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-10 17:53:43');
+INSERT INTO `t_company` VALUES ('125', '0', '78', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 14:52:06');
+INSERT INTO `t_company` VALUES ('126', '0', '79', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 14:52:06');
+INSERT INTO `t_company` VALUES ('127', '0', '80', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 15:42:00');
+INSERT INTO `t_company` VALUES ('128', '0', '81', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 15:42:01');
+INSERT INTO `t_company` VALUES ('129', '0', '82', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 16:02:34');
+INSERT INTO `t_company` VALUES ('130', '0', '83', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', null, '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 16:02:34');
+INSERT INTO `t_company` VALUES ('131', '0', '84', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', '9df2a556-20b6-451a-af6c-6127791d5c57.jpg', '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 17:19:15');
+INSERT INTO `t_company` VALUES ('132', '0', '85', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', '13281c29-59c5-4a9e-a67d-a6e746dac4db.jpg', '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 17:19:15');
+INSERT INTO `t_company` VALUES ('133', '0', '86', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', 'f367cf90-b6ef-4ce7-8745-3252d6015b53.jpg', '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 17:24:19');
+INSERT INTO `t_company` VALUES ('134', '0', '87', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', '05b917d9-b08d-4ed3-82e1-afe2cee2f20f.jpg', '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 17:24:19');
+INSERT INTO `t_company` VALUES ('135', '0', '88', '张建', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', 'd0962e12-bfba-4868-a4ad-45ad8c9c7293.jpg', '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 17:26:21');
+INSERT INTO `t_company` VALUES ('136', '0', '89', '廖冰', '15675141288', '13023189972@163.com', 'laban', '仪菲集团', '上海市嘉定区', 'COMPANY_SIZE_100_200', null, 'COMPANY_ROLE_CEO', '8e785528-0327-49c6-98be-d82a878b5127.jpg', '13023189972222587', null, '15675141238@163.com', '15696584231', 'liaobing', '雅姿，威压', '测试品牌', '3', null, null, null, '2018-08-12 17:26:21');
+
+-- ----------------------------
+-- Table structure for t_contact_user
+-- ----------------------------
+DROP TABLE IF EXISTS `t_contact_user`;
+CREATE TABLE `t_contact_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(100) DEFAULT NULL COMMENT '用户名称',
+  `phone` char(11) DEFAULT NULL COMMENT '手机号',
+  `status` smallint(1) DEFAULT '0' COMMENT '状态（0-待联系，1-已联系，2-感兴趣，3-已入住）',
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户联系意向表';
+
+-- ----------------------------
+-- Records of t_contact_user
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_cooperation_mode_introduce
@@ -773,12 +1172,64 @@ CREATE TABLE `t_country` (
   `code` varchar(50) DEFAULT NULL COMMENT '国家编码',
   `sort` smallint(3) DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='国家表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='国家表';
 
 -- ----------------------------
 -- Records of t_country
 -- ----------------------------
-INSERT INTO `t_country` VALUES ('1', 'CHN', '中国', 'CHN', '0');
+INSERT INTO `t_country` VALUES ('1', 'China', '中国', 'China', '0');
+INSERT INTO `t_country` VALUES ('2', 'Japan', '日本', 'Japan', '0');
+
+-- ----------------------------
+-- Table structure for t_credit_card
+-- ----------------------------
+DROP TABLE IF EXISTS `t_credit_card`;
+CREATE TABLE `t_credit_card` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_id` varchar(20) DEFAULT NULL COMMENT '订单号',
+  `user_id` int(11) DEFAULT NULL COMMENT '用户id',
+  `credit_no` varchar(21) DEFAULT NULL COMMENT '银行卡号',
+  `card_attr` varchar(2) DEFAULT NULL COMMENT '银行卡属性(银行卡卡属性字典： 00 未知； 01 借记卡； 02 贷记卡； 03 准贷记卡； 04 借贷合一卡； 05 预付费卡； 06 证券)',
+  `card_nm` varchar(90) DEFAULT NULL COMMENT '银行名称',
+  `bank_only_nm` varchar(90) DEFAULT NULL COMMENT '唯一简称',
+  `org_cd` varchar(20) DEFAULT NULL COMMENT '发卡机构代码',
+  `token` varchar(1024) DEFAULT NULL COMMENT '银联无跳转支付token',
+  `de_select` smallint(2) DEFAULT '0' COMMENT '默认付款银行卡(0:非默认，1:默认)',
+  `del_flag` smallint(2) DEFAULT '0' COMMENT '删除标志(0:正常使用，1:删除)',
+  `create_time` datetime DEFAULT NULL COMMENT '创建日期',
+  `del_time` datetime DEFAULT NULL COMMENT '删除日期',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COMMENT='用户银行卡';
+
+-- ----------------------------
+-- Records of t_credit_card
+-- ----------------------------
+INSERT INTO `t_credit_card` VALUES ('16', null, '14', '6230664831010409342', null, '江苏省农村信用联合社', '江苏省农村信用联合社', null, null, '1', '0', null, null);
+INSERT INTO `t_credit_card` VALUES ('17', null, '14', '6217211107001880725', null, '中国工商银行', '中国工商银行', null, null, '0', '0', null, null);
+INSERT INTO `t_credit_card` VALUES ('18', null, '14', '6228480272129528415', null, '中国农业银行', '中国农业银行', null, null, '0', '0', null, null);
+INSERT INTO `t_credit_card` VALUES ('19', null, '14', '6217001210024455220', null, '中国建设银行', '中国建设银行', null, null, '0', '0', null, null);
+INSERT INTO `t_credit_card` VALUES ('20', null, '14', '6221558812340000', null, '平安银行', '平安银行', null, null, '0', '0', null, null);
+
+-- ----------------------------
+-- Table structure for t_credit_verify
+-- ----------------------------
+DROP TABLE IF EXISTS `t_credit_verify`;
+CREATE TABLE `t_credit_verify` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_id` varchar(20) DEFAULT NULL COMMENT '订单号',
+  `credit_id` int(11) DEFAULT NULL COMMENT '银行卡表ID',
+  `credit_no` varchar(32) DEFAULT NULL COMMENT '银行卡号',
+  `customer_nm` varchar(32) DEFAULT NULL COMMENT '姓名',
+  `phone_no` varchar(11) DEFAULT NULL COMMENT '手机号',
+  `certif_id` varchar(18) DEFAULT NULL COMMENT '证件号',
+  `certif_tp` varchar(2) DEFAULT NULL COMMENT '证件类型(不传时默认为身份证：01-身份证 ；02-军官证 ；03-护照 ；04-回乡证 ；05-台胞证 ；06-警官证；07-士兵证 ；99-其它证件)',
+  `create_time` datetime DEFAULT NULL COMMENT '创建日期',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='银行卡验证记录表';
+
+-- ----------------------------
+-- Records of t_credit_verify
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_delivery_address
@@ -797,11 +1248,140 @@ CREATE TABLE `t_delivery_address` (
   `receiver_zip` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邮政编码',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户订单收货地址信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户订单收货地址信息表';
 
 -- ----------------------------
 -- Records of t_delivery_address
 -- ----------------------------
+INSERT INTO `t_delivery_address` VALUES ('3', '02018072410532510006', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-07-24 10:53:29');
+INSERT INTO `t_delivery_address` VALUES ('4', '22018072411163810001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-07-24 11:16:39');
+INSERT INTO `t_delivery_address` VALUES ('5', '02018072516060210001', '李倩', '17834526783', null, '410000', '410100', '410102', '中国,北京,北京,东城', null, '2018-07-25 16:06:04');
+INSERT INTO `t_delivery_address` VALUES ('6', '02018072517044110001', '李倩', '17834526783', null, '410000', '410100', '410102', '中国,北京,北京,东城', null, '2018-07-25 17:04:41');
+INSERT INTO `t_delivery_address` VALUES ('7', '02018072614522110001', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 14:52:23');
+INSERT INTO `t_delivery_address` VALUES ('8', '02018072614535210002', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 14:53:52');
+INSERT INTO `t_delivery_address` VALUES ('9', '02018072615274410006', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:44');
+INSERT INTO `t_delivery_address` VALUES ('10', '02018072615274410007', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:44');
+INSERT INTO `t_delivery_address` VALUES ('11', '02018072615274410008', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('12', '02018072615274410009', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('13', '02018072615274410010', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('14', '02018072615274410011', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('15', '02018072615274410012', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('16', '02018072615274410013', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('17', '02018072615274410014', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('18', '02018072615274410015', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('19', '02018072615274410016', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('20', '02018072615274410017', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('21', '02018072615274410018', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('22', '02018072615274410019', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('23', '02018072615274410020', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('24', '02018072615274410021', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('25', '02018072615274410022', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('26', '02018072615274410023', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('27', '02018072615274410024', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('28', '02018072615274410025', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('29', '02018072615274510026', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('30', '02018072615274510027', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('31', '02018072615274510028', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('32', '02018072615274510029', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('33', '02018072615274510030', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('34', '02018072615274510031', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('35', '02018072615274510032', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:45');
+INSERT INTO `t_delivery_address` VALUES ('36', '02018072615274510033', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('37', '02018072615274510034', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('38', '02018072615274510035', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('39', '02018072615274510036', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('40', '02018072615274510037', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('41', '02018072615274510038', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('42', '02018072615274510039', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('43', '02018072615274510040', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('44', '02018072615274510041', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('45', '02018072615274510042', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('46', '02018072615274510043', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('47', '02018072615274510044', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('48', '02018072615274510045', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('49', '02018072615274510046', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('50', '02018072615274510047', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('51', '02018072615274510048', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('52', '02018072615274510049', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('53', '02018072615274510050', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('54', '02018072615274510051', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('55', '02018072615274510052', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('56', '02018072615274510053', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('57', '02018072615274510054', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('58', '02018072615274610055', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('59', '02018072615274610056', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('60', '02018072615274610057', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('61', '02018072615274610058', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('62', '02018072615274610059', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('63', '02018072615274610060', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:46');
+INSERT INTO `t_delivery_address` VALUES ('64', '02018072615274610061', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('65', '02018072615274610062', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('66', '02018072615274610063', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('67', '02018072615274610064', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('68', '02018072615274610065', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('69', '02018072615274610066', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('70', '02018072615274610067', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('71', '02018072615274610068', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('72', '02018072615274610069', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('73', '02018072615274610070', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('74', '02018072615274610071', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('75', '02018072615274610072', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('76', '02018072615274610073', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('77', '02018072615274610074', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('78', '02018072615274610075', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('79', '02018072615274610076', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('80', '02018072615274610077', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('81', '02018072615274610078', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('82', '02018072615274610079', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('83', '02018072615274610080', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('84', '02018072615274610081', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('85', '02018072615274610082', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('86', '02018072615274710083', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('87', '02018072615274710084', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('88', '02018072615274710085', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('89', '02018072615274710086', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('90', '02018072615274710087', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('91', '02018072615274710088', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:47');
+INSERT INTO `t_delivery_address` VALUES ('92', '02018072615274710089', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('93', '02018072615274710090', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('94', '02018072615274710091', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('95', '02018072615274710092', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('96', '02018072615274710093', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('97', '02018072615274710094', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('98', '02018072615274710095', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('99', '02018072615274710096', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('100', '02018072615274710097', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('101', '02018072615274710098', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('102', '02018072615274710099', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('103', '02018072615274710100', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('104', '02018072615274710101', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('105', '02018072615274710102', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('106', '02018072615274710103', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('107', '02018072615274710104', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('108', '02018072615274710105', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-26 15:27:48');
+INSERT INTO `t_delivery_address` VALUES ('109', '02018073011413110001', '李倩', '17834526783', null, '810000', '810200', '810201', '中国,北京,北京,东城', null, '2018-07-30 11:41:32');
+INSERT INTO `t_delivery_address` VALUES ('110', '02018080109405210006', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-01 09:40:52');
+INSERT INTO `t_delivery_address` VALUES ('111', '02018080109493410001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-01 09:49:34');
+INSERT INTO `t_delivery_address` VALUES ('112', '02018080109520710007', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-01 09:52:08');
+INSERT INTO `t_delivery_address` VALUES ('113', '02018080110014110008', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-01 10:01:42');
+INSERT INTO `t_delivery_address` VALUES ('114', '02018080111045110004', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-01 11:04:52');
+INSERT INTO `t_delivery_address` VALUES ('115', '22018080113534110002', '黄伟', '15026486249', null, '150000', '150100', '150102', '体育天我旅途ggghghggh', null, '2018-08-01 13:53:41');
+INSERT INTO `t_delivery_address` VALUES ('116', '22018080113540910003', '黄伟', '15026486249', null, '150000', '150100', '150102', '体育天我旅途ggghghggh', null, '2018-08-01 13:54:09');
+INSERT INTO `t_delivery_address` VALUES ('117', '02018080311322610001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-03 11:32:27');
+INSERT INTO `t_delivery_address` VALUES ('118', '02018080609470510001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 09:47:06');
+INSERT INTO `t_delivery_address` VALUES ('119', '02018080611233610004', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 11:23:37');
+INSERT INTO `t_delivery_address` VALUES ('120', '02018080611302110006', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 11:30:21');
+INSERT INTO `t_delivery_address` VALUES ('121', '02018080611354810008', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 11:35:49');
+INSERT INTO `t_delivery_address` VALUES ('122', '02018080613330410001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 13:33:05');
+INSERT INTO `t_delivery_address` VALUES ('123', '02018080614115010002', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 14:11:50');
+INSERT INTO `t_delivery_address` VALUES ('124', '02018080614242210003', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 14:24:23');
+INSERT INTO `t_delivery_address` VALUES ('125', '02018080614293210004', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 14:29:32');
+INSERT INTO `t_delivery_address` VALUES ('126', '02018080614451910005', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 14:45:20');
+INSERT INTO `t_delivery_address` VALUES ('127', '02018080615274210001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-06 15:27:43');
+INSERT INTO `t_delivery_address` VALUES ('128', '02018080917592710001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-09 17:59:28');
+INSERT INTO `t_delivery_address` VALUES ('129', '02018081210361010001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-12 10:36:10');
+INSERT INTO `t_delivery_address` VALUES ('130', '02018081310473210004', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-13 10:47:34');
+INSERT INTO `t_delivery_address` VALUES ('131', '02018081311061410001', '李倩', '17834526783', null, '110000', '110100', '110101', '中国,北京,北京,东城', null, '2018-08-13 11:06:15');
 
 -- ----------------------------
 -- Table structure for t_dict_data
@@ -814,41 +1394,82 @@ CREATE TABLE `t_dict_data` (
   `dict_name` varchar(255) NOT NULL COMMENT '字典名称',
   `has_child` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否有子集 0无 1有',
   `parent_id` int(11) DEFAULT NULL COMMENT '父ID',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COMMENT='字典表';
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COMMENT='字典表';
 
 -- ----------------------------
 -- Records of t_dict_data
 -- ----------------------------
-INSERT INTO `t_dict_data` VALUES ('1', 'PAGE_TEMPLATE', 'APP_PAGE_NET_RED_INDEX', '手机端网红首页模板', '0', null);
-INSERT INTO `t_dict_data` VALUES ('2', 'PAGE_TEMPLATE', 'APP_PAGE_INDEX', 'APP首页模板', '0', null);
-INSERT INTO `t_dict_data` VALUES ('3', 'PAGE_TEMPLATE', 'APP_BOTTOM_TAB', 'APP底部模板', '0', null);
-INSERT INTO `t_dict_data` VALUES ('4', 'PAGE_TEMPLATE', 'APP_HEAD', 'APP头部模板', '0', null);
-INSERT INTO `t_dict_data` VALUES ('5', 'PAGE_TEMPLATE', 'APP_PAGE_BRANDS_INDEX', 'APP品牌页模板', '0', null);
-INSERT INTO `t_dict_data` VALUES ('6', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_OTHER', '其他国家', '0', null);
-INSERT INTO `t_dict_data` VALUES ('7', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_CHINA', '中国', '0', null);
-INSERT INTO `t_dict_data` VALUES ('8', 'AD', 'AD_APP_INDEX_BANNER', '手机端首页轮播图广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('9', 'AD', 'AD_APP_INDEX_MENU', '手机端首页分类广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('10', 'AD', 'AD_APP_INDEX_INFO_TOUTIAO', '手机端首页资讯头条广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('11', 'AD', 'AD_APP_INDEX_GOODS', '手机端首页商品广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('12', 'AD', 'AD_APP_INDEX_ZIXUN', '手机端首页资讯广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('13', 'AD', 'AD_APP_INDEX_ORDINARY', '手机端首页普通广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('14', 'AD', 'AD_APP_BRANDS_INDEX_BANNER', '手机端品牌首页轮播图广告', '0', null);
-INSERT INTO `t_dict_data` VALUES ('15', 'MESSAGE_CHANNEL', 'MESSAGE_CHANNEL_SMS', '短信', '0', null);
-INSERT INTO `t_dict_data` VALUES ('16', 'MESSAGE_CHANNEL', 'MESSAGE_CHANNEL_APP_NOTIFICATION_BAR', 'APP通知栏消息', '0', null);
-INSERT INTO `t_dict_data` VALUES ('17', 'MESSAGE_CHANNEL', 'MESSAGE_CHANNEL_APP_APPLICATION', 'APP应用消息', '0', null);
-INSERT INTO `t_dict_data` VALUES ('18', 'PROMOTIONS_TYPE', 'trial', '试用', '0', null);
-INSERT INTO `t_dict_data` VALUES ('19', 'PROMOTIONS_TYPE', 'group_buy', '团购', '0', null);
-INSERT INTO `t_dict_data` VALUES ('20', 'TRADE_TYPES', 'CENERAL_TRADE', '一般贸易', '0', null);
-INSERT INTO `t_dict_data` VALUES ('21', 'TRADE_TYPES', 'CENERAL_TRADE_COUNTRY', '一般贸易-国货', '0', null);
-INSERT INTO `t_dict_data` VALUES ('22', 'TRADE_TYPES', 'CROSS_BORDER_TRADE', '跨境贸易', '0', null);
-INSERT INTO `t_dict_data` VALUES ('23', 'CHANNEL_TYPE', 'AGENTS', '代理商', '0', null);
-INSERT INTO `t_dict_data` VALUES ('24', 'CHANNEL_TYPE', 'BRAND_SIDE', '品牌方', '0', null);
-INSERT INTO `t_dict_data` VALUES ('25', 'USER_CATEGORY', 'MEMBER', '商会会员', '0', null);
-INSERT INTO `t_dict_data` VALUES ('26', 'USER_CATEGORY', 'SENSATION', '红人', '0', null);
-INSERT INTO `t_dict_data` VALUES ('27', 'USER_CATEGORY', 'BRAND_PARTY', '品牌方', '0', null);
-INSERT INTO `t_dict_data` VALUES ('28', 'MEMBER_TYPE', 'PRESIDENT', '会长', '0', null);
-INSERT INTO `t_dict_data` VALUES ('29', 'MEMBER_TYPE', 'DIRECTOR_GENERAL', '理事长', '0', null);
+INSERT INTO `t_dict_data` VALUES ('1', 'PAGE_TEMPLATE', 'APP_PAGE_NET_RED_INDEX', '手机端网红首页模板', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('2', 'PAGE_TEMPLATE', 'APP_PAGE_INDEX', 'APP首页模板', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('3', 'PAGE_TEMPLATE', 'APP_BOTTOM_TAB', 'APP底部模板', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('4', 'PAGE_TEMPLATE', 'APP_HEAD', 'APP头部模板', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('5', 'PAGE_TEMPLATE', 'APP_PAGE_BRANDS_INDEX', 'APP品牌页模板', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('6', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_OTHER', '其他国家', '0', null, '4', '1');
+INSERT INTO `t_dict_data` VALUES ('7', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_CHINA', '中国', '0', null, '2', '1');
+INSERT INTO `t_dict_data` VALUES ('8', 'AD', 'AD_APP_INDEX_BANNER', '手机端首页轮播图广告', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('9', 'AD', 'AD_APP_INDEX_MENU', '手机端首页分类广告', '0', null, null, '0');
+INSERT INTO `t_dict_data` VALUES ('10', 'AD', 'AD_APP_INDEX_INFO_TOUTIAO', '手机端首页资讯头条广告', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('11', 'AD', 'AD_APP_INDEX_GOODS', '手机端首页商品广告5', '0', null, null, '0');
+INSERT INTO `t_dict_data` VALUES ('12', 'AD', 'AD_APP_INDEX_ZIXUN', '手机端首页资讯广告', '0', null, null, '0');
+INSERT INTO `t_dict_data` VALUES ('13', 'AD', 'AD_APP_INDEX_ORDINARY', '手机端首页普通广告', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('14', 'AD', 'AD_APP_BRANDS_INDEX_BANNER', '手机端品牌首页轮播图广告', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('15', 'MESSAGE_CHANNEL', 'MESSAGE_CHANNEL_SMS', '短信', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('16', 'MESSAGE_CHANNEL', 'MESSAGE_CHANNEL_APP_NOTIFICATION_BAR', 'APP通知栏消息', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('17', 'MESSAGE_CHANNEL', 'MESSAGE_CHANNEL_APP_APPLICATION', 'APP应用消息', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('18', 'PROMOTIONS_TYPE', 'trial', '试用', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('19', 'PROMOTIONS_TYPE', 'group_buy', '团购', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('20', 'TRADE_TYPES', 'CENERAL_TRADE', '一般贸易', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('21', 'TRADE_TYPES', 'CENERAL_TRADE_COUNTRY', '一般贸易-国货', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('22', 'TRADE_TYPES', 'CROSS_BORDER_TRADE', '跨境贸易', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('23', 'CHANNEL_TYPE', 'AGENTS', '代理商', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('24', 'CHANNEL_TYPE', 'BRAND_SIDE', '品牌方', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('25', 'USER_CATEGORY', 'MEMBER', '商会会员', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('26', 'USER_CATEGORY', 'SENSATION', '红人', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('27', 'USER_CATEGORY', 'BRAND_PARTY', '品牌方', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('28', 'MEMBER_TYPE', 'PRESIDENT', '会长', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('29', 'MEMBER_TYPE', 'DIRECTOR_GENERAL', '理事长', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('30', 'ARTICLE_RECOMMEND', 'APP_HOT_ARTICLE', '热门资讯', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('31', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_JAPAN', '日本', '0', null, '1', '1');
+INSERT INTO `t_dict_data` VALUES ('32', 'PRODUCT_ADDRESS', 'PROD_ADDRESS_FRANCE', '法国', '0', null, '3', '1');
+INSERT INTO `t_dict_data` VALUES ('33', 'MAIN_BRAND', 'MAIN_BRAND_ZH', '综合', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('34', 'MAIN_BRAND', 'MAIN_BRAND_RH', '日韩', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('35', 'MAIN_BRAND', 'MAIN_BRAND_OM', '欧美', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('36', 'MAIN_BRAND', 'MAIN_BRAND_GH', '国货', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('37', 'MAIN_BRAND', 'MAIN_BRAND_DNY', '东南亚', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('38', 'MAIN_BRAND', 'MAIN_BRAND_AZ', '澳洲', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('39', 'SHOP_TYPE', 'SHOP_TYPE_ZH', '综合店', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('40', 'SHOP_TYPE', 'SHOP_TYPE_QJ', '旗舰店', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('41', 'SHOP_TYPE', 'SHOP_TYPE_ZY', '专营店', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('42', 'SHOP_TYPE', 'SHOP_TYPE_HR', '红人店', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('43', 'SHOP_TYPE', 'SHOP_TYPE_XD', '小众店', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('44', 'SHOP_TYPE', 'SHOP_TYPE_XFPL', '细分品类店', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('45', 'PLATFORM_CODE', 'PLATFORM_CODE_TM', '天猫', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('46', 'PLATFORM_CODE', 'PLATFORM_CODE_JD', '京东', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('47', 'PLATFORM_CODE', 'PLATFORM_CODE_TB', '淘宝', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('48', 'PLATFORM_CODE', 'PLATFORM_CODE——XHS', '小红书', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('49', 'COMPANY_SIZE', 'COMPANY_SIZE_0_10', '0~10', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('50', 'COMPANY_SIZE', 'COMPANY_SIZE_10_50', '10~50', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('51', 'COMPANY_SIZE', 'COMPANY_SIZE_50_100', '50~100', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('52', 'COMPANY_SIZE', 'COMPANY_SIZE_100_200', '100~200', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('53', 'COMPANY_SIZE', 'COMPANY_SIZE_200_500', '200~500', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('54', 'RELEASE_COOPERATION', 'RELEASE_COOPERATION_SY', '海外溯源', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('55', 'RELEASE_COOPERATION', 'RELEASE_COOPERATION_DZFBH', '定制化发布会', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('56', 'COMPANY_ROLE', 'COMPANY_ROLE_CEO', 'CEO', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('57', 'COMPANY_ROLE', 'COMPANY_ROLE_CW', '财务', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('58', 'SENSATION_CATEGORY', 'SENSATION_CATEGORY_MZ', '彩妆\r\n', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('59', 'SENSATION_SOURCE', 'SENSATION_SOURCE_TAO_BAO', '淘宝', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('60', 'SENSATION_SOURCE', 'SENSATION_SOURCE_JD', '京东', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('61', 'LOGISTICS_METHODS', 'LOGISTICS_METHODS_GN', '国内', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('62', 'LOGISTICS_METHODS', 'LOGISTICS_METHODS_BSC', '保税仓', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('63', 'LOGISTICS_METHODS', 'LOGISTICS_METHODS_ZY', '直邮', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('64', 'AUTH_CHANNEL', 'AUTH_CHANNEL_DZH', '大中华区代理', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('65', 'AUTH_CHANNEL', 'AUTH_CHANNEL_XS', '线上代理', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('66', 'AUTH_CHANNEL', 'AUTH_CHANNEL_ALX', '阿里系代理', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('67', 'AUTH_CHANNEL', 'AUTH_CHANNEL_APP', 'APP代理', '0', null, null, '1');
+INSERT INTO `t_dict_data` VALUES ('68', 'AUTH_CHANNEL', 'AUTH_CHANNEL_ZMTQD', '自媒体渠道代理', '0', null, null, '1');
 
 -- ----------------------------
 -- Table structure for t_dict_type
@@ -859,7 +1480,7 @@ CREATE TABLE `t_dict_type` (
   `dict_type` varchar(50) NOT NULL COMMENT '字典类型',
   `dict_type_name` varchar(255) NOT NULL COMMENT '字典类型名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COMMENT='字典类型表';
 
 -- ----------------------------
 -- Records of t_dict_type
@@ -876,6 +1497,16 @@ INSERT INTO `t_dict_type` VALUES ('9', 'CHANNEL_TYPE', '渠道类型');
 INSERT INTO `t_dict_type` VALUES ('10', 'USER_CATEGORY', '用户类别');
 INSERT INTO `t_dict_type` VALUES ('11', 'MEMBER_TYPE', '会员类型');
 INSERT INTO `t_dict_type` VALUES ('12', 'AUTH_CHANNEL', '授权渠道');
+INSERT INTO `t_dict_type` VALUES ('13', 'ARTICLE_RECOMMEND', '文章推荐');
+INSERT INTO `t_dict_type` VALUES ('14', 'MAIN_BRAND', '主营品牌国家');
+INSERT INTO `t_dict_type` VALUES ('15', 'SHOP_TYPE', '店铺类型');
+INSERT INTO `t_dict_type` VALUES ('16', 'PLATFORM_CODE', '平台');
+INSERT INTO `t_dict_type` VALUES ('17', 'COMPANY_SIZE', '公司规模');
+INSERT INTO `t_dict_type` VALUES ('18', 'RELEASE_COOPERATION', '发布会合作方式');
+INSERT INTO `t_dict_type` VALUES ('19', 'COMPANY_ROLE', '公司角色');
+INSERT INTO `t_dict_type` VALUES ('20', 'SENSATION_CATEGORY', '红人类别');
+INSERT INTO `t_dict_type` VALUES ('21', 'SENSATION_SOURCE', '红人来源平台');
+INSERT INTO `t_dict_type` VALUES ('22', 'LOGISTICS_METHODS', '物流方式');
 
 -- ----------------------------
 -- Table structure for t_goods_collect
@@ -889,11 +1520,178 @@ CREATE TABLE `t_goods_collect` (
   `cancel_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '取消收藏时间',
   `delete_flag` smallint(1) NOT NULL COMMENT '是否有效 1有效 0无效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品收藏表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='商品收藏表';
 
 -- ----------------------------
 -- Records of t_goods_collect
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_hotel
+-- ----------------------------
+DROP TABLE IF EXISTS `t_hotel`;
+CREATE TABLE `t_hotel` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(150) DEFAULT NULL COMMENT '酒店名称',
+  `room_num` int(5) DEFAULT NULL COMMENT '房间总数',
+  `address` varchar(150) DEFAULT NULL COMMENT '酒店地址',
+  `province` varchar(50) DEFAULT NULL COMMENT '省份',
+  `city` varchar(50) DEFAULT NULL COMMENT '城市',
+  `region` varchar(50) DEFAULT NULL COMMENT '区域',
+  `location` varchar(50) DEFAULT NULL COMMENT '经纬度',
+  `star_level` smallint(2) DEFAULT NULL COMMENT '星级',
+  `decorate_year` varchar(10) DEFAULT NULL COMMENT '装修年份',
+  `introduction` text COMMENT '酒店简介',
+  `photo` varchar(300) DEFAULT NULL COMMENT '图片',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  `publish_status` smallint(1) NOT NULL DEFAULT '0' COMMENT '上下架标识 1上架 0下架',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='酒店表';
+
+-- ----------------------------
+-- Records of t_hotel
+-- ----------------------------
+INSERT INTO `t_hotel` VALUES ('1', '上海小南国大酒店', '10', '上海市杨浦区佳木斯林路', '上海', '上海市', '杨浦区', '', '5', '2011', '上海小南国花园酒店地处杨浦区，步行5分钟即可到达地铁8号线黄兴公园站，坐拥上海浦西市中心不可多得的自然生态环境，为客人提供大隐于市的度假体验。', '/hotel/31f34345-15cb-48c1-8210-08a9f3ce2c0f.jpg', null, null, '1', '1');
+
+-- ----------------------------
+-- Table structure for t_hotel_goods
+-- ----------------------------
+DROP TABLE IF EXISTS `t_hotel_goods`;
+CREATE TABLE `t_hotel_goods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '酒店规格表主键',
+  `hotel_id` int(11) NOT NULL COMMENT '酒店ID',
+  `goods_type` smallint(1) DEFAULT NULL COMMENT '酒店商品类型  1房间 2其他（住宿以外）',
+  `goods_name` varchar(50) NOT NULL COMMENT '酒店商品名（或规格名）',
+  `stock_num` int(5) NOT NULL COMMENT '库存',
+  `price` decimal(8,2) DEFAULT NULL COMMENT '价格',
+  `live_num` int(2) DEFAULT '2' COMMENT '可入住人数（酒店商品类型为房间）',
+  `image` varchar(300) DEFAULT NULL COMMENT '图片',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='酒店规格表';
+
+-- ----------------------------
+-- Records of t_hotel_goods
+-- ----------------------------
+INSERT INTO `t_hotel_goods` VALUES ('1', '1', '1', '豪华湖景房', '5', '850.00', '2', '', '1', '2018-08-06 17:09:34', null);
+INSERT INTO `t_hotel_goods` VALUES ('2', '1', '1', '至尊湖景房', '5', '1500.00', '2', '', '1', '2018-08-06 17:09:34', null);
+
+-- ----------------------------
+-- Table structure for t_internet_celebrity
+-- ----------------------------
+DROP TABLE IF EXISTS `t_internet_celebrity`;
+CREATE TABLE `t_internet_celebrity` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
+  `source` varchar(50) DEFAULT NULL COMMENT '来源平台',
+  `price` decimal(8,2) DEFAULT '0.00' COMMENT '价格',
+  `followers` int(8) DEFAULT '0' COMMENT '粉丝数量',
+  `category` varchar(50) DEFAULT NULL COMMENT '类别',
+  `head_image` varchar(100) DEFAULT NULL COMMENT '头像图片',
+  `auth_images` varchar(255) DEFAULT NULL COMMENT '红人认证图片',
+  `status` smallint(1) DEFAULT '0' COMMENT '状态',
+  `is_delete` smallint(1) DEFAULT '0' COMMENT '是否删除( 0-未删除，1-已删除 ）',
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  `user_id` int(11) DEFAULT NULL COMMENT '用户ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COMMENT='红人主表';
+
+-- ----------------------------
+-- Records of t_internet_celebrity
+-- ----------------------------
+INSERT INTO `t_internet_celebrity` VALUES ('1', '昵称', '昵称', '0.00', '0', '0', null, null, '1', '1', '2018-07-23 09:06:56', null);
+INSERT INTO `t_internet_celebrity` VALUES ('17', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-10 14:11:00', null);
+INSERT INTO `t_internet_celebrity` VALUES ('20', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-10 16:49:38', null);
+INSERT INTO `t_internet_celebrity` VALUES ('21', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-10 17:49:53', null);
+INSERT INTO `t_internet_celebrity` VALUES ('22', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-10 17:53:43', null);
+INSERT INTO `t_internet_celebrity` VALUES ('23', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-10 17:53:43', null);
+INSERT INTO `t_internet_celebrity` VALUES ('24', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-12 14:52:06', null);
+INSERT INTO `t_internet_celebrity` VALUES ('25', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-12 14:52:06', null);
+INSERT INTO `t_internet_celebrity` VALUES ('26', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-12 15:42:01', null);
+INSERT INTO `t_internet_celebrity` VALUES ('27', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-12 15:42:01', null);
+INSERT INTO `t_internet_celebrity` VALUES ('28', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-12 16:02:34', null);
+INSERT INTO `t_internet_celebrity` VALUES ('29', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, null, null, '0', '0', '2018-08-12 16:02:34', null);
+INSERT INTO `t_internet_celebrity` VALUES ('30', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, '6a92d3d5-ff3b-4b46-93f4-cdf913d0fd60.jpg', '2dec081b-3bf4-4dc6-9c42-33efdf65b8fa.jpg,7b8e521c-3922-40b9-986e-051526a49b23.jpg', '0', '0', '2018-08-12 17:19:15', null);
+INSERT INTO `t_internet_celebrity` VALUES ('31', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, '35c6554d-4486-48fa-8005-c6061f1fe58a.jpg', 'b7153133-afde-4804-83b6-9689a2e62c8c.jpg,0d6443a7-e6ca-40fd-879a-4b2fe3973d41.jpg', '0', '0', '2018-08-12 17:19:15', null);
+INSERT INTO `t_internet_celebrity` VALUES ('32', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, 'c08269a7-9461-456b-8765-745df4d1bf03.jpg', '3e12b7bd-8b39-4f2e-bc94-722f30dc2258.jpg,cb617c58-b4ed-414a-b41a-93c219c2af34.jpg', '0', '0', '2018-08-12 17:24:43', null);
+INSERT INTO `t_internet_celebrity` VALUES ('33', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, '60282da7-4c6b-415e-87fb-dca3938d7950.jpg', '98ffbfe3-d47f-4158-960a-ab286707f12d.jpg,ed23d1ed-ae28-4ab3-ada4-9e795e769a2b.jpg', '0', '0', '2018-08-12 17:24:43', null);
+INSERT INTO `t_internet_celebrity` VALUES ('34', '香奈儿', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, '0e7232a5-44ee-4ea2-9bd7-527603dd5f88.jpg', '84261e23-3938-4dea-b063-ca505d0f144c.jpg,e84b0c50-e022-432b-bf94-7b1625211bc9.jpg', '0', '0', '2018-08-12 17:26:37', null);
+INSERT INTO `t_internet_celebrity` VALUES ('35', '大主宰', 'SENSATION_SOURCE_JD', '5000.00', '2000', null, '1eb630c2-d62a-4ab0-b140-ae05632b622f.jpg', 'b3918f96-75f2-4257-9ad5-aa6fe43290ac.jpg,92a27d48-7aee-400c-af76-9ef6297ad92a.jpg', '0', '0', '2018-08-12 17:26:37', null);
+
+-- ----------------------------
+-- Table structure for t_internet_celebrity_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `t_internet_celebrity_detail`;
+CREATE TABLE `t_internet_celebrity_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `internet_id` int(11) NOT NULL COMMENT '红人主表ID',
+  `text` longtext COMMENT '红人介绍明细',
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COMMENT='红人介绍明细表';
+
+-- ----------------------------
+-- Records of t_internet_celebrity_detail
+-- ----------------------------
+INSERT INTO `t_internet_celebrity_detail` VALUES ('1', '1', '123123123', '2018-07-20 11:36:44');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('2', '15', '1', null);
+INSERT INTO `t_internet_celebrity_detail` VALUES ('7', '20', '红人明细介绍', '2018-08-10 16:49:38');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('8', '21', '红人明细介绍', '2018-08-10 17:49:53');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('9', '22', '红人明细介绍', '2018-08-10 17:53:43');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('10', '23', '红人明细介绍', '2018-08-10 17:53:43');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('11', '24', '红人明细介绍', '2018-08-12 14:52:06');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('12', '25', '红人明细介绍', '2018-08-12 14:52:06');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('13', '26', '红人明细介绍', '2018-08-12 15:42:01');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('14', '27', '红人明细介绍', '2018-08-12 15:42:01');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('15', '28', '红人明细介绍', '2018-08-12 16:02:34');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('16', '29', '红人明细介绍', '2018-08-12 16:02:34');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('17', '30', '红人明细介绍', '2018-08-12 17:17:53');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('18', '31', '红人明细介绍', '2018-08-12 17:17:53');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('19', '32', '红人明细介绍', '2018-08-12 17:22:57');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('20', '33', '红人明细介绍', '2018-08-12 17:22:57');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('21', '34', '红人明细介绍', '2018-08-12 17:24:59');
+INSERT INTO `t_internet_celebrity_detail` VALUES ('22', '35', '红人明细介绍', '2018-08-12 17:24:59');
+
+-- ----------------------------
+-- Table structure for t_internet_celebrity_intention
+-- ----------------------------
+DROP TABLE IF EXISTS `t_internet_celebrity_intention`;
+CREATE TABLE `t_internet_celebrity_intention` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `internet_id` int(11) NOT NULL,
+  `budget` decimal(10,2) DEFAULT NULL COMMENT '预算',
+  `push_brand` varchar(255) DEFAULT NULL COMMENT '主推品牌',
+  `push_channel` varchar(255) DEFAULT NULL COMMENT '推广渠道',
+  `extend_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '推广时间',
+  `like_red` varchar(255) DEFAULT NULL COMMENT '喜欢网红',
+  `telephone` varchar(11) DEFAULT NULL COMMENT '联系手机号码',
+  `status` smallint(1) DEFAULT '0' COMMENT '处理状态(0-未处理，1-已处理)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='意向联系红人表';
+
+-- ----------------------------
+-- Records of t_internet_celebrity_intention
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_internet_celebrity_user
+-- ----------------------------
+DROP TABLE IF EXISTS `t_internet_celebrity_user`;
+CREATE TABLE `t_internet_celebrity_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `internet_id` int(11) DEFAULT NULL COMMENT '红人主表ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COMMENT='关注红人表';
+
+-- ----------------------------
+-- Records of t_internet_celebrity_user
+-- ----------------------------
+INSERT INTO `t_internet_celebrity_user` VALUES ('33', '1', '1');
 
 -- ----------------------------
 -- Table structure for t_invoice
@@ -901,90 +1699,26 @@ CREATE TABLE `t_goods_collect` (
 DROP TABLE IF EXISTS `t_invoice`;
 CREATE TABLE `t_invoice` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `company_id` int(11) NOT NULL COMMENT '公司ID',
-  `invoice_type` smallint(1) DEFAULT NULL COMMENT '发票类型（普票-0，增值税专用发票-1）',
-  `invoice_title` varchar(50) DEFAULT NULL COMMENT '发票抬头',
-  `duty_paragraph` varchar(50) DEFAULT NULL COMMENT '纳税人识别号',
+  `invoice_type` smallint(1) DEFAULT NULL COMMENT '发票类型（1-电子发票，2-增值税发票，3-普通发票）',
+  `title_tyoe` varchar(50) DEFAULT NULL COMMENT '抬头类型（0-公司，1-个人）',
+  `title_name` varchar(100) DEFAULT NULL COMMENT '抬头名称',
+  `duty_paragraph` varchar(20) DEFAULT NULL COMMENT '纳税人识别号',
   `telephone` varchar(16) DEFAULT NULL COMMENT '注册电话',
-  `bank_name` varchar(50) DEFAULT NULL COMMENT '银行名称',
-  `bank_account` varchar(50) DEFAULT NULL COMMENT '银行账号',
+  `bank_name` varchar(100) DEFAULT NULL COMMENT '银行名称',
+  `bank_account` varchar(21) DEFAULT NULL COMMENT '银行账号',
   `register_address` varchar(100) DEFAULT NULL COMMENT '单位注册地址',
-  `invoice_content` varchar(255) DEFAULT NULL COMMENT '发票内容',
+  `email` varchar(50) DEFAULT NULL COMMENT '收件邮箱',
+  `status` smallint(1) DEFAULT '0' COMMENT '审核状态（0-未审核，1-审核通过，2-已拒绝）',
+  `description` varchar(255) DEFAULT NULL COMMENT '审核描述',
   `create_user_id` int(11) DEFAULT NULL COMMENT '创建用户ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8mb4 COMMENT='发票表信息维护表';
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8mb4 COMMENT='发票表信息维护表';
 
 -- ----------------------------
 -- Records of t_invoice
 -- ----------------------------
-INSERT INTO `t_invoice` VALUES ('1', '13', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', null);
-INSERT INTO `t_invoice` VALUES ('3', '15', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('4', '16', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '公司注册地址', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('5', '17', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('6', '18', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('7', '19', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('8', '20', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('9', '21', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('10', '22', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('11', '23', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('12', '24', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('13', '25', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('14', '26', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('15', '27', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('16', '28', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('17', '29', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('18', '30', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('19', '31', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('20', '32', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('21', '33', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('22', '34', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('23', '35', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('24', '36', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('25', '37', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('26', '38', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('27', '39', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('28', '40', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('29', '41', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('30', '42', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('31', '46', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('32', '47', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('33', '48', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('34', '51', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('35', '52', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('36', '53', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('37', '54', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('38', '55', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('39', '56', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('40', '57', '1', '发票抬头', '老婆老婆老婆', '老婆老婆老婆', '可人咯人咯人咯', '可人咯人咯人咯', '男人', '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('41', '64', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('42', '65', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('43', '67', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('44', '68', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('45', '69', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('46', '70', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('47', '71', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('48', '72', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('49', '73', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('50', '74', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('51', '75', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('52', '76', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('53', '77', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('54', '78', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('55', '79', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('56', '80', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('57', '87', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('58', '88', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('59', '89', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('60', '90', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('61', '91', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('62', '92', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('63', '93', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('64', '94', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('65', '95', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('66', '96', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('67', '97', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('68', '98', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
-INSERT INTO `t_invoice` VALUES ('69', '99', '1', '发票抬头', '纳税人识别号', '注册电话', '银行名称', '银行账号', null, '发票内容', '1');
+INSERT INTO `t_invoice` VALUES ('1', '1', '发票抬头', null, '纳税人识别号', '07312919078', '银行名称', '111111111111111111111', '上海市闵行区', null, '1', null, '1');
+INSERT INTO `t_invoice` VALUES ('79', '1', '发票抬头', '抬头名称', '纳税人识别号', '07312919078', '银行名称', '22222222', '上海市闵行区', null, '1', null, '1');
 
 -- ----------------------------
 -- Table structure for t_invoice_history
@@ -992,16 +1726,17 @@ INSERT INTO `t_invoice` VALUES ('69', '99', '1', '发票抬头', '纳税人识�
 DROP TABLE IF EXISTS `t_invoice_history`;
 CREATE TABLE `t_invoice_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `invoice_type` varchar(10) DEFAULT NULL COMMENT '发票类型（1-电子发票，2-增值税发票，3-普通发票）',
   `order_type` varchar(16) NOT NULL COMMENT '订单类型',
   `order_id` int(11) DEFAULT NULL COMMENT '订单Id',
-  `invoice_type` varchar(10) DEFAULT NULL COMMENT '发票类型（增值税专用发票等）',
-  `invoice_title` varchar(50) DEFAULT NULL COMMENT '发票抬头',
-  `duty_paragraph` varchar(50) DEFAULT NULL COMMENT '纳税人识别号',
+  `title_tyoe` varchar(50) DEFAULT NULL COMMENT '抬头类型（0-公司，1-个人）',
+  `title_name` varchar(100) DEFAULT NULL COMMENT '抬头名称',
+  `duty_paragraph` varchar(20) DEFAULT NULL COMMENT '纳税人识别号',
   `telephone` varchar(16) DEFAULT NULL COMMENT '注册电话',
-  `bank_name` varchar(50) DEFAULT NULL COMMENT '银行名称',
-  `bank_account` varchar(50) DEFAULT NULL COMMENT '银行账号',
+  `bank_name` varchar(100) DEFAULT NULL COMMENT '银行名称',
+  `bank_account` char(21) DEFAULT NULL COMMENT '银行账号',
   `invoice_content` varchar(255) DEFAULT NULL COMMENT '发票内容',
-  `status` smallint(1) NOT NULL DEFAULT '0' COMMENT '开票状态（0 - 未开票，1 - 已开票）',
+  `email` varchar(50) DEFAULT NULL COMMENT '收件邮箱',
   `create_user_id` int(11) DEFAULT NULL COMMENT '创建用户ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='发票表开票历史';
@@ -1021,7 +1756,7 @@ CREATE TABLE `t_main_push_brand_product` (
   `brand_gross_profit` varchar(15) DEFAULT NULL COMMENT '品牌零售毛利预估（选填）',
   `brand_per_ticket_sales` decimal(8,2) DEFAULT NULL COMMENT '单品平均客单价（选填，金额）',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COMMENT='品牌主推产品信息';
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COMMENT='品牌主推产品信息';
 
 -- ----------------------------
 -- Records of t_main_push_brand_product
@@ -1093,6 +1828,7 @@ INSERT INTO `t_main_push_brand_product` VALUES ('68', '108', '品牌爆款产品
 INSERT INTO `t_main_push_brand_product` VALUES ('69', '109', '品牌爆款产品名称（选填）', '品牌零售毛利预估（选填）', '100.00');
 INSERT INTO `t_main_push_brand_product` VALUES ('70', '110', '品牌爆款产品名称（选填）', '品牌零售毛利预估（选填）', '100.00');
 INSERT INTO `t_main_push_brand_product` VALUES ('71', '111', '品牌爆款产品名称（选填）', '品牌零售毛利预估（选填）', '100.00');
+INSERT INTO `t_main_push_brand_product` VALUES ('72', '114', '品牌爆款产品名称（选填）', '品牌零售毛利预估（选填）', '100.00');
 
 -- ----------------------------
 -- Table structure for t_member_detail
@@ -1121,20 +1857,35 @@ CREATE TABLE `t_message_config` (
   `msg_title` varchar(255) DEFAULT NULL COMMENT '消息标题',
   `msg_content` varchar(500) DEFAULT NULL COMMENT '推送内容',
   `push_type` smallint(2) DEFAULT '1' COMMENT '推送类型 1立即发送 2定时发送',
+  `link_url` varchar(100) DEFAULT NULL COMMENT '消息链接',
   `trigger_time` timestamp NULL DEFAULT NULL COMMENT ' 触发时间 推送类型为定时推送时配置推送时间',
-  `push_status` smallint(2) DEFAULT NULL COMMENT '推送状态 0未推送 1推送成功  2 部分成功 -1推送失败',
-  `sms_template_id` int(11) DEFAULT NULL COMMENT '推送渠道为短信通道  保存短信推送模板ID',
+  `push_status` smallint(2) DEFAULT '0' COMMENT '推送状态 0未推送 1推送成功  2 部分成功 -1推送失败',
+  `template_code` varchar(50) DEFAULT NULL COMMENT '推送渠道为短信通道  保存推送模板code',
   `device_type` varchar(50) DEFAULT NULL COMMENT '设备类型 all  ios android  推送渠道为 app通知栏消息',
   `receive_type` smallint(1) DEFAULT NULL COMMENT '接收人 1全部 2会员 3品牌方 4网红达人 5指定接收人',
-  `create_admin` int(11) NOT NULL COMMENT '创建人ID',
+  `create_admin` int(11) DEFAULT NULL COMMENT '创建人ID',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `delete_flag` smallint(1) DEFAULT NULL COMMENT '删除标识 0：无效 1：有效',
+  `delete_flag` smallint(1) DEFAULT '1' COMMENT '删除标识 0：无效 1：有效',
+  `sync_application_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否同步到应用消息渠道标识  1是  0否',
+  `cycle_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否轮循发送 1是 0否',
+  `cycle_minutes` int(11) DEFAULT NULL COMMENT '轮循周期分钟数 ',
+  `cycle_num` int(11) NOT NULL DEFAULT '1' COMMENT '剩余周期次数',
+  `msg_type` smallint(3) NOT NULL DEFAULT '1' COMMENT '消息类型 1系统消息 2订单消息 3活动消息 4物流提醒',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息配置表';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COMMENT='消息配置表';
 
 -- ----------------------------
 -- Records of t_message_config
 -- ----------------------------
+INSERT INTO `t_message_config` VALUES ('2', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:00:21', null, '1', '', '1', '-1', '2018-07-08 15:02:11', '0', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('3', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:01:53', null, '1', '', '1', '-1', '2018-07-08 15:03:41', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('4', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:04:07', null, '1', '', '1', '-1', '2018-07-08 15:05:56', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('5', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:10:33', null, '1', '', '1', '-1', '2018-07-08 15:12:22', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('6', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:11:44', null, '1', '', '1', '-1', '2018-07-08 15:13:32', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('7', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:20:30', null, '1', '', '1', '-1', '2018-07-08 15:22:19', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('8', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:22:56', null, '1', '', '1', '-1', '2018-07-08 15:24:48', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('9', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:38:50', null, '1', '', '1', '-1', '2018-07-08 15:40:34', '1', '0', '1', '10', '1', '1');
+INSERT INTO `t_message_config` VALUES ('10', 'MESSAGE_CHANNEL_SMS', '资讯头条', '上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司', '7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销', '1', 'http://m.tmz.com/', '2018-07-08 15:50:11', '1', '1', '', '1', '-1', '2018-07-08 15:52:07', '1', '0', '1', '10', '1', '1');
 
 -- ----------------------------
 -- Table structure for t_message_config_receiver
@@ -1147,11 +1898,29 @@ CREATE TABLE `t_message_config_receiver` (
   `delete_flag` smallint(1) DEFAULT '1' COMMENT '删除标识 0：无效 1：有效',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息配置接收人';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COMMENT='消息配置接收人';
 
 -- ----------------------------
 -- Records of t_message_config_receiver
 -- ----------------------------
+INSERT INTO `t_message_config_receiver` VALUES ('1', '1', '2', '1', '2018-07-08 15:02:12');
+INSERT INTO `t_message_config_receiver` VALUES ('2', '2', '2', '1', '2018-07-08 15:02:12');
+INSERT INTO `t_message_config_receiver` VALUES ('3', '1', '3', '1', '2018-07-08 15:03:42');
+INSERT INTO `t_message_config_receiver` VALUES ('4', '2', '3', '1', '2018-07-08 15:03:42');
+INSERT INTO `t_message_config_receiver` VALUES ('5', '1', '4', '1', '2018-07-08 15:05:56');
+INSERT INTO `t_message_config_receiver` VALUES ('6', '2', '4', '1', '2018-07-08 15:05:56');
+INSERT INTO `t_message_config_receiver` VALUES ('7', '1', '5', '1', '2018-07-08 15:12:22');
+INSERT INTO `t_message_config_receiver` VALUES ('8', '2', '5', '1', '2018-07-08 15:12:22');
+INSERT INTO `t_message_config_receiver` VALUES ('9', '1', '6', '1', '2018-07-08 15:13:32');
+INSERT INTO `t_message_config_receiver` VALUES ('10', '2', '6', '1', '2018-07-08 15:13:32');
+INSERT INTO `t_message_config_receiver` VALUES ('11', '1', '7', '1', '2018-07-08 15:22:19');
+INSERT INTO `t_message_config_receiver` VALUES ('12', '2', '7', '1', '2018-07-08 15:22:19');
+INSERT INTO `t_message_config_receiver` VALUES ('13', '1', '8', '1', '2018-07-08 15:24:48');
+INSERT INTO `t_message_config_receiver` VALUES ('14', '2', '8', '1', '2018-07-08 15:24:48');
+INSERT INTO `t_message_config_receiver` VALUES ('15', '1', '9', '1', '2018-07-08 15:40:34');
+INSERT INTO `t_message_config_receiver` VALUES ('16', '2', '9', '1', '2018-07-08 15:40:34');
+INSERT INTO `t_message_config_receiver` VALUES ('17', '1', '10', '1', '2018-07-08 15:52:07');
+INSERT INTO `t_message_config_receiver` VALUES ('18', '2', '10', '1', '2018-07-08 15:52:07');
 
 -- ----------------------------
 -- Table structure for t_message_notice
@@ -1164,17 +1933,62 @@ CREATE TABLE `t_message_notice` (
   `msg_title` varchar(255) NOT NULL COMMENT '消息标题',
   `msg_content` varchar(1000) DEFAULT NULL COMMENT '消息内容',
   `link_url` varchar(500) DEFAULT NULL COMMENT '链接地址',
-  `msg_type` smallint(3) NOT NULL COMMENT '消息类型 1系统消息 2订单消息 3活动消息',
+  `msg_type` smallint(3) NOT NULL DEFAULT '1' COMMENT '消息类型 1系统消息 2订单消息 3活动消息 4物流提醒',
   `read_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否已读 0未读 1已读',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `delete_flag` smallint(1) NOT NULL COMMENT '删除标识 0：无效 1：有效',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '删除标识 0：无效 1：有效',
   `push_channel` varchar(50) NOT NULL COMMENT '推送渠道 详细见字典表',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息通知表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='消息通知表';
 
 -- ----------------------------
 -- Records of t_message_notice
 -- ----------------------------
+INSERT INTO `t_message_notice` VALUES ('1', '1', '系统消息', '测试标题变通打发打发范德萨发', '房贷发放发发大师傅但是', null, '1', '1', '2018-07-20 17:19:03', '1', 'MESSAGE_CHANNEL_APP_APPLICATION');
+INSERT INTO `t_message_notice` VALUES ('2', '1', '订单消息', '发放大放大发生范德萨', '发放大放大撒', null, '2', '1', '2018-07-20 17:19:50', '1', 'MESSAGE_CHANNEL_APP_APPLICATION');
+INSERT INTO `t_message_notice` VALUES ('3', '1', '活动消息', '发的法大师傅大师傅的', '发的发大水发大水范德萨', null, '3', '0', '2018-07-20 17:20:18', '1', 'MESSAGE_CHANNEL_APP_APPLICATION');
+INSERT INTO `t_message_notice` VALUES ('4', '1', '物流提醒', '韩国的很过分的话获得过', '发发大水范德萨发给粉丝共和国', null, '4', '1', '2018-07-20 17:20:37', '1', 'MESSAGE_CHANNEL_APP_APPLICATION');
+
+-- ----------------------------
+-- Table structure for t_message_template
+-- ----------------------------
+DROP TABLE IF EXISTS `t_message_template`;
+CREATE TABLE `t_message_template` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '模板ID主键',
+  `template_code` varchar(50) NOT NULL COMMENT '模板编码',
+  `template_name` varchar(50) DEFAULT NULL COMMENT '模板名称',
+  `msg_type` smallint(1) NOT NULL COMMENT '消息类型',
+  `sms_template` varchar(200) DEFAULT NULL COMMENT '短信模板',
+  `sms_sign_name` varchar(100) DEFAULT NULL COMMENT '短信签名-可在阿里云短信控制台中找到',
+  `sms_template_code` varchar(100) DEFAULT NULL COMMENT '短信模板-可在阿里云短信控制台中找到',
+  `sms_template_param` varchar(100) DEFAULT NULL COMMENT '参数模板',
+  `app_template` varchar(300) DEFAULT NULL COMMENT 'app应用模板',
+  `app_notice_template` varchar(300) DEFAULT NULL COMMENT '通知栏模板',
+  `link_url` varchar(500) DEFAULT NULL COMMENT '跳转地址',
+  `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效 1有效 0无效',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COMMENT='消息内容发送配置模板表';
+
+-- ----------------------------
+-- Records of t_message_template
+-- ----------------------------
+INSERT INTO `t_message_template` VALUES ('1', 'LOGIN_VERIFYCODE', '登录确认验证码', '1', '验证码%s，您正在登录，若非本人操作，请勿泄露。', '淘美妆商会', 'SMS_137485027', '{\"code\":\"%s\"}', '', '', null, '1', '2018-07-16 18:25:39', null);
+INSERT INTO `t_message_template` VALUES ('2', 'RIGISTER_VERIFYCODE', '用户注册验证码', '1', '验证码%s，您正在注册成为新用户，感谢您的支持！', '淘美妆商会', 'SMS_137485025', '{\"code\":\"%s\"}', '', '', null, '1', '2018-07-16 18:25:43', null);
+INSERT INTO `t_message_template` VALUES ('3', 'MODIFY_PASSWORD_VERIFYCODE', '修改密码验证码', '1', '验证码%s，您正在尝试修改登录密码，请妥善保管账户信息。', '淘美妆商会', 'SMS_137485024', '{\"code\":\"%s\"}', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('4', 'MEMBER_BIRTHDAY', '会员生日提醒', '1', '尊敬淘美妆会员，今天是您生日，在此淘美妆商会携全体员工祝您生日快乐，生活愉快！', '淘美妆商会', 'SMS_139229309', '', '尊敬淘美妆会员，今天是您生日，在此淘美妆商会携全体员工祝您生日快乐，生活愉快！', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('5', 'MEMBER_AUDIT_PASS', '审核通过提醒', '1', '您的%s申请已于%s审批通过，特此通知。', '淘美妆商会', 'SMS_138130193', '{\"mtname\":\"%s\",\"submittime\":\"%s\"}', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('6', 'MEMBER_AUDIT_NOT_PASS', '审核不通过提醒', '1', '您的%s申请已于%s审批不通过，请前往淘美妆商会APP了解详情', '淘美妆商会', 'SMS_139244148', '{\"mtname\":\"%s\",\"submittime\":\"%s\"}', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('7', 'MEMBER_EXPIRDED', '会员会费到期提醒', '1', '尊敬的淘美妆会员，您的会员服务已到期，请前往淘美妆商会APP进行续费', '淘美妆商会', 'SMS_139244146', '', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('8', 'BRAND_EXPIRDED', '品牌池品牌到期提醒', '1', '尊敬的淘美妆品牌方，贵司入驻品牌池的品牌服务已到期，请前往淘美妆商会APP进行续费', '淘美妆商会', 'SMS_139244147', '', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('9', 'MEMBER_EXPIRING', '会员会费即将到期', '1', '尊敬淘美妆会员，你的会员服务还有%s天到期，续费请前往淘美妆商会APP进行续费', '淘美妆商会', 'SMS_138066013', '{\"day\":\"%s\"}', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('10', 'ACTIVITY_STARTING', '活动即将开始', '3', '亲爱的%s，您报名参加的%s活动即将开幕，特此通知', '淘美妆商会', 'SMS_139244183', '{\"name\":\"%s\",\"title\":\"%s\"}', '亲爱的%s，您报名参加的%s活动即将开幕', '亲爱的%s，您报名参加的%s活动即将开幕', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('11', 'SHIP', '发货通知', '4', '亲爱的%s，您购买的宝贝已经由%s快递,单号：%s安排发货。', '淘美妆商会', 'SMS_139244199', '{\"userName\":\"%s\",\"logistics\":\"%s\",\"number\":\"%s\"}', '亲爱的%s，您购买的宝贝已经由【%s快递】单号：%s安排发货', '您购买的%s已发货', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('12', 'PROMOTIONS_SUCCESS', '试用/活动报名成功通知', '1', '您的%s申请已于%s审批通过，特此通知', '淘美妆商会', 'SMS_139234806', '{\"promotions\":\"%s\",\"submittime\":\"%s\"}', '', '', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('13', 'ORDER_PAY_SUCCESS', '订单支付成功通知', '2', '', '', '', '', '亲爱的%s，感谢您选择淘美妆商会。您刚刚在本平台购买的商品,我们会尽快为您安排发货', '亲爱的%s，感谢您选择淘美妆商会。您刚刚在本平台购买的商品,我们会尽快为您安排发货', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('14', 'ORDER_NOT_PAY', '待支付通知', '2', '', '', '', '', '您有待付款订单，赶紧去支付吧', '您有待付款订单，赶紧去支付吧', null, '1', null, null);
+INSERT INTO `t_message_template` VALUES ('15', 'MODIFY_PHONE', '修改绑定手机号', '1', '您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。', '淘美妆商会', 'SMS_140115185', '{\"code\":\"%s\"}', '', '', null, '1', null, '2018-07-23 18:17:56');
 
 -- ----------------------------
 -- Table structure for t_order
@@ -1185,10 +1999,10 @@ CREATE TABLE `t_order` (
   `order_code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '订单编号',
   `total_fee` decimal(30,2) DEFAULT NULL COMMENT '商品总价',
   `payment` decimal(30,2) DEFAULT NULL COMMENT '实付金额',
-  `pay_type` smallint(2) DEFAULT '0' COMMENT '支付类型(0支付宝/1微信)',
+  `pay_type` smallint(2) DEFAULT '0' COMMENT '支付类型(0支付宝/1微信/2银联)',
   `pay_status` smallint(2) DEFAULT '0' COMMENT '付款状态(0未付款/1正在付款/2已付款/3退款/4支付超时)',
   `order_type` smallint(2) DEFAULT '0' COMMENT '订单类型(0普通/1活动/2集采)',
-  `order_status` smallint(2) DEFAULT '0' COMMENT '订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)',
+  `order_status` smallint(2) DEFAULT '0' COMMENT '订单状态(0待付款/1待发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)',
   `payment_time` datetime DEFAULT NULL COMMENT '付款时间',
   `consign_time` datetime DEFAULT NULL COMMENT '发货时间',
   `end_time` datetime DEFAULT NULL COMMENT '订单完成时间',
@@ -1197,12 +2011,168 @@ CREATE TABLE `t_order` (
   `user_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户姓名',
   `phone` varchar(11) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '手机号码',
   `address` int(11) DEFAULT NULL COMMENT '收货地址',
+  `promotions_id` int(11) DEFAULT NULL COMMENT '活动ID',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `logistics_num` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '物流公司编号',
+  `courier_num` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '快递单号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=192 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单表';
 
 -- ----------------------------
 -- Records of t_order
+-- ----------------------------
+INSERT INTO `t_order` VALUES ('48', '02018071514214610001', '6372.95', null, '0', '1', '0', '1', '2018-07-15 14:22:00', null, null, '2018-07-15 14:26:48', null, '18356238002', '18356238002', '1', '4', '2018-07-15 14:21:48', null, null);
+INSERT INTO `t_order` VALUES ('49', '02018071514243310002', '6372.95', null, '2', '0', '0', '5', null, null, null, '2018-07-15 14:29:34', '2018-07-15 14:48:00', '18356238002', '18356238002', '1', '4', '2018-07-15 14:24:34', null, null);
+INSERT INTO `t_order` VALUES ('54', '02018072410532510006', '6372.95', null, '0', '0', '0', '5', null, null, null, '2018-07-24 18:53:26', '2018-07-27 16:43:00', '18356238002', '18356238002', '32', '4', '2018-07-24 10:53:26', null, null);
+INSERT INTO `t_order` VALUES ('55', '22018072411163810001', '6372.95', null, '0', '0', '0', '5', null, null, null, '2018-07-24 18:16:39', '2018-07-27 16:48:00', '18356238002', '18356238002', '32', '4', '2018-07-24 11:16:39', null, null);
+INSERT INTO `t_order` VALUES ('56', '02018072516060210001', '6372.95', null, '0', '0', '0', '5', null, null, null, '2018-07-25 18:06:04', '2018-07-27 16:48:00', '18356238002', '18356238002', '32', '4', '2018-07-25 16:06:04', null, null);
+INSERT INTO `t_order` VALUES ('57', '02018072517044110001', '6372.95', null, '0', '0', '0', '5', null, null, null, '2018-07-25 19:04:41', '2018-07-27 16:47:00', '18356238002', '18356238002', '32', '4', '2018-07-25 17:04:41', null, null);
+INSERT INTO `t_order` VALUES ('58', '02018072614522110001', '6372.95', null, '0', '0', '0', '5', null, null, null, '2018-07-26 16:52:23', '2018-07-27 16:43:00', '18356238002', '18356238002', '32', '4', '2018-07-26 14:52:23', null, null);
+INSERT INTO `t_order` VALUES ('59', '02018072614535210002', '6372.95', null, '0', '0', '0', '5', null, null, null, '2018-07-26 16:53:52', '2018-07-27 16:43:00', '18356238002', '18356238002', '32', '4', '2018-07-26 14:53:52', null, null);
+INSERT INTO `t_order` VALUES ('60', '02018072615274410006', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:44', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:44', null, null);
+INSERT INTO `t_order` VALUES ('61', '02018072615274410007', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:44', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:44', null, null);
+INSERT INTO `t_order` VALUES ('62', '02018072615274410008', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('63', '02018072615274410009', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('64', '02018072615274410010', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('65', '02018072615274410011', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('66', '02018072615274410012', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('67', '02018072615274410013', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('68', '02018072615274410014', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:01', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('69', '02018072615274410015', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('70', '02018072615274410016', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('71', '02018072615274410017', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('72', '02018072615274410018', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('73', '02018072615274410019', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('74', '02018072615274410020', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('75', '02018072615274410021', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('76', '02018072615274410022', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:02', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('77', '02018072615274410023', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('78', '02018072615274410024', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('79', '02018072615274410025', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('80', '02018072615274510026', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('81', '02018072615274510027', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('82', '02018072615274510028', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('83', '02018072615274510029', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('84', '02018072615274510030', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('85', '02018072615274510031', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:03', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('86', '02018072615274510032', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:45', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:45', null, null);
+INSERT INTO `t_order` VALUES ('87', '02018072615274510033', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('88', '02018072615274510034', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('89', '02018072615274510035', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('90', '02018072615274510036', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('91', '02018072615274510037', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('92', '02018072615274510038', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('93', '02018072615274510039', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('94', '02018072615274510040', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('95', '02018072615274510041', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:04', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('96', '02018072615274510042', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('97', '02018072615274510043', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('98', '02018072615274510044', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('99', '02018072615274510045', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('100', '02018072615274510046', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('101', '02018072615274510047', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('102', '02018072615274510048', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('103', '02018072615274510049', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('104', '02018072615274510050', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:05', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('105', '02018072615274510051', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('106', '02018072615274510052', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('107', '02018072615274510053', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('108', '02018072615274510054', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('109', '02018072615274610055', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('110', '02018072615274610056', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('111', '02018072615274610057', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('112', '02018072615274610058', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('113', '02018072615274610059', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:06', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('114', '02018072615274610060', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:46', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:46', null, null);
+INSERT INTO `t_order` VALUES ('115', '02018072615274610061', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('116', '02018072615274610062', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('117', '02018072615274610063', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('118', '02018072615274610064', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('119', '02018072615274610065', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('120', '02018072615274610066', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('121', '02018072615274610067', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('122', '02018072615274610068', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('123', '02018072615274610069', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('124', '02018072615274610070', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:07', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('125', '02018072615274610071', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('126', '02018072615274610072', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('127', '02018072615274610073', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('128', '02018072615274610074', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('129', '02018072615274610075', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('130', '02018072615274610076', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('131', '02018072615274610077', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('132', '02018072615274610078', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('133', '02018072615274610079', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('134', '02018072615274610080', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('135', '02018072615274610081', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('136', '02018072615274610082', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:08', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('137', '02018072615274710083', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('138', '02018072615274710084', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('139', '02018072615274710085', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('140', '02018072615274710086', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('141', '02018072615274710087', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('142', '02018072615274710088', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:47', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:47', null, null);
+INSERT INTO `t_order` VALUES ('143', '02018072615274710089', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('144', '02018072615274710090', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('145', '02018072615274710091', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('146', '02018072615274710092', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('147', '02018072615274710093', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('148', '02018072615274710094', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:09', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('149', '02018072615274710095', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:10', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('150', '02018072615274710096', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:10', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('151', '02018072615274710097', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-07-26 17:27:48', '2018-07-27 16:43:10', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('152', '02018072615274710098', '2190.98', null, '0', '0', '0', '0', null, null, null, null, '2018-07-27 16:43:10', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('153', '02018072615274710099', '2190.98', '2190.98', '0', '3', '0', '7', '2018-08-03 11:22:25', null, null, null, '2018-07-27 16:43:10', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('154', '02018072615274710100', '2190.98', null, '0', '0', '0', '0', null, null, null, null, '2018-07-27 16:43:10', '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('155', '02018072615274710101', '2190.98', null, '0', '1', '0', '0', null, null, null, '2018-07-31 17:27:48', null, '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('156', '02018072615274710102', '2190.98', null, '0', '1', '0', '0', null, null, null, '2018-07-31 19:27:48', null, '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('157', '02018072615274710103', '2190.98', '2190.98', '0', '2', '0', '1', '2018-07-29 17:13:05', null, null, '2018-07-31 19:27:48', null, '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('158', '02018072615274710104', '2190.98', '2190.98', '0', '2', '0', '1', '2018-07-29 17:31:18', null, null, '2018-07-31 19:27:48', null, '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('159', '02018072615274710105', '2190.98', '2190.98', '0', '2', '0', '1', '2018-07-29 17:54:46', null, null, '2018-07-31 19:27:48', null, '18356238002', '18356238002', '32', '4', '2018-07-26 15:27:48', null, null);
+INSERT INTO `t_order` VALUES ('160', '02018073011413110001', '1.00', null, '0', '2', '0', '0', null, null, null, null, null, '18356238002_84ea3d69', '18356238002', '32', '7', '2018-07-30 11:41:32', null, null);
+INSERT INTO `t_order` VALUES ('170', '02018080109405210006', '1.00', null, '0', '2', '1', '0', null, null, null, null, '2018-08-01 15:46:00', '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-01 09:40:52', null, null);
+INSERT INTO `t_order` VALUES ('171', '02018080109493410001', '1.00', '1.00', '0', '2', '0', '1', '2018-08-02 17:11:26', null, null, null, '2018-08-01 15:46:00', '', '18356238002', '35', '7', '2018-08-01 09:49:34', null, null);
+INSERT INTO `t_order` VALUES ('172', '02018080109520710007', '1.00', '1.00', '0', '2', '0', '1', '2018-08-02 17:12:33', null, null, null, '2018-08-01 15:46:01', '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-01 09:52:08', null, null);
+INSERT INTO `t_order` VALUES ('173', '02018080110014110008', '2190.98', '2190.98', '0', '2', '0', '1', '2018-08-02 17:17:18', null, null, null, '2018-08-01 15:46:01', '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-01 10:01:42', null, null);
+INSERT INTO `t_order` VALUES ('174', '02018080111045110004', '2190.98', null, '0', '1', '0', '0', null, null, null, null, '2018-08-01 15:46:01', '', '18356238002', '35', '7', '2018-08-01 11:04:51', null, null);
+INSERT INTO `t_order` VALUES ('175', '22018080113534110002', '199.99', '199.99', '0', '2', '2', '1', '2018-08-02 17:58:57', null, null, null, null, '', '15026486249', '40', '7', '2018-08-01 13:53:41', null, null);
+INSERT INTO `t_order` VALUES ('176', '22018080113540910003', '199.99', '199.99', '0', '2', '2', '1', '2018-08-03 11:22:25', null, null, null, null, '', '15026486249', '40', '7', '2018-08-01 13:54:09', null, null);
+INSERT INTO `t_order` VALUES ('177', '02018080311322610001', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-08-03 13:32:27', '2018-08-03 13:33:00', '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-03 11:32:27', null, null);
+INSERT INTO `t_order` VALUES ('178', '02018080609470510001', '0.01', '0.01', '0', '2', '0', '6', '2018-08-06 09:55:36', null, null, '2018-08-06 11:47:06', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 09:47:06', null, null);
+INSERT INTO `t_order` VALUES ('179', '02018080611233610004', '0.01', '0.01', '0', '2', '0', '6', '2018-08-06 11:26:07', null, null, '2018-08-06 13:23:36', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 11:23:36', null, null);
+INSERT INTO `t_order` VALUES ('180', '02018080611302110006', '0.01', '0.01', '0', '3', '0', '7', '2018-08-06 11:31:22', null, null, '2018-08-06 13:30:21', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 11:30:21', null, null);
+INSERT INTO `t_order` VALUES ('181', '02018080611354810008', '0.01', '0.01', '0', '3', '0', '7', '2018-08-06 11:37:17', null, null, '2018-08-06 13:35:49', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 11:35:49', null, null);
+INSERT INTO `t_order` VALUES ('182', '02018080613330410001', '0.01', '0.01', '0', '3', '0', '7', '2018-08-06 13:36:16', '2018-08-06 14:08:34', '2018-08-06 14:09:30', '2018-08-06 15:33:05', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 13:33:05', '', '');
+INSERT INTO `t_order` VALUES ('183', '02018080614115010002', '2190.98', '2190.98', '0', '2', '0', '6', '2018-08-06 14:15:40', '2018-08-06 14:19:01', '2018-08-06 14:19:10', '2018-08-06 16:11:50', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 14:11:50', '', '');
+INSERT INTO `t_order` VALUES ('184', '02018080614242210003', '2190.98', null, '0', '0', '0', '5', null, null, null, '2018-08-06 16:24:23', '2018-08-06 16:25:00', '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 14:24:23', null, null);
+INSERT INTO `t_order` VALUES ('185', '02018080614293210004', '0.01', '0.01', '0', '3', '0', '7', '2018-08-06 14:29:54', '2018-08-06 14:30:42', '2018-08-06 14:30:50', '2018-08-06 16:29:32', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 14:29:32', '', '');
+INSERT INTO `t_order` VALUES ('186', '02018080614451910005', '0.01', '0.01', '0', '3', '0', '7', '2018-08-06 14:45:51', '2018-08-06 14:46:17', '2018-08-06 14:46:31', '2018-08-06 16:45:20', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 14:45:20', '', '');
+INSERT INTO `t_order` VALUES ('187', '02018080615274210001', '0.01', '0.01', '0', '3', '0', '7', '2018-08-06 15:28:07', null, null, '2018-08-06 17:27:43', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-06 15:27:43', null, null);
+INSERT INTO `t_order` VALUES ('188', '02018080917592710001', '0.01', null, '0', '0', '0', '5', null, null, null, '2018-08-09 19:59:28', '2018-08-09 20:00:00', '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-09 17:59:28', null, null);
+INSERT INTO `t_order` VALUES ('189', '02018081210361010001', '0.01', '0.01', '0', '3', '0', '7', '2018-08-13 10:01:47', null, '2018-08-13 10:17:32', '2018-08-14 12:36:10', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-12 10:36:10', null, null);
+INSERT INTO `t_order` VALUES ('190', '02018081310473210004', '0.01', '0.01', '0', '3', '0', '7', '2018-08-13 10:48:33', null, '2018-08-13 10:59:42', '2018-08-13 12:47:33', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-13 10:47:33', null, null);
+INSERT INTO `t_order` VALUES ('191', '02018081311061410001', '0.01', '0.01', '0', '3', '0', '7', '2018-08-13 11:07:30', null, '2018-08-13 11:08:55', '2018-08-13 13:06:15', null, '18356238002_84ea3d69', '18356238002', '35', '7', '2018-08-13 11:06:15', null, null);
+
+-- ----------------------------
+-- Table structure for t_order_act_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `t_order_act_detail`;
+CREATE TABLE `t_order_act_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `order_code` varchar(20) DEFAULT NULL COMMENT '订单id',
+  `activity_order_id` int(11) DEFAULT NULL COMMENT '活动报名订单ID',
+  `prod_type` varchar(50) DEFAULT NULL COMMENT '活动产品类型  参会 旁听 参展 冠名 联合赞助 详细见字典表',
+  `prod_subtype` varchar(50) DEFAULT NULL COMMENT '活动产品子类型  会员参会下有酒店 活动费 押金等  详细见字典',
+  `hotel_id` int(11) DEFAULT NULL COMMENT '酒店ID',
+  `hotel_goods_id` int(11) DEFAULT NULL COMMENT '酒店商品ID',
+  `unit_price` decimal(8,2) DEFAULT NULL COMMENT '明细单价',
+  `number` int(11) DEFAULT NULL COMMENT '数量',
+  `subtotal` decimal(8,2) DEFAULT NULL COMMENT '金额',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of t_order_act_detail
 -- ----------------------------
 
 -- ----------------------------
@@ -1219,17 +2189,53 @@ CREATE TABLE `t_order_address` (
   `area_city` int(11) DEFAULT NULL COMMENT '地址所属市',
   `area_country` int(11) DEFAULT NULL COMMENT '地址所属区县',
   `zip_code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '邮政编码',
+  `merger_name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '省市区详细地址',
   `address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '详细地址',
-  `de_select` tinyint(4) DEFAULT NULL COMMENT '是否默认地址（0:非默认，1:默认）',
-  `flag` tinyint(4) DEFAULT NULL COMMENT '删除状态（0:有效，1:删除）',
+  `de_select` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否默认地址（0:非默认，1:默认）',
+  `flag` tinyint(4) NOT NULL DEFAULT '0' COMMENT '删除状态（0:有效，1:删除）',
   `creat_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户地址信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='用户地址信息表';
 
 -- ----------------------------
 -- Records of t_order_address
 -- ----------------------------
-INSERT INTO `t_order_address` VALUES ('1', '1', '光伟', '18356238002', '18356238002', '310000', '310100', '310114', '201800', '中国,上海,上海市,嘉定区', '1', '1', '2018-07-04 16:37:40');
+INSERT INTO `t_order_address` VALUES ('2', null, '李倩', '17834526783', null, '110000', '110100', '110101', null, null, '中国,北京,北京,东城', '0', '1', '2018-07-20 10:43:47');
+INSERT INTO `t_order_address` VALUES ('3', null, '李倩', '17834526783', null, '110000', '110100', '110101', null, null, '中国,北京,北京,东城', '0', '0', '2018-07-20 10:53:28');
+INSERT INTO `t_order_address` VALUES ('4', '9', '李倩', '17834526783', null, '110000', '110100', '110101', null, null, '中国,北京,北京,东城', '0', '1', '2018-07-20 11:10:24');
+INSERT INTO `t_order_address` VALUES ('5', '9', '李倩', '178345', null, '110000', '110100', '110101', null, null, '442', '0', '1', '2018-07-20 11:14:07');
+INSERT INTO `t_order_address` VALUES ('6', '9', '李倩', '17834526783', null, '110101', '110100', '110000', null, '内蒙古呼和浩特新城', '中国,北京,北京,东城', '1', '1', '2018-07-20 11:14:34');
+INSERT INTO `t_order_address` VALUES ('7', '9', '李倩', '17834526783', null, '110000', '110100', '110101', null, '内蒙古呼和浩特新城', '中国,北京,北京,东城', '1', '0', '2018-07-20 11:28:27');
+INSERT INTO `t_order_address` VALUES ('8', '9', '李倩', '17834526783', null, '110000', '110100', '110101', null, null, '中国,北京,北京,东城', '0', '1', '2018-07-20 13:02:37');
+INSERT INTO `t_order_address` VALUES ('9', '10', '女女', '15555555555', null, '360000', '360100', '360102', null, null, '了骆驼', '0', '1', '2018-07-20 13:06:48');
+INSERT INTO `t_order_address` VALUES ('10', '10', '女女', '155555555555', null, '360000', '360100', '360102', null, null, '了骆驼', '0', '1', '2018-07-20 13:07:08');
+INSERT INTO `t_order_address` VALUES ('11', '9', '李倩', '17834526783', null, '110000', '110100', '110101', null, null, '中国,北京,北京,东城', '0', '1', '2018-07-20 13:16:16');
+INSERT INTO `t_order_address` VALUES ('12', '10', '来来来', '15888888888', null, '410000', '410100', '410102', null, null, '退咯哦monk', '0', '1', '2018-07-20 13:21:15');
+INSERT INTO `t_order_address` VALUES ('13', '10', '看看', '28', null, '110000', '110100', '110101', null, null, '噜噜噜', '0', '1', '2018-07-20 13:23:06');
+INSERT INTO `t_order_address` VALUES ('14', '10', '来来来', '555', null, '110000', '110100', '110101', null, null, '噜噜噜UK', '0', '1', '2018-07-20 13:24:10');
+INSERT INTO `t_order_address` VALUES ('15', '10', '来来来', '1888', null, '110000', '110100', '110101', null, null, '他他不', '0', '1', '2018-07-20 13:25:14');
+INSERT INTO `t_order_address` VALUES ('16', '10', '123', '12', null, '110000', '110100', '110101', null, null, '噜噜噜UK', '0', '1', '2018-07-20 13:25:27');
+INSERT INTO `t_order_address` VALUES ('17', '10', '陈志强', '18466334577', null, '360000', '360100', '360102', null, null, '人咯人咯啦人咯人咯人5人咯人咯人咯可人咯人咯人咯人可人咯人咯人咯人可人咯人咯人咯可人咯人咯', '1', '1', '2018-07-20 13:31:35');
+INSERT INTO `t_order_address` VALUES ('18', '9', '张三', '15026486249', null, '110000', '110100', '110105', null, '北京北京朝阳', '继续图五', '0', '0', '2018-07-20 14:44:52');
+INSERT INTO `t_order_address` VALUES ('19', '9', '黄伟', '16728298588', null, '500000', '500100', '500101', null, '重庆重庆万州', '继续继续继续图咯图是咯', '0', '1', '2018-07-20 14:46:58');
+INSERT INTO `t_order_address` VALUES ('20', '9', '黄伟', '16728298588', null, '500000', '500100', '500101', null, '重庆重庆万州', '继续继续继续图咯图是咯', '0', '1', '2018-07-20 14:47:49');
+INSERT INTO `t_order_address` VALUES ('21', '10', '老头', '18555555556', null, '110000', '110100', '110101', null, null, '聚聚UK', '1', '1', '2018-07-20 15:11:20');
+INSERT INTO `t_order_address` VALUES ('22', '10', '来来来', '15866664444', null, '110000', '110100', '110101', null, null, '踏踏不不不', '1', '1', '2018-07-20 15:13:51');
+INSERT INTO `t_order_address` VALUES ('23', '10', '来来来', '15555555555', null, '110000', '110100', '110101', null, null, '他哭KTV路', '1', '1', '2018-07-20 15:16:03');
+INSERT INTO `t_order_address` VALUES ('24', '10', '来来来', '12555553366', null, '350000', '350100', '350102', null, null, '噜噜噜不', '1', '1', '2018-07-20 16:17:37');
+INSERT INTO `t_order_address` VALUES ('25', '10', '来来来', '15888888888', null, '110000', '110100', '110101', null, null, '聚聚他来来来', '1', '0', '2018-07-20 16:19:05');
+INSERT INTO `t_order_address` VALUES ('26', '10', '露露', '18000000000', null, '110000', '110100', '110101', null, null, '路偷偷摩托', '0', '1', '2018-07-20 16:20:31');
+INSERT INTO `t_order_address` VALUES ('27', '9', '旅途', '15026486249', null, '130000', '130100', '130102', null, '河北石家庄长安', '口继续咯舞台', '0', '1', '2018-07-20 17:19:27');
+INSERT INTO `t_order_address` VALUES ('28', '9', '张建', '15026486276', null, '140000', '140100', '140105', null, '山西太原小店', '继续继续继续咯林语堂', '0', '1', '2018-07-20 17:20:10');
+INSERT INTO `t_order_address` VALUES ('29', '9', '阿继续逗', '15026486249', null, '150000', '150100', '150104', null, '内蒙古呼和浩特玉泉', '来源越想越空虚策略元宵节快乐', '0', '0', '2018-07-23 10:41:31');
+INSERT INTO `t_order_address` VALUES ('30', '9', '计较', '15026486289', null, '110000', '110100', '110101', null, '北京北京东城', '继续咯舞台', '0', '0', '2018-07-23 10:42:20');
+INSERT INTO `t_order_address` VALUES ('31', '9', 'gut', '15026486249', null, '150000', '150100', '150102', null, '内蒙古呼和浩特新城', '继续图', '0', '0', '2018-07-23 11:09:19');
+INSERT INTO `t_order_address` VALUES ('35', '14', '李倩', '17834526783', null, '110000', '110100', '110101', null, '北京,北京,东城', '中国,北京,北京,东城', '0', '0', '2018-07-30 15:22:20');
+INSERT INTO `t_order_address` VALUES ('36', '14', '李倩', '17834526783', null, '110000', '110100', '110101', null, '北京,北京,东城', '中国,北京,北京,东城', '0', '0', '2018-07-30 15:22:21');
+INSERT INTO `t_order_address` VALUES ('37', '14', '李倩', '17834526783', null, '110000', '110100', '110101', null, '北京,北京,东城', '中国,北京,北京,东城', '0', '0', '2018-07-30 15:22:27');
+INSERT INTO `t_order_address` VALUES ('38', '14', '李倩', '17834526783', null, '110000', '110100', '110101', null, '北京,北京,东城', '中国,北京,北京,东城', '0', '0', '2018-07-30 15:22:42');
+INSERT INTO `t_order_address` VALUES ('39', '1', '继续兔兔', '15026486249', null, '140105', '140100', '140000', null, '山西太原小店', '体育凑 job 够 low 图四步', '0', '0', '2018-07-30 17:17:26');
+INSERT INTO `t_order_address` VALUES ('40', '1', '黄伟', '15026486249', null, '150000', '150100', '150102', null, '内蒙古自治区呼和浩特市新城区体育天我旅途ggghghggh', '体育天我旅途ggghghggh', '1', '0', '2018-07-30 17:44:16');
 
 -- ----------------------------
 -- Table structure for t_order_item
@@ -1246,11 +2252,267 @@ CREATE TABLE `t_order_item` (
   `act_price` decimal(30,2) DEFAULT NULL COMMENT '活动单价',
   `num` int(11) DEFAULT NULL COMMENT '商品数量',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=287 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单详情表';
 
 -- ----------------------------
 -- Records of t_order_item
 -- ----------------------------
+INSERT INTO `t_order_item` VALUES ('13', '02018072410532510006', '1', '1', '2', '150ml', '1990.99', '1990.99', '3');
+INSERT INTO `t_order_item` VALUES ('14', '02018072410532510006', '1', '1', '1', '15ml', '199.99', '199.99', '2');
+INSERT INTO `t_order_item` VALUES ('15', '22018072411163810001', '1', '1', '2', '150ml', '1990.99', '1990.99', '3');
+INSERT INTO `t_order_item` VALUES ('16', '22018072411163810001', '1', '1', '1', '15ml', '199.99', '199.99', '2');
+INSERT INTO `t_order_item` VALUES ('17', '02018072516060210001', '1', '1', '2', '150ml', '1990.99', '1990.99', '3');
+INSERT INTO `t_order_item` VALUES ('18', '02018072516060210001', '1', '1', '1', '15ml', '199.99', '199.99', '2');
+INSERT INTO `t_order_item` VALUES ('19', '02018072517044110001', '1', '1', '2', '150ml', '1990.99', '1990.99', '3');
+INSERT INTO `t_order_item` VALUES ('20', '02018072517044110001', '1', '1', '1', '15ml', '199.99', '199.99', '2');
+INSERT INTO `t_order_item` VALUES ('21', '02018072614522110001', '1', '1', '2', '150ml', '1990.99', '1990.99', '3');
+INSERT INTO `t_order_item` VALUES ('22', '02018072614522110001', '1', '1', '1', '15ml', '199.99', '199.99', '2');
+INSERT INTO `t_order_item` VALUES ('23', '02018072614535210002', '1', '1', '2', '150ml', '1990.99', '1990.99', '3');
+INSERT INTO `t_order_item` VALUES ('24', '02018072614535210002', '1', '1', '1', '15ml', '199.99', '199.99', '2');
+INSERT INTO `t_order_item` VALUES ('25', '02018072615274410006', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('26', '02018072615274410006', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('27', '02018072615274410007', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('28', '02018072615274410007', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('29', '02018072615274410008', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('30', '02018072615274410008', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('31', '02018072615274410009', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('32', '02018072615274410009', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('33', '02018072615274410010', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('34', '02018072615274410010', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('35', '02018072615274410011', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('36', '02018072615274410011', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('37', '02018072615274410012', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('38', '02018072615274410012', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('39', '02018072615274410013', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('40', '02018072615274410013', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('41', '02018072615274410014', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('42', '02018072615274410014', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('43', '02018072615274410015', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('44', '02018072615274410015', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('45', '02018072615274410016', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('46', '02018072615274410016', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('47', '02018072615274410017', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('48', '02018072615274410017', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('49', '02018072615274410018', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('50', '02018072615274410018', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('51', '02018072615274410019', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('52', '02018072615274410019', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('53', '02018072615274410020', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('54', '02018072615274410020', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('55', '02018072615274410021', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('56', '02018072615274410021', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('57', '02018072615274410022', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('58', '02018072615274410022', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('59', '02018072615274410023', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('60', '02018072615274410023', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('61', '02018072615274410024', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('62', '02018072615274410024', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('63', '02018072615274410025', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('64', '02018072615274410025', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('65', '02018072615274510026', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('66', '02018072615274510026', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('67', '02018072615274510027', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('68', '02018072615274510027', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('69', '02018072615274510028', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('70', '02018072615274510028', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('71', '02018072615274510029', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('72', '02018072615274510029', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('73', '02018072615274510030', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('74', '02018072615274510030', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('75', '02018072615274510031', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('76', '02018072615274510031', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('77', '02018072615274510032', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('78', '02018072615274510032', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('79', '02018072615274510033', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('80', '02018072615274510033', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('81', '02018072615274510034', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('82', '02018072615274510034', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('83', '02018072615274510035', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('84', '02018072615274510035', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('85', '02018072615274510036', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('86', '02018072615274510036', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('87', '02018072615274510037', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('88', '02018072615274510037', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('89', '02018072615274510038', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('90', '02018072615274510038', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('91', '02018072615274510039', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('92', '02018072615274510039', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('93', '02018072615274510040', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('94', '02018072615274510040', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('95', '02018072615274510041', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('96', '02018072615274510041', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('97', '02018072615274510042', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('98', '02018072615274510042', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('99', '02018072615274510043', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('100', '02018072615274510043', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('101', '02018072615274510044', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('102', '02018072615274510044', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('103', '02018072615274510045', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('104', '02018072615274510045', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('105', '02018072615274510046', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('106', '02018072615274510046', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('107', '02018072615274510047', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('108', '02018072615274510047', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('109', '02018072615274510048', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('110', '02018072615274510048', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('111', '02018072615274510049', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('112', '02018072615274510049', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('113', '02018072615274510050', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('114', '02018072615274510050', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('115', '02018072615274510051', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('116', '02018072615274510051', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('117', '02018072615274510052', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('118', '02018072615274510052', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('119', '02018072615274510053', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('120', '02018072615274510053', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('121', '02018072615274510054', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('122', '02018072615274510054', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('123', '02018072615274610055', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('124', '02018072615274610055', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('125', '02018072615274610056', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('126', '02018072615274610056', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('127', '02018072615274610057', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('128', '02018072615274610057', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('129', '02018072615274610058', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('130', '02018072615274610058', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('131', '02018072615274610059', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('132', '02018072615274610059', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('133', '02018072615274610060', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('134', '02018072615274610060', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('135', '02018072615274610061', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('136', '02018072615274610061', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('137', '02018072615274610062', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('138', '02018072615274610062', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('139', '02018072615274610063', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('140', '02018072615274610063', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('141', '02018072615274610064', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('142', '02018072615274610064', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('143', '02018072615274610065', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('144', '02018072615274610065', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('145', '02018072615274610066', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('146', '02018072615274610066', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('147', '02018072615274610067', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('148', '02018072615274610067', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('149', '02018072615274610068', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('150', '02018072615274610068', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('151', '02018072615274610069', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('152', '02018072615274610069', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('153', '02018072615274610070', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('154', '02018072615274610070', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('155', '02018072615274610071', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('156', '02018072615274610071', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('157', '02018072615274610072', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('158', '02018072615274610072', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('159', '02018072615274610073', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('160', '02018072615274610073', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('161', '02018072615274610074', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('162', '02018072615274610074', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('163', '02018072615274610075', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('164', '02018072615274610075', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('165', '02018072615274610076', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('166', '02018072615274610076', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('167', '02018072615274610077', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('168', '02018072615274610077', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('169', '02018072615274610078', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('170', '02018072615274610078', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('171', '02018072615274610079', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('172', '02018072615274610079', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('173', '02018072615274610080', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('174', '02018072615274610080', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('175', '02018072615274610081', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('176', '02018072615274610081', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('177', '02018072615274610082', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('178', '02018072615274610082', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('179', '02018072615274710083', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('180', '02018072615274710083', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('181', '02018072615274710084', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('182', '02018072615274710084', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('183', '02018072615274710085', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('184', '02018072615274710085', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('185', '02018072615274710086', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('186', '02018072615274710086', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('187', '02018072615274710087', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('188', '02018072615274710087', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('189', '02018072615274710088', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('190', '02018072615274710088', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('191', '02018072615274710089', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('192', '02018072615274710089', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('193', '02018072615274710090', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('194', '02018072615274710090', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('195', '02018072615274710091', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('196', '02018072615274710091', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('197', '02018072615274710092', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('198', '02018072615274710092', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('199', '02018072615274710093', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('200', '02018072615274710093', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('201', '02018072615274710094', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('202', '02018072615274710094', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('203', '02018072615274710095', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('204', '02018072615274710095', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('205', '02018072615274710096', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('206', '02018072615274710096', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('207', '02018072615274710097', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('208', '02018072615274710097', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('209', '02018072615274710098', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('210', '02018072615274710098', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('211', '02018072615274710099', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('212', '02018072615274710099', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('213', '02018072615274710100', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('214', '02018072615274710100', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('215', '02018072615274710101', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('216', '02018072615274710101', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('217', '02018072615274710102', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('218', '02018072615274710102', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('219', '02018072615274710103', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('220', '02018072615274710103', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('221', '02018072615274710104', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('222', '02018072615274710104', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('223', '02018072615274710105', '1', '1', '2', '150ml', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('224', '02018072615274710105', '1', '1', '1', '15ml', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('225', '02018073011413110001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('226', '02018073011413110001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('245', '02018080109405210006', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('246', '02018080109405210006', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('247', '02018080109493410001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('248', '02018080109493410001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('249', '02018080109520710007', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('250', '02018080109520710007', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('251', '02018080110014110008', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('252', '02018080110014110008', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('253', '02018080111045110004', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('254', '02018080111045110004', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('255', '22018080113534110002', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('256', '22018080113540910003', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('257', '02018080311322610001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('258', '02018080311322610001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('259', '02018080609470510001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('260', '02018080609470510001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('261', '02018080611233610004', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('262', '02018080611233610004', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('263', '02018080611302110006', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('264', '02018080611302110006', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('265', '02018080611354810008', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('266', '02018080611354810008', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('267', '02018080613330410001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('268', '02018080613330410001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('269', '02018080614115010002', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('270', '02018080614115010002', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('271', '02018080614242210003', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('272', '02018080614242210003', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('273', '02018080614293210004', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('274', '02018080614293210004', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('275', '02018080614451910005', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('276', '02018080614451910005', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('277', '02018080615274210001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('278', '02018080615274210001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('279', '02018080917592710001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('280', '02018080917592710001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('281', '02018081210361010001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('282', '02018081210361010001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('283', '02018081310473210004', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('284', '02018081310473210004', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
+INSERT INTO `t_order_item` VALUES ('285', '02018081311061410001', '1', '2', '3', '100g', '199.99', '199.99', '1');
+INSERT INTO `t_order_item` VALUES ('286', '02018081311061410001', '1', '2', '4', '150g', '1990.99', '1990.99', '1');
 
 -- ----------------------------
 -- Table structure for t_order_region
@@ -5581,11 +6843,168 @@ CREATE TABLE `t_order_trace` (
   `username` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '用户名称',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单操作轨迹表';
+) ENGINE=InnoDB AUTO_INCREMENT=162 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='订单操作轨迹表';
 
 -- ----------------------------
 -- Records of t_order_trace
 -- ----------------------------
+INSERT INTO `t_order_trace` VALUES ('5', '02018072410532510006', '0', null, '18356238002', '2018-07-24 10:53:29');
+INSERT INTO `t_order_trace` VALUES ('6', '22018072411163810001', '0', null, '18356238002', '2018-07-24 11:16:39');
+INSERT INTO `t_order_trace` VALUES ('7', '02018072516060210001', '0', null, '18356238002', '2018-07-25 16:06:04');
+INSERT INTO `t_order_trace` VALUES ('8', '02018072517044110001', '0', null, '18356238002', '2018-07-25 17:04:41');
+INSERT INTO `t_order_trace` VALUES ('9', '02018072614522110001', '0', null, '18356238002', '2018-07-26 14:52:23');
+INSERT INTO `t_order_trace` VALUES ('10', '02018072614535210002', '0', null, '18356238002', '2018-07-26 14:53:52');
+INSERT INTO `t_order_trace` VALUES ('11', '02018072615274410006', '0', null, '18356238002', '2018-07-26 15:27:44');
+INSERT INTO `t_order_trace` VALUES ('12', '02018072615274410007', '0', null, '18356238002', '2018-07-26 15:27:44');
+INSERT INTO `t_order_trace` VALUES ('13', '02018072615274410008', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('14', '02018072615274410009', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('15', '02018072615274410010', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('16', '02018072615274410011', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('17', '02018072615274410012', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('18', '02018072615274410013', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('19', '02018072615274410014', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('20', '02018072615274410015', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('21', '02018072615274410016', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('22', '02018072615274410017', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('23', '02018072615274410018', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('24', '02018072615274410019', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('25', '02018072615274410020', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('26', '02018072615274410021', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('27', '02018072615274410022', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('28', '02018072615274410023', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('29', '02018072615274410024', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('30', '02018072615274410025', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('31', '02018072615274510026', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('32', '02018072615274510027', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('33', '02018072615274510028', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('34', '02018072615274510029', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('35', '02018072615274510030', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('36', '02018072615274510031', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('37', '02018072615274510032', '0', null, '18356238002', '2018-07-26 15:27:45');
+INSERT INTO `t_order_trace` VALUES ('38', '02018072615274510033', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('39', '02018072615274510034', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('40', '02018072615274510035', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('41', '02018072615274510036', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('42', '02018072615274510037', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('43', '02018072615274510038', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('44', '02018072615274510039', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('45', '02018072615274510040', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('46', '02018072615274510041', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('47', '02018072615274510042', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('48', '02018072615274510043', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('49', '02018072615274510044', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('50', '02018072615274510045', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('51', '02018072615274510046', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('52', '02018072615274510047', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('53', '02018072615274510048', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('54', '02018072615274510049', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('55', '02018072615274510050', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('56', '02018072615274510051', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('57', '02018072615274510052', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('58', '02018072615274510053', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('59', '02018072615274510054', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('60', '02018072615274610055', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('61', '02018072615274610056', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('62', '02018072615274610057', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('63', '02018072615274610058', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('64', '02018072615274610059', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('65', '02018072615274610060', '0', null, '18356238002', '2018-07-26 15:27:46');
+INSERT INTO `t_order_trace` VALUES ('66', '02018072615274610061', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('67', '02018072615274610062', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('68', '02018072615274610063', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('69', '02018072615274610064', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('70', '02018072615274610065', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('71', '02018072615274610066', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('72', '02018072615274610067', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('73', '02018072615274610068', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('74', '02018072615274610069', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('75', '02018072615274610070', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('76', '02018072615274610071', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('77', '02018072615274610072', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('78', '02018072615274610073', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('79', '02018072615274610074', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('80', '02018072615274610075', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('81', '02018072615274610076', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('82', '02018072615274610077', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('83', '02018072615274610078', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('84', '02018072615274610079', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('85', '02018072615274610080', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('86', '02018072615274610081', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('87', '02018072615274610082', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('88', '02018072615274710083', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('89', '02018072615274710084', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('90', '02018072615274710085', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('91', '02018072615274710086', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('92', '02018072615274710087', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('93', '02018072615274710088', '0', null, '18356238002', '2018-07-26 15:27:47');
+INSERT INTO `t_order_trace` VALUES ('94', '02018072615274710089', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('95', '02018072615274710090', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('96', '02018072615274710091', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('97', '02018072615274710092', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('98', '02018072615274710093', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('99', '02018072615274710094', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('100', '02018072615274710095', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('101', '02018072615274710096', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('102', '02018072615274710097', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('103', '02018072615274710098', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('104', '02018072615274710099', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('105', '02018072615274710100', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('106', '02018072615274710101', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('107', '02018072615274710102', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('108', '02018072615274710103', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('109', '02018072615274710104', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('110', '02018072615274710105', '0', null, '18356238002', '2018-07-26 15:27:48');
+INSERT INTO `t_order_trace` VALUES ('111', '02018073011413110001', '0', null, '18356238002_84ea3d69', '2018-07-30 11:41:32');
+INSERT INTO `t_order_trace` VALUES ('112', '02018080109405210006', '0', null, '18356238002_84ea3d69', '2018-08-01 09:40:52');
+INSERT INTO `t_order_trace` VALUES ('113', '02018080109493410001', '0', null, '', '2018-08-01 09:49:34');
+INSERT INTO `t_order_trace` VALUES ('114', '02018080109520710007', '0', null, '18356238002_84ea3d69', '2018-08-01 09:52:08');
+INSERT INTO `t_order_trace` VALUES ('115', '02018080110014110008', '0', null, '18356238002_84ea3d69', '2018-08-01 10:01:42');
+INSERT INTO `t_order_trace` VALUES ('116', '02018080111045110004', '0', null, '', '2018-08-01 11:04:52');
+INSERT INTO `t_order_trace` VALUES ('117', '22018080113534110002', '0', null, '', '2018-08-01 13:53:41');
+INSERT INTO `t_order_trace` VALUES ('118', '22018080113540910003', '0', null, '', '2018-08-01 13:54:09');
+INSERT INTO `t_order_trace` VALUES ('119', '02018080311322610001', '0', null, '18356238002_84ea3d69', '2018-08-03 11:32:27');
+INSERT INTO `t_order_trace` VALUES ('120', '02018080609470510001', '0', null, '18356238002_84ea3d69', '2018-08-06 09:47:06');
+INSERT INTO `t_order_trace` VALUES ('121', '02018080611233610004', '0', null, '18356238002_84ea3d69', '2018-08-06 11:23:37');
+INSERT INTO `t_order_trace` VALUES ('122', '02018080611233610004', '6', null, '18356238002_84ea3d69', '2018-08-06 11:28:00');
+INSERT INTO `t_order_trace` VALUES ('123', '02018080611302110006', '0', null, '18356238002_84ea3d69', '2018-08-06 11:30:21');
+INSERT INTO `t_order_trace` VALUES ('124', '02018080611302110006', '6', null, '18356238002_84ea3d69', '2018-08-06 11:32:26');
+INSERT INTO `t_order_trace` VALUES ('125', '02018080611302110006', '5', null, '18356238002_84ea3d69', '2018-08-06 11:35:02');
+INSERT INTO `t_order_trace` VALUES ('126', '02018080611354810008', '0', null, '18356238002_84ea3d69', '2018-08-06 11:35:49');
+INSERT INTO `t_order_trace` VALUES ('127', '02018080611354810008', '6', null, '18356238002_84ea3d69', '2018-08-06 11:38:34');
+INSERT INTO `t_order_trace` VALUES ('128', '02018080611354810008', '5', null, '18356238002_84ea3d69', '2018-08-06 11:38:50');
+INSERT INTO `t_order_trace` VALUES ('129', '02018080613330410001', '0', null, '18356238002_84ea3d69', '2018-08-06 13:33:05');
+INSERT INTO `t_order_trace` VALUES ('130', '02018080613330410001', '2', null, '18356238002_84ea3d69', '2018-08-06 14:08:34');
+INSERT INTO `t_order_trace` VALUES ('131', '02018080613330410001', '3', null, '18356238002_84ea3d69', '2018-08-06 14:09:30');
+INSERT INTO `t_order_trace` VALUES ('132', '02018080613330410001', '6', null, '18356238002_84ea3d69', '2018-08-06 14:10:01');
+INSERT INTO `t_order_trace` VALUES ('133', '02018080613330410001', '5', null, '18356238002_84ea3d69', '2018-08-06 14:10:16');
+INSERT INTO `t_order_trace` VALUES ('134', '02018080614115010002', '0', null, '18356238002_84ea3d69', '2018-08-06 14:11:50');
+INSERT INTO `t_order_trace` VALUES ('135', '02018080614115010002', '2', null, '18356238002_84ea3d69', '2018-08-06 14:19:01');
+INSERT INTO `t_order_trace` VALUES ('136', '02018080614115010002', '3', null, '18356238002_84ea3d69', '2018-08-06 14:19:10');
+INSERT INTO `t_order_trace` VALUES ('137', '02018080614115010002', '6', null, '18356238002_84ea3d69', '2018-08-06 14:19:21');
+INSERT INTO `t_order_trace` VALUES ('138', '02018080614115010002', '5', null, '18356238002_84ea3d69', '2018-08-06 14:22:35');
+INSERT INTO `t_order_trace` VALUES ('139', '02018080614242210003', '0', null, '18356238002_84ea3d69', '2018-08-06 14:24:23');
+INSERT INTO `t_order_trace` VALUES ('140', '02018080614293210004', '0', null, '18356238002_84ea3d69', '2018-08-06 14:29:32');
+INSERT INTO `t_order_trace` VALUES ('141', '02018080614293210004', '2', null, '18356238002_84ea3d69', '2018-08-06 14:30:42');
+INSERT INTO `t_order_trace` VALUES ('142', '02018080614293210004', '3', null, '18356238002_84ea3d69', '2018-08-06 14:30:50');
+INSERT INTO `t_order_trace` VALUES ('143', '02018080614293210004', '6', null, '18356238002_84ea3d69', '2018-08-06 14:31:00');
+INSERT INTO `t_order_trace` VALUES ('144', '02018080614293210004', '5', null, '18356238002_84ea3d69', '2018-08-06 14:32:17');
+INSERT INTO `t_order_trace` VALUES ('145', '02018080614451910005', '0', null, '18356238002_84ea3d69', '2018-08-06 14:45:20');
+INSERT INTO `t_order_trace` VALUES ('146', '02018080614451910005', '2', null, '18356238002_84ea3d69', '2018-08-06 14:46:17');
+INSERT INTO `t_order_trace` VALUES ('147', '02018080614451910005', '3', null, '18356238002_84ea3d69', '2018-08-06 14:46:31');
+INSERT INTO `t_order_trace` VALUES ('148', '02018080614451910005', '6', null, '18356238002_84ea3d69', '2018-08-06 14:46:56');
+INSERT INTO `t_order_trace` VALUES ('149', '02018080614451910005', '5', null, '18356238002_84ea3d69', '2018-08-06 14:47:29');
+INSERT INTO `t_order_trace` VALUES ('150', '02018080615274210001', '0', null, '18356238002_84ea3d69', '2018-08-06 15:27:43');
+INSERT INTO `t_order_trace` VALUES ('151', '02018080917592710001', '0', null, '18356238002_84ea3d69', '2018-08-09 17:59:28');
+INSERT INTO `t_order_trace` VALUES ('152', '02018081210361010001', '0', null, '18356238002_84ea3d69', '2018-08-12 10:36:10');
+INSERT INTO `t_order_trace` VALUES ('153', '02018081210361010001', '3', null, '18356238002_84ea3d69', '2018-08-13 10:17:32');
+INSERT INTO `t_order_trace` VALUES ('154', '02018081210361010001', '6', null, '18356238002_84ea3d69', '2018-08-13 10:17:38');
+INSERT INTO `t_order_trace` VALUES ('155', '02018081310473210004', '0', null, '18356238002_84ea3d69', '2018-08-13 10:47:34');
+INSERT INTO `t_order_trace` VALUES ('156', '02018081310473210004', '3', null, '18356238002_84ea3d69', '2018-08-13 10:59:42');
+INSERT INTO `t_order_trace` VALUES ('157', '02018081310473210004', '6', null, '18356238002_84ea3d69', '2018-08-13 10:59:55');
+INSERT INTO `t_order_trace` VALUES ('158', '02018081311061410001', '0', null, '18356238002_84ea3d69', '2018-08-13 11:06:15');
+INSERT INTO `t_order_trace` VALUES ('159', '02018081311061410001', '3', null, '18356238002_84ea3d69', '2018-08-13 11:08:55');
+INSERT INTO `t_order_trace` VALUES ('160', '02018081311061410001', '6', null, '18356238002_84ea3d69', '2018-08-13 11:10:05');
+INSERT INTO `t_order_trace` VALUES ('161', '02018081311061410001', '5', null, '18356238002_84ea3d69', '2018-08-13 11:10:24');
 
 -- ----------------------------
 -- Table structure for t_pay_record
@@ -5594,6 +7013,7 @@ DROP TABLE IF EXISTS `t_pay_record`;
 CREATE TABLE `t_pay_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `order_id` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '订单号',
+  `refund_code` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '退款或撤销交易的订单订单号',
   `trade_no` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '支付宝交易号',
   `pay_channel` smallint(2) DEFAULT NULL COMMENT '交易渠道',
   `pay_type` smallint(1) DEFAULT NULL COMMENT '交易类型(0:付款/1:退款)',
@@ -5602,13 +7022,64 @@ CREATE TABLE `t_pay_record` (
   `buyed_id` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `seller_id` varchar(128) COLLATE utf8_unicode_ci DEFAULT NULL,
   `payment_time` datetime DEFAULT NULL,
-  `ceate_tme` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `active_sign` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '活动标志',
+  `flag` smallint(2) DEFAULT '0' COMMENT '交易状态(0:成功，1:失败)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='付款记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='付款记录表';
 
 -- ----------------------------
 -- Records of t_pay_record
 -- ----------------------------
+INSERT INTO `t_pay_record` VALUES ('1', '22018072411163810001', null, null, null, '0', null, null, null, null, '2018-07-25 17:02:53', '2018-07-25 17:02:54', null, '1');
+INSERT INTO `t_pay_record` VALUES ('2', '02018072517044110001', null, null, null, '0', null, null, null, null, '2018-07-25 17:04:55', '2018-07-25 17:04:56', null, '1');
+INSERT INTO `t_pay_record` VALUES ('3', '02018072516060210001', null, null, null, '0', null, null, null, null, '2018-07-25 17:05:22', '2018-07-25 17:05:23', null, '1');
+INSERT INTO `t_pay_record` VALUES ('4', '02018072615274710101', null, null, null, '0', null, null, null, null, '2018-07-29 09:26:30', '2018-07-29 09:26:31', null, '1');
+INSERT INTO `t_pay_record` VALUES ('5', '02018072615274710101', null, null, null, '0', null, null, null, null, '2018-07-29 09:31:27', '2018-07-29 09:31:28', null, '1');
+INSERT INTO `t_pay_record` VALUES ('6', '02018072615274710101', null, null, null, '0', null, null, null, null, '2018-07-29 10:06:44', '2018-07-29 10:06:44', null, '1');
+INSERT INTO `t_pay_record` VALUES ('7', '02018072615274710101', null, null, null, '0', null, null, null, null, '2018-07-29 16:50:06', '2018-07-29 16:50:08', null, '1');
+INSERT INTO `t_pay_record` VALUES ('8', '02018072615274710102', null, null, null, '0', null, null, null, null, '2018-07-29 16:55:58', '2018-07-29 16:55:58', null, '1');
+INSERT INTO `t_pay_record` VALUES ('9', '02018072615274710102', null, null, null, '0', null, null, null, null, '2018-07-29 16:56:54', '2018-07-29 16:56:55', null, '1');
+INSERT INTO `t_pay_record` VALUES ('10', '02018072615274710103', null, null, null, '0', null, null, null, null, '2018-07-29 17:13:05', '2018-07-29 17:13:05', null, '1');
+INSERT INTO `t_pay_record` VALUES ('11', '02018072615274710104', null, '531807291731184035038', '2', '0', '2190.98', '2190.98', null, null, '2018-07-29 17:31:18', '2018-07-29 17:31:19', null, '0');
+INSERT INTO `t_pay_record` VALUES ('12', '02018072615274710105', null, '381807291754464063028', '2', '0', '2190.98', '2190.98', null, null, '2018-07-29 17:54:46', '2018-07-29 17:54:47', null, '0');
+INSERT INTO `t_pay_record` VALUES ('16', '02018073011413110001', null, null, null, '0', null, null, null, null, '2018-08-02 16:35:15', '2018-08-02 16:41:45', null, '1');
+INSERT INTO `t_pay_record` VALUES ('17', '02018080109405210006', null, null, null, '0', null, null, null, null, '2018-08-02 16:57:40', '2018-08-02 16:58:59', null, '1');
+INSERT INTO `t_pay_record` VALUES ('18', '02018080109493410001', null, '681808021711263198038', '2', '0', '1.00', '1.00', null, null, '2018-08-02 17:11:26', '2018-08-02 17:12:05', null, '0');
+INSERT INTO `t_pay_record` VALUES ('19', '02018080109520710007', null, '351808021712333585028', '2', '0', '1.00', '1.00', null, null, '2018-08-02 17:12:33', '2018-08-02 17:12:47', null, '0');
+INSERT INTO `t_pay_record` VALUES ('20', '02018080110014110008', null, '961808021717183230038', '2', '0', '2190.98', '2190.98', null, null, '2018-08-02 17:17:18', '2018-08-02 17:17:35', null, '0');
+INSERT INTO `t_pay_record` VALUES ('21', '22018080217351410001', '02018080109493410001', null, null, '2', null, null, null, null, '2018-08-02 17:11:26', '2018-08-02 17:35:16', null, '1');
+INSERT INTO `t_pay_record` VALUES ('22', '12018080217420710002', '02018080109520710007', null, null, '1', null, null, null, null, '2018-08-02 17:12:33', '2018-08-02 17:42:13', null, '1');
+INSERT INTO `t_pay_record` VALUES ('23', '12018080217511510001', '02018080110014110008', null, null, '1', null, null, null, null, '2018-08-02 17:17:18', '2018-08-02 17:51:16', null, '1');
+INSERT INTO `t_pay_record` VALUES ('24', '02018080111045110004', null, null, null, '0', '2190.98', '2190.98', null, null, '2018-08-02 17:54:23', '2018-08-02 17:54:40', null, '0');
+INSERT INTO `t_pay_record` VALUES ('25', '22018080113534110002', null, '501808021758573555038', '2', '0', '199.99', '199.99', null, null, '2018-08-02 17:58:57', '2018-08-02 17:59:11', null, '0');
+INSERT INTO `t_pay_record` VALUES ('26', '12018080217595810002', '22018080113534110002', null, null, '1', null, null, null, null, '2018-08-02 17:58:57', '2018-08-02 17:59:59', null, '1');
+INSERT INTO `t_pay_record` VALUES ('27', '22018080113540910003', null, '331808031122257038028', '2', '0', '199.99', '199.99', null, null, '2018-08-03 11:22:25', '2018-08-03 11:22:49', null, '0');
+INSERT INTO `t_pay_record` VALUES ('28', '12018080311240810001', '22018080113540910003', null, null, '1', null, null, null, null, '2018-08-03 11:22:25', '2018-08-03 11:24:09', null, '1');
+INSERT INTO `t_pay_record` VALUES ('29', '02018072615274710099', null, '351808031122257176028', '2', '0', '2190.98', '2190.98', null, null, '2018-08-03 11:22:25', '2018-08-03 13:15:49', null, '0');
+INSERT INTO `t_pay_record` VALUES ('30', '12018080313165310001', '02018072615274710099', '351808031122257018028', '2', '1', '2190.98', '2190.98', null, null, '2018-08-03 11:22:25', '2018-08-03 13:16:54', null, '0');
+INSERT INTO `t_pay_record` VALUES ('33', '02018080609470510001', null, '2018080621001004560200685101', '0', '0', '0.01', '0.01', null, null, '2018-08-06 09:55:36', '2018-08-06 09:59:19', null, '0');
+INSERT INTO `t_pay_record` VALUES ('34', '02018080611233610004', null, '2018080621001004560200685110', '0', '0', '0.01', '0.01', null, null, '2018-08-06 11:26:07', '2018-08-06 11:26:10', null, '0');
+INSERT INTO `t_pay_record` VALUES ('35', '02018080611302110006', null, '2018080621001004560200684921', '0', '0', '0.01', '0.01', null, null, '2018-08-06 11:31:22', '2018-08-06 11:31:23', null, '0');
+INSERT INTO `t_pay_record` VALUES ('36', '12018080611324410007', '02018080611302110006', '2018080621001004560200684921', '0', '1', '0.01', '0.01', 'vtv***@sandbox.com', null, '2018-08-06 11:32:54', '2018-08-06 11:34:00', null, '0');
+INSERT INTO `t_pay_record` VALUES ('37', '02018080611354810008', null, '2018080621001004560200684922', '0', '0', '0.01', '0.01', null, null, '2018-08-06 11:37:17', '2018-08-06 11:37:18', null, '0');
+INSERT INTO `t_pay_record` VALUES ('38', '12018080611384610009', '02018080611354810008', '2018080621001004560200684922', '0', '1', '0.01', '0.01', 'vtv***@sandbox.com', null, '2018-08-06 11:38:49', '2018-08-06 11:38:50', null, '0');
+INSERT INTO `t_pay_record` VALUES ('39', '02018080613330410001', null, '2018080621001004560200684924', '0', '0', '0.01', '0.01', null, null, '2018-08-06 13:36:16', '2018-08-07 09:30:19', null, '0');
+INSERT INTO `t_pay_record` VALUES ('40', '12018080614101210001', '02018080613330410001', '2018080621001004560200684924', '0', '1', '0.01', '0.01', 'vtv***@sandbox.com', null, '2018-08-06 14:10:14', '2018-08-06 14:10:16', null, '0');
+INSERT INTO `t_pay_record` VALUES ('41', '02018080614115010002', null, '431808061415409443028', '2', '0', '2190.98', '2190.98', null, null, '2018-08-06 14:15:40', '2018-08-06 14:16:44', null, '0');
+INSERT INTO `t_pay_record` VALUES ('42', '12018080614223310001', '02018080614115010002', null, '2', '1', null, null, null, null, '2018-08-06 14:15:40', '2018-08-06 14:22:35', null, '1');
+INSERT INTO `t_pay_record` VALUES ('43', '02018080614293210004', null, '381808061429549495028', '2', '0', '0.01', '0.01', null, null, '2018-08-06 14:29:54', '2018-08-06 14:30:27', null, '0');
+INSERT INTO `t_pay_record` VALUES ('44', '12018080614314810003', '02018080614293210004', '381808061429549684028', '2', '1', '0.01', '0.01', null, null, '2018-08-06 14:29:54', '2018-08-06 14:32:17', null, '0');
+INSERT INTO `t_pay_record` VALUES ('45', '02018080614451910005', null, '701808061445519551038', '2', '0', '0.01', '0.01', null, null, '2018-08-06 14:45:51', '2018-08-06 14:46:04', null, '0');
+INSERT INTO `t_pay_record` VALUES ('46', '12018080614472810004', '02018080614451910005', '701808061445519750038', '2', '1', '0.01', '0.01', null, null, '2018-08-06 14:45:51', '2018-08-06 14:47:29', null, '0');
+INSERT INTO `t_pay_record` VALUES ('47', '02018080615274210001', null, '511808061528079692038', '2', '0', '0.01', '0.01', null, null, '2018-08-06 15:28:07', '2018-08-06 15:28:24', null, '0');
+INSERT INTO `t_pay_record` VALUES ('48', '22018080615334910001', '02018080615274210001', '511808061528079709038', '2', '2', '0.01', '0.01', null, null, '2018-08-06 15:28:07', '2018-08-06 15:33:50', null, '0');
+INSERT INTO `t_pay_record` VALUES ('49', '02018081210361010001', null, '2018081321001004560200686546', '0', '0', '0.01', '0.01', null, null, '2018-08-13 10:01:47', '2018-08-14 05:55:49', null, '0');
+INSERT INTO `t_pay_record` VALUES ('50', '12018081310191010003', '02018081210361010001', '2018081321001004560200686546', '0', '1', '0.01', '0.01', 'vtv***@sandbox.com', null, '2018-08-13 10:19:10', '2018-08-13 10:19:12', null, '0');
+INSERT INTO `t_pay_record` VALUES ('51', '02018081310473210004', null, '2018081321001004560200687015', '0', '0', '0.01', '0.01', null, null, '2018-08-13 10:48:33', '2018-08-14 06:42:34', null, '0');
+INSERT INTO `t_pay_record` VALUES ('52', '12018081311003310005', '02018081310473210004', '2018081321001004560200687015', '0', '1', '0.01', '0.01', 'vtv***@sandbox.com', null, '2018-08-13 11:00:32', '2018-08-13 11:00:34', null, '0');
+INSERT INTO `t_pay_record` VALUES ('53', '02018081311061410001', null, '2018081321001004560200687017', '0', '0', '0.01', '0.01', null, null, '2018-08-13 11:07:30', '2018-08-14 07:01:32', null, '0');
+INSERT INTO `t_pay_record` VALUES ('54', '12018081311102210002', '02018081311061410001', '2018081321001004560200687017', '0', '1', '0.01', '0.01', 'vtv***@sandbox.com', null, '2018-08-13 11:10:22', '2018-08-13 11:10:24', null, '0');
 
 -- ----------------------------
 -- Table structure for t_promotions
@@ -5621,6 +7092,7 @@ CREATE TABLE `t_promotions` (
   `main_image` varchar(500) DEFAULT NULL COMMENT '活动主图',
   `start_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '活动开始时间',
   `end_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '活动结束时间',
+  `user_type` varchar(500) DEFAULT NULL COMMENT '活动适用用户类型  保存json数组',
   `priority` int(11) DEFAULT NULL COMMENT '活动优先级',
   `share_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否和其他活动共享  1和其他活动共享 0不和其他活动共享',
   `discout` decimal(8,2) DEFAULT NULL COMMENT '折扣',
@@ -5632,16 +7104,17 @@ CREATE TABLE `t_promotions` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `delete_flag` smallint(1) DEFAULT '1' COMMENT '删除标识 0：无效 1：有效',
   `create_admin` int(11) NOT NULL COMMENT '活动创建人',
+  `collect_count` int(11) NOT NULL DEFAULT '0' COMMENT '收藏数量',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COMMENT='促销活动表';
 
 -- ----------------------------
 -- Records of t_promotions
 -- ----------------------------
-INSERT INTO `t_promotions` VALUES ('4', 'trial', '芙丽芳丝面膜试用活动', '/1.jpg', '2018-07-02 00:00:00', '2019-07-02 23:59:59', '1', '1', '10.00', '10', '100', '1', '试用流程 1、成为认证用户 2、免费申请试用 3、等待审核', '2018-07-02 18:12:08', '2018-07-03 13:52:00', '1', '-1');
-INSERT INTO `t_promotions` VALUES ('5', 'trial', '薇姿保湿套餐试用活动', '/2.jpg', '2018-06-02 00:00:00', '2018-07-02 23:59:59', '1', '1', '10.00', '10', '100', '0', '试用流程 1、成为认证用户 2、免费申请试用 3、等待审核', '2018-07-03 15:18:25', '2018-07-03 15:18:25', '1', '-1');
-INSERT INTO `t_promotions` VALUES ('6', 'trial', '薇姿面膜试用活动', '/1.jpg', '2018-07-09 00:00:00', '2019-07-02 23:59:59', '1', '1', '10.00', '10', '100', '0', '试用流程 1、成为认证用户 2、免费申请试用 3、等待审核', '2018-07-04 11:27:07', '2018-07-04 11:27:49', '1', '-1');
-INSERT INTO `t_promotions` VALUES ('7', 'trial', '理肤泉喷雾试用活动', '/1.jpg', '2018-07-02 00:00:00', '2019-07-02 23:59:59', '1', '1', '10.00', '10', '100', '1', '<p><strong><span style=\"font-size:18px;\">试用流程</span></strong> </p> <p> <span style=\"color:#666666;\">1、成为认证用户</span> </p> <p> <span style=\"color:#666666;\">申请试用者必须是淘美商会认证用户</span> </p> <p><span style=\"color:#666666;\">2、免费申请试用</span> </p> <p><span style=\"color:#666666;\">我们将为你提供各类化妆品免费试用机会</span> </p> <hr /><a href=\"http://www.taobao.com\">点击打开链接</a><br />', '2018-07-04 11:36:39', '2018-07-05 11:54:06', '1', '-1');
+INSERT INTO `t_promotions` VALUES ('4', 'trial', '芙丽芳丝面膜试用活动', '/1.jpg', '2018-07-02 00:00:00', '2019-07-02 23:59:59', null, '1', '1', '10.00', '10', '100', '1', '试用流程 1、成为认证用户 2、免费申请试用 3、等待审核', '2018-07-02 18:12:08', '2018-07-03 13:52:00', '1', '-1', '0');
+INSERT INTO `t_promotions` VALUES ('5', 'trial', '薇姿保湿套餐试用活动', '/2.jpg', '2018-06-02 00:00:00', '2018-07-27 23:59:59', null, '1', '1', '10.00', '10', '100', '0', '试用流程 1、成为认证用户 2、免费申请试用 3、等待审核', '2018-07-03 15:18:25', '2018-07-12 11:29:01', '1', '-1', '0');
+INSERT INTO `t_promotions` VALUES ('6', 'trial', '薇姿面膜试用活动', '/1.jpg', '2018-07-09 00:00:00', '2019-07-02 23:59:59', null, '1', '1', '10.00', '10', '100', '0', '试用流程 1、成为认证用户 2、免费申请试用 3、等待审核', '2018-07-04 11:27:07', '2018-07-10 13:56:42', '1', '-1', '0');
+INSERT INTO `t_promotions` VALUES ('7', 'group_buy', '兰蔻洗面奶150ml美白团购', '/1.jpg', '2018-07-02 00:00:00', '2019-07-02 23:59:59', '[\"MEMBER\",\"BRAND_PARTY\"]', '1', '1', '10.00', '10', '100', '0', '<p><strong><span style=\"font-size:18px;\">试用流程</span></strong> </p> <p> <span style=\"color:#666666;\">1、成为认证用户</span> </p> <p> <span style=\"color:#666666;\">申请试用者必须是淘美商会认证用户</span> </p> <p><span style=\"color:#666666;\">2、免费申请试用</span> </p> <p><span style=\"color:#666666;\">我们将为你提供各类化妆品免费试用机会</span> </p> <hr /><a href=\"http://www.taobao.com\">点击打开链接</a><br />', '2018-07-04 11:36:39', '2018-07-30 13:49:52', '1', '-1', '0');
 
 -- ----------------------------
 -- Table structure for t_promotions_apply
@@ -5659,14 +7132,15 @@ CREATE TABLE `t_promotions_apply` (
   `receiver_phone` varchar(20) DEFAULT NULL COMMENT '固定号码',
   `receiver_address` varchar(300) DEFAULT NULL COMMENT '收货地址，如：xx省xx市xx县/区xx路xx号',
   `remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `audit_reason` varchar(150) DEFAULT NULL COMMENT '审核不通过原因',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='促销活动申请表';
 
 -- ----------------------------
 -- Records of t_promotions_apply
 -- ----------------------------
-INSERT INTO `t_promotions_apply` VALUES ('1', '4', '1', '3', null, '2018-07-03 13:51:59', '侯印', '18513222222', '固定电话', '侯印得圈或窝地址', '侯印要求有球多，过多要求写了也不得满足你');
-INSERT INTO `t_promotions_apply` VALUES ('2', '7', '1', '0', null, '2018-07-05 11:54:06', '侯印', '18513222222', '固定电话', '侯印得圈或窝地址', '侯印要求有球多，过多要求写了也不得满足你');
+INSERT INTO `t_promotions_apply` VALUES ('1', '4', '1', '3', null, '2018-07-03 13:51:59', '侯印', '18513222222', '固定电话', '侯印得圈或窝地址', '侯印要求有球多，过多要求写了也不得满足你', null);
+INSERT INTO `t_promotions_apply` VALUES ('2', '7', '1', '0', null, '2018-07-05 11:54:06', '侯印', '18513222222', '固定电话', '侯印得圈或窝地址', '侯印要求有球多，过多要求写了也不得满足你', null);
 
 -- ----------------------------
 -- Table structure for t_promotions_collect
@@ -5680,7 +7154,7 @@ CREATE TABLE `t_promotions_collect` (
   `cancel_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '取消收藏时间',
   `delete_flag` smallint(1) NOT NULL COMMENT '是否有效 1有效 0无效',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='促销活动收藏表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='促销活动收藏表';
 
 -- ----------------------------
 -- Records of t_promotions_collect
@@ -5704,9 +7178,7 @@ CREATE TABLE `t_promotions_goods` (
 -- Records of t_promotions_goods
 -- ----------------------------
 INSERT INTO `t_promotions_goods` VALUES ('1', '4', '1', '999', '2018-07-02 18:12:09', '1');
-INSERT INTO `t_promotions_goods` VALUES ('2', '5', '2', '999', '2018-07-03 15:18:27', '1');
-INSERT INTO `t_promotions_goods` VALUES ('3', '6', '2', '999', '2018-07-04 11:27:07', '1');
-INSERT INTO `t_promotions_goods` VALUES ('4', '7', '2', '999', '2018-07-04 11:36:39', '1');
+INSERT INTO `t_promotions_goods` VALUES ('2', '7', '2', '999', '2018-07-03 15:18:27', '1');
 
 -- ----------------------------
 -- Table structure for t_receipt_address
@@ -5717,8 +7189,11 @@ CREATE TABLE `t_receipt_address` (
   `invoice_id` int(11) NOT NULL COMMENT '发票ID',
   `name` varchar(50) DEFAULT NULL COMMENT '收票人姓名',
   `telephone` varchar(16) DEFAULT NULL COMMENT '电话',
+  `province` int(8) DEFAULT NULL COMMENT '省份',
+  `city` int(8) DEFAULT NULL COMMENT '市',
+  `district` int(8) DEFAULT NULL COMMENT '区',
   `detailed_address` varchar(255) DEFAULT NULL COMMENT '收票人详细地址',
-  `status` smallint(1) DEFAULT NULL COMMENT '收票状态（0 - 未签收，1 - 已签收）',
+  `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收票地址表';
 
@@ -5763,16 +7238,32 @@ INSERT INTO `t_review_log` VALUES ('26', 'banrd', '92', '品牌入驻审核', '2
 INSERT INTO `t_review_log` VALUES ('27', 'banrd', '92', '品牌入驻审核', '2', '审核通过', '-1', null);
 
 -- ----------------------------
+-- Table structure for t_shop_follow
+-- ----------------------------
+DROP TABLE IF EXISTS `t_shop_follow`;
+CREATE TABLE `t_shop_follow` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `shop_id` int(11) NOT NULL COMMENT '店铺ID',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COMMENT='店铺关注人列表';
+
+-- ----------------------------
+-- Records of t_shop_follow
+-- ----------------------------
+INSERT INTO `t_shop_follow` VALUES ('52', '1', '1');
+
+-- ----------------------------
 -- Table structure for t_shop_info
 -- ----------------------------
 DROP TABLE IF EXISTS `t_shop_info`;
 CREATE TABLE `t_shop_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `platform_code` varchar(20) NOT NULL COMMENT '平台 code （天猫，淘宝，京东、等）',
-  `third_shop_id` varchar(20) NOT NULL COMMENT '第三方店铺ID',
+  `platform_code` varchar(20) DEFAULT NULL COMMENT '平台 code （天猫，淘宝，京东、等）',
+  `third_shop_id` varchar(20) DEFAULT NULL COMMENT '第三方店铺ID',
   `third_shop_name` varchar(50) DEFAULT NULL COMMENT '第三方店铺名称',
   `third_shop_url` varchar(255) DEFAULT NULL COMMENT '第三方店铺链接',
-  `monthly_turnover` decimal(8,2) DEFAULT NULL COMMENT '月成交额',
+  `monthly_turnover` decimal(10,2) DEFAULT NULL COMMENT '月成交额',
   `monthly_sales_images` varchar(255) DEFAULT NULL COMMENT '月销售截图',
   `main_category` varchar(255) DEFAULT NULL COMMENT '主营类目（护肤/彩妆/洗护/香水）',
   `main_brand` varchar(255) DEFAULT NULL COMMENT '主营品牌（综合/日韩/欧美/国货/东南亚/澳洲）',
@@ -5781,18 +7272,66 @@ CREATE TABLE `t_shop_info` (
   `shop_describe` varchar(40) DEFAULT NULL COMMENT '店铺经营特色',
   `logistics_methods` varchar(60) DEFAULT NULL COMMENT '物流方式（国内/保税仓/直邮）',
   `logo_images` varchar(50) DEFAULT NULL COMMENT '品牌logo图片',
+  `follower_num` int(8) DEFAULT '0' COMMENT '关注人数量',
   `user_id` int(11) DEFAULT NULL COMMENT '用户ID',
   `status` smallint(1) DEFAULT '0' COMMENT '店铺审核状态（0-未审核，1-审核中，2-已审核，3-已拒绝）',
   `is_main_shop` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否是主店铺（0,- 否，1- 是）',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='店铺信息';
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4 COMMENT='店铺信息';
 
 -- ----------------------------
 -- Records of t_shop_info
 -- ----------------------------
-INSERT INTO `t_shop_info` VALUES ('1', '平台 code （天猫，淘宝，京东、等）', '200000', '第三方店铺名称', '第三方店铺链接', '8000.00', null, '主营类目（护肤/彩妆/洗护/香水）', '主营品牌（综合/日韩/欧美/国货/东南亚/澳洲）', '店铺类型（品牌旗舰店or专营/综合店/红人店/小众店/细分品类店', '80.00', '店铺经营特色', '物流方式（国内/保税仓/直邮）', '品牌logo图片', '13', '3', '0', '2018-06-30 17:22:30');
-INSERT INTO `t_shop_info` VALUES ('2', '平台 code （天猫，淘宝，京东、等）', '200000', '第三方店铺名称', '第三方店铺链接', '8000.00', null, '主营类目（护肤/彩妆/洗护/香水）', '主营品牌（综合/日韩/欧美/国货/东南亚/澳洲）', '店铺类型（品牌旗舰店or专营/综合店/红人店/小众店/细分品类店', '80.00', '店铺经营特色', '物流方式（国内/保税仓/直邮）', '品牌logo图片', '1', '1', '0', '2018-06-29 14:26:31');
+INSERT INTO `t_shop_info` VALUES ('1', '平台 code （天猫，淘宝，京东、等）', '200000', '第三方店铺名称', '第三方店铺链接', '8000.00', null, '[5,6]', '主营品牌（综合/日韩/欧美/国货/东南亚/澳洲）', '店铺类型（品牌旗舰店or专营/综合店/红人店/小众店/细分品类店', '80.00', '店铺经营特色', '物流方式（国内/保税仓/直邮）', '品牌logo图片', '1', '1', '2', '1', '2018-08-12 13:26:12');
+INSERT INTO `t_shop_info` VALUES ('2', '平台 code （天猫，淘宝，京东、等）', '200000', '第三方店铺名称', '第三方店铺链接', '8000.00', null, '[5,6]', '主营品牌（综合/日韩/欧美/国货/东南亚/澳洲）', '店铺类型（品牌旗舰店or专营/综合店/红人店/小众店/细分品类店', '80.00', '店铺经营特色', '物流方式（国内/保税仓/直邮）', '品牌logo图片', '0', '1', '1', '0', '2018-08-12 13:26:10');
+INSERT INTO `t_shop_info` VALUES ('14', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '74', '2', '1', '2018-08-10 16:49:38');
+INSERT INTO `t_shop_info` VALUES ('15', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '74', '2', '1', '2018-08-10 16:49:38');
+INSERT INTO `t_shop_info` VALUES ('16', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '75', '2', '1', '2018-08-10 17:49:52');
+INSERT INTO `t_shop_info` VALUES ('17', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '75', '2', '1', '2018-08-10 17:49:53');
+INSERT INTO `t_shop_info` VALUES ('18', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '76', '2', '1', '2018-08-10 17:53:43');
+INSERT INTO `t_shop_info` VALUES ('19', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '76', '2', '1', '2018-08-10 17:53:43');
+INSERT INTO `t_shop_info` VALUES ('20', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '77', '2', '1', '2018-08-10 17:53:43');
+INSERT INTO `t_shop_info` VALUES ('21', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '77', '2', '1', '2018-08-10 17:53:43');
+INSERT INTO `t_shop_info` VALUES ('22', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '78', '2', '1', '2018-08-12 14:52:06');
+INSERT INTO `t_shop_info` VALUES ('23', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '78', '2', '1', '2018-08-12 14:52:06');
+INSERT INTO `t_shop_info` VALUES ('24', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '79', '2', '1', '2018-08-12 14:52:06');
+INSERT INTO `t_shop_info` VALUES ('25', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '79', '2', '1', '2018-08-12 14:52:06');
+INSERT INTO `t_shop_info` VALUES ('26', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '80', '2', '1', '2018-08-12 15:42:00');
+INSERT INTO `t_shop_info` VALUES ('27', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '80', '2', '1', '2018-08-12 15:42:00');
+INSERT INTO `t_shop_info` VALUES ('28', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '81', '2', '1', '2018-08-12 15:42:01');
+INSERT INTO `t_shop_info` VALUES ('29', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '81', '2', '1', '2018-08-12 15:42:01');
+INSERT INTO `t_shop_info` VALUES ('30', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '82', '2', '1', '2018-08-12 16:02:34');
+INSERT INTO `t_shop_info` VALUES ('31', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '82', '2', '1', '2018-08-12 16:02:34');
+INSERT INTO `t_shop_info` VALUES ('32', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '83', '2', '1', '2018-08-12 16:02:34');
+INSERT INTO `t_shop_info` VALUES ('33', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', null, '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '83', '2', '1', '2018-08-12 16:02:34');
+INSERT INTO `t_shop_info` VALUES ('34', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '122dae98-39bf-4fc4-b32c-23a6715da5bb.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '84', '2', '1', '2018-08-12 17:19:15');
+INSERT INTO `t_shop_info` VALUES ('35', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '83c76a63-9524-41ae-88ed-ed2944d0b704.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '84', '2', '1', '2018-08-12 17:19:15');
+INSERT INTO `t_shop_info` VALUES ('36', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '38107204-2907-4a6d-886a-4f3a4b8d0a00.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '85', '2', '1', '2018-08-12 17:19:15');
+INSERT INTO `t_shop_info` VALUES ('37', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '0b960532-e8c7-4031-90cc-17f8f97e3ca1.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '85', '2', '1', '2018-08-12 17:19:15');
+INSERT INTO `t_shop_info` VALUES ('38', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '1375d242-1aad-4f09-a754-bd1f47c735d7.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '86', '2', '1', '2018-08-12 17:24:43');
+INSERT INTO `t_shop_info` VALUES ('39', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', 'ea96247c-f148-4f79-a003-2a6271dc6976.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '86', '2', '1', '2018-08-12 17:24:43');
+INSERT INTO `t_shop_info` VALUES ('40', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '6c82bd89-9125-4b34-9608-fd6ebd922cf8.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '87', '2', '1', '2018-08-12 17:24:43');
+INSERT INTO `t_shop_info` VALUES ('41', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', 'c3fa82ea-9ef7-403f-87e4-9d3ed6d5165c.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '87', '2', '1', '2018-08-12 17:24:43');
+INSERT INTO `t_shop_info` VALUES ('42', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', 'c463980e-b1f6-47e0-8e08-3c9513051167.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '88', '2', '1', '2018-08-12 17:26:37');
+INSERT INTO `t_shop_info` VALUES ('43', 'PLATFORM_CODE_TB', '1001201020', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '6abd51c1-3309-4923-b051-13e1d862bdfe.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '88', '2', '1', '2018-08-12 17:26:37');
+INSERT INTO `t_shop_info` VALUES ('44', 'PLATFORM_CODE_TB', '156464446', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '9183a7f2-91fa-4ec9-bfcc-3f197b603075.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '89', '2', '1', '2018-08-12 17:26:37');
+INSERT INTO `t_shop_info` VALUES ('45', 'PLATFORM_CODE_TB', '822551166', '第三方店铺测试名称', 'www.baidu.com', '2000000.00', '8cc8f057-8dff-4f26-91c0-e360015bf340.jpg', '[5,6]', '[\"MAIN_BRAND_ZH\",\"MAIN_BRAND_RH\",\"MAIN_BRAND_OM\"]', 'SHOP_TYPE_ZH', '200.00', '测试特色', 'LOGISTICS_METHODS_GN', null, '0', '89', '2', '1', '2018-08-12 17:26:37');
+
+-- ----------------------------
+-- Table structure for t_shop_label
+-- ----------------------------
+DROP TABLE IF EXISTS `t_shop_label`;
+CREATE TABLE `t_shop_label` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shop_id` int(11) NOT NULL COMMENT '店铺ID',
+  `laban_code` varchar(16) NOT NULL COMMENT '标签编码（数据字典）',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='店铺和标签关联表';
+
+-- ----------------------------
+-- Records of t_shop_label
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for t_sku
@@ -5817,10 +7356,10 @@ CREATE TABLE `t_sku` (
 -- ----------------------------
 -- Records of t_sku
 -- ----------------------------
-INSERT INTO `t_sku` VALUES ('1', '1', '15ml', '199.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:35:07', '2018-07-04 18:44:36');
-INSERT INTO `t_sku` VALUES ('2', '1', '150ml', '1990.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:35:07', '2018-07-04 18:44:40');
-INSERT INTO `t_sku` VALUES ('3', '2', '15ml', '199.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:36:12', '2018-06-28 13:36:12');
-INSERT INTO `t_sku` VALUES ('4', '2', '150ml', '1990.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:36:12', '2018-06-28 13:36:12');
+INSERT INTO `t_sku` VALUES ('1', '1', '15ml', '199.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:35:07', '2018-07-27 16:52:03');
+INSERT INTO `t_sku` VALUES ('2', '1', '150ml', '1990.99', '1', '99', 'http://', '10', '0', '0', '2018-06-28 13:35:07', '2018-07-27 16:52:10');
+INSERT INTO `t_sku` VALUES ('3', '2', '100g', '199.99', '1', '99', '/goods/7c7acd0f-b92e-442e-944d-134966eb4894.jpg', '95', '5', '1', '2018-06-28 13:36:12', '2018-08-13 11:11:44');
+INSERT INTO `t_sku` VALUES ('4', '2', '150g', '1990.99', '1', '99', '/goods/7c7acd0f-b92e-442e-944d-134966eb4894.jpg', '95', '5', '1', '2018-06-28 13:36:12', '2018-08-13 11:11:44');
 INSERT INTO `t_sku` VALUES ('5', '3', '15ml', '199.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:36:19', '2018-06-28 13:36:19');
 INSERT INTO `t_sku` VALUES ('6', '3', '150ml', '1990.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:36:19', '2018-06-28 13:36:19');
 INSERT INTO `t_sku` VALUES ('7', '4', '15ml', '199.99', '1', '99', 'http://', '10', '0', '1', '2018-06-28 13:36:47', '2018-06-28 13:36:47');
@@ -5848,14 +7387,14 @@ INSERT INTO `t_sku` VALUES ('24', '12', '150ml', '1990.99', '1', '99', 'http://'
 DROP TABLE IF EXISTS `t_sms_log`;
 CREATE TABLE `t_sms_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `sms_template_id` int(11) NOT NULL COMMENT '短信发送模板ID',
+  `template_id` int(11) NOT NULL COMMENT '消息模板id',
   `biz_id` varchar(50) NOT NULL COMMENT '短信发送回执ID',
   `success_flag` smallint(1) NOT NULL COMMENT '是否发送成功  1成功 0不成功',
   `mobile` text NOT NULL COMMENT '短信接收号码,批量以逗号分隔的形式存储',
   `send_content` varchar(255) DEFAULT NULL COMMENT '短信发送内容',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COMMENT='短信发送记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COMMENT='短信发送记录表';
 
 -- ----------------------------
 -- Records of t_sms_log
@@ -5876,6 +7415,9 @@ INSERT INTO `t_sms_log` VALUES ('13', '4', '456713830152330343^0', '1', '1804643
 INSERT INTO `t_sms_log` VALUES ('14', '4', '145814530154027068^0', '1', '18046438383', '{\"code\":\"982048\"}', '2018-06-28 10:48:36');
 INSERT INTO `t_sms_log` VALUES ('15', '4', '264209430155471214^0', '1', '18046438383', '{\"code\":\"268534\"}', '2018-06-28 11:12:41');
 INSERT INTO `t_sms_log` VALUES ('16', '4', '281515830156936873^0', '1', '18011111111', '{\"code\":\"727394\"}', '2018-06-28 11:37:06');
+INSERT INTO `t_sms_log` VALUES ('17', '4', '266215231737084194^0', '1', '18516525350', '', '2018-07-16 18:33:05');
+INSERT INTO `t_sms_log` VALUES ('18', '1', '739419732052212486^0', '1', '18516525350', '验证码${code}，您正在登录，若非本人操作，请勿泄露。', '2018-07-20 10:05:11');
+INSERT INTO `t_sms_log` VALUES ('19', '1', '962409232052385244^0', '1', '18516525350', '验证码246123，您正在登录，若非本人操作，请勿泄露。', '2018-07-20 10:08:03');
 
 -- ----------------------------
 -- Table structure for t_sms_template
@@ -5923,31 +7465,33 @@ CREATE TABLE `t_spu` (
   `collect_count` int(11) NOT NULL DEFAULT '0' COMMENT '商品收藏数',
   `stock_count` int(11) NOT NULL DEFAULT '0' COMMENT '总库存',
   `sell_count` int(11) NOT NULL DEFAULT '0' COMMENT '总销量',
-  `publish_status` smallint(1) NOT NULL DEFAULT '1' COMMENT '上下架标识 1上架 0下架',
+  `publish_status` smallint(1) NOT NULL DEFAULT '1' COMMENT '上下架标识 1上架 0下架 2品牌过期下架',
   `audit_status` smallint(1) NOT NULL DEFAULT '1' COMMENT '审核状态 0初始化 1通过 2不通过',
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   `on_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上架时间',
   `up_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '下架时间',
   `delete_flag` smallint(1) NOT NULL DEFAULT '1' COMMENT '是否有效  1有效 0无效',
+  `user_id` int(11) NOT NULL DEFAULT '1' COMMENT '商家ID',
+  `virtual_flag` smallint(1) NOT NULL DEFAULT '0' COMMENT '是否是虚拟商品 1是 0否',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='商品或者产品表';
 
 -- ----------------------------
 -- Records of t_spu
 -- ----------------------------
-INSERT INTO `t_spu` VALUES ('1', '芙丽芳丝洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '1', '0', '0', '20', '0', '1', '1', '2018-06-28 13:33:38', '2018-07-04 18:44:28', '2018-06-28 13:33:38', '2018-06-28 13:35:07', '1');
-INSERT INTO `t_spu` VALUES ('2', '兰蔻洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:34:43', '2018-06-28 13:34:43', '2018-06-28 13:34:43', '2018-06-28 13:36:12', '1');
-INSERT INTO `t_spu` VALUES ('3', '雅思兰黛洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:34:50', '2018-06-28 13:34:50', '2018-06-28 13:34:50', '2018-06-28 13:36:19', '1');
-INSERT INTO `t_spu` VALUES ('4', '纪梵希洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:18', '2018-06-28 13:35:18', '2018-06-28 13:35:18', '2018-06-28 13:36:47', '1');
-INSERT INTO `t_spu` VALUES ('5', '香奈儿洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:29', '2018-06-28 13:35:29', '2018-06-28 13:35:29', '2018-06-28 13:36:58', '1');
-INSERT INTO `t_spu` VALUES ('6', '阿玛尼洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:44', '2018-07-04 16:57:28', '2018-06-28 13:35:44', '2018-06-28 13:37:13', '1');
-INSERT INTO `t_spu` VALUES ('7', 'SK2洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:53', '2018-06-28 13:35:53', '2018-06-28 13:35:53', '2018-06-28 13:37:22', '1');
-INSERT INTO `t_spu` VALUES ('8', '罗卜丁权杖口红', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:36:15', '2018-06-28 13:36:15', '2018-06-28 13:36:15', '2018-06-28 13:37:44', '1');
-INSERT INTO `t_spu` VALUES ('9', '阿玛尼小胖丁权杖口红', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:36:38', '2018-06-28 13:36:38', '2018-06-28 13:36:38', '2018-06-28 13:38:07', '1');
-INSERT INTO `t_spu` VALUES ('10', '纪梵希蜜粉', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:37:17', '2018-06-28 13:37:17', '2018-06-28 13:37:17', '2018-06-28 13:38:46', '1');
-INSERT INTO `t_spu` VALUES ('11', '兰蔻小黑瓶', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:38:20', '2018-06-28 13:38:20', '2018-06-28 13:38:20', '2018-06-28 13:39:49', '1');
-INSERT INTO `t_spu` VALUES ('12', '雅思兰黛粉底液', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:38:44', '2018-06-28 13:38:44', '2018-06-28 13:38:44', '2018-06-28 13:40:13', '1');
+INSERT INTO `t_spu` VALUES ('1', '芙丽芳丝洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '1', '0', '0', '20', '0', '1', '1', '2018-06-28 13:33:38', '2018-07-27 16:51:54', '2018-06-28 13:33:38', '2018-06-28 13:35:07', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('2', '兰蔻洗面奶150ml美白', '/goods/ab5e75bc-aed2-486c-bc3f-058ad2fb9a84.jpg', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '1', '0', '0', '190', '10', '1', '1', '2018-06-28 13:34:43', '2018-08-13 11:11:44', '2018-06-28 13:34:43', '2018-06-28 13:36:12', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('3', '雅思兰黛洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:34:50', '2018-06-28 13:34:50', '2018-06-28 13:34:50', '2018-06-28 13:36:19', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('4', '纪梵希洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:18', '2018-06-28 13:35:18', '2018-06-28 13:35:18', '2018-06-28 13:36:47', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('5', '香奈儿洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:29', '2018-06-28 13:35:29', '2018-06-28 13:35:29', '2018-06-28 13:36:58', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('6', '阿玛尼洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:44', '2018-07-04 16:57:28', '2018-06-28 13:35:44', '2018-06-28 13:37:13', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('7', 'SK2洗面奶150ml美白', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:35:53', '2018-06-28 13:35:53', '2018-06-28 13:35:53', '2018-06-28 13:37:22', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('8', '罗卜丁权杖口红', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:36:15', '2018-06-28 13:36:15', '2018-06-28 13:36:15', '2018-06-28 13:37:44', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('9', '阿玛尼小胖丁权杖口红', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:36:38', '2018-06-28 13:36:38', '2018-06-28 13:36:38', '2018-06-28 13:38:07', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('10', '纪梵希蜜粉', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:37:17', '2018-06-28 13:37:17', '2018-06-28 13:37:17', '2018-06-28 13:38:46', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('11', '兰蔻小黑瓶', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:38:20', '2018-06-28 13:38:20', '2018-06-28 13:38:20', '2018-06-28 13:39:49', '1', '0', '0');
+INSERT INTO `t_spu` VALUES ('12', '雅思兰黛粉底液', 'http', '1', '-1', 'http://', '卖点美白抖音同款', '199.99', '0', '0', '0', '20', '0', '1', '1', '2018-06-28 13:38:44', '2018-06-28 13:38:44', '2018-06-28 13:38:44', '2018-06-28 13:40:13', '1', '0', '0');
 
 -- ----------------------------
 -- Table structure for t_spu_extend
@@ -5967,18 +7511,18 @@ CREATE TABLE `t_spu_extend` (
 -- ----------------------------
 -- Records of t_spu_extend
 -- ----------------------------
-INSERT INTO `t_spu_extend` VALUES ('1', '1', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:35:07', '2018-06-28 13:35:07');
-INSERT INTO `t_spu_extend` VALUES ('2', '2', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:36:12', '2018-06-28 13:36:12');
-INSERT INTO `t_spu_extend` VALUES ('3', '3', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:36:19', '2018-06-28 13:36:19');
-INSERT INTO `t_spu_extend` VALUES ('4', '4', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:36:47', '2018-06-28 13:36:47');
-INSERT INTO `t_spu_extend` VALUES ('5', '5', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:36:58', '2018-06-28 13:36:58');
-INSERT INTO `t_spu_extend` VALUES ('6', '6', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:37:13', '2018-06-28 13:37:13');
-INSERT INTO `t_spu_extend` VALUES ('7', '7', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:37:22', '2018-06-28 13:37:22');
-INSERT INTO `t_spu_extend` VALUES ('8', '8', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:37:44', '2018-06-28 13:37:44');
-INSERT INTO `t_spu_extend` VALUES ('9', '9', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:38:07', '2018-06-28 13:38:07');
-INSERT INTO `t_spu_extend` VALUES ('10', '10', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:38:47', '2018-06-28 13:38:47');
-INSERT INTO `t_spu_extend` VALUES ('11', '11', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:39:49', '2018-06-28 13:39:49');
-INSERT INTO `t_spu_extend` VALUES ('12', '12', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":\"芙丽芳丝\"},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":\"中国上海\"},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":\"所有肤质\"},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"干肤质\",\"油性肤质\"]}]', null, '2018-06-28 13:40:13', '2018-06-28 13:40:13');
+INSERT INTO `t_spu_extend` VALUES ('1', '1', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:30:57', '2018-06-28 13:35:07');
+INSERT INTO `t_spu_extend` VALUES ('2', '2', '<video class=\"lib-video\" controlslist=\"\" webkit-playsinline=\"webkit-playsinline\" playsinline=\"playsinline\" autoplay=\"undefined\" poster=\"//img.alicdn.com/imgextra/i4/6000000000895/TB2xx78wdBopuFjSZPcXXc9EpXa_!!0-0-tbvideo.jpg_400x400.jpg\" data-spm-anchor-id=\"2013.1.0.i0.cc4a4ea8BERsAr\"></video>\r\n<p><img src=\"http://192.168.168.5:8020/goods/detail/c7dbdb06-30ad-45fa-8792-0012c33f5b9d.jpg\" /></p>\r\n<p><img src=\"http://192.168.168.5:8020/goods/detail/0b11c9ac-3473-4e11-bbe2-9d8007864e23.jpg\" /></p>\r\n<p><img src=\"http://192.168.168.5:8020/goods/detail/ac65ea84-0774-480a-84ca-c79a6f1e283b.jpg\" /></p>\r\n<p><img src=\"http://192.168.168.5:8020/goods/detail/a6362b45-eb13-45fb-9b2b-b3073f987fe1.jpg\" /></p>\r\n<p><img src=\"http://192.168.168.5:8020/goods/detail/6d2c1ceb-d80d-474c-8815-fa81f4939d60.jpg\" /></p>', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 11:11:42', '2018-06-28 13:36:12');
+INSERT INTO `t_spu_extend` VALUES ('3', '3', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:00', '2018-06-28 13:36:19');
+INSERT INTO `t_spu_extend` VALUES ('4', '4', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:04', '2018-06-28 13:36:47');
+INSERT INTO `t_spu_extend` VALUES ('5', '5', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:07', '2018-06-28 13:36:58');
+INSERT INTO `t_spu_extend` VALUES ('6', '6', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:11', '2018-06-28 13:37:13');
+INSERT INTO `t_spu_extend` VALUES ('7', '7', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:17', '2018-06-28 13:37:22');
+INSERT INTO `t_spu_extend` VALUES ('8', '8', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:21', '2018-06-28 13:37:44');
+INSERT INTO `t_spu_extend` VALUES ('9', '9', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:25', '2018-06-28 13:38:07');
+INSERT INTO `t_spu_extend` VALUES ('10', '10', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:28', '2018-06-28 13:38:47');
+INSERT INTO `t_spu_extend` VALUES ('11', '11', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:31', '2018-06-28 13:39:49');
+INSERT INTO `t_spu_extend` VALUES ('12', '12', '图文详情', '[{\"id\":1,\"keyName\":\"品牌\",\"keyValue\":[\"芙丽芳丝\"]},{\"id\":2,\"keyName\":\"产地\",\"keyValue\":[\"中国上海\"]},{\"id\":3,\"keyName\":\"适合肤质\",\"keyValue\":[\"所有肤质\"]},{\"id\":4,\"keyName\":\"功效\",\"keyValue\":[\"美白\",\"补水\",\"抗痘\",\"提亮肤色\"]}]', null, '2018-07-30 09:31:35', '2018-06-28 13:40:13');
 
 -- ----------------------------
 -- Table structure for t_spu_photo
@@ -6000,9 +7544,9 @@ CREATE TABLE `t_spu_photo` (
 INSERT INTO `t_spu_photo` VALUES ('1', '1', '1', 'http', '1', '2018-06-28 13:35:07');
 INSERT INTO `t_spu_photo` VALUES ('2', '1', '2', 'http', '0', '2018-06-28 13:35:07');
 INSERT INTO `t_spu_photo` VALUES ('3', '1', '3', 'http', '0', '2018-06-28 13:35:07');
-INSERT INTO `t_spu_photo` VALUES ('4', '2', '1', 'http', '1', '2018-06-28 13:36:12');
-INSERT INTO `t_spu_photo` VALUES ('5', '2', '2', 'http', '0', '2018-06-28 13:36:12');
-INSERT INTO `t_spu_photo` VALUES ('6', '2', '3', 'http', '0', '2018-06-28 13:36:12');
+INSERT INTO `t_spu_photo` VALUES ('4', '2', '1', '/goods/ab5e75bc-aed2-486c-bc3f-058ad2fb9a84.jpg', '1', '2018-06-28 13:36:12');
+INSERT INTO `t_spu_photo` VALUES ('5', '2', '2', '/goods/78e9afed-b23a-4741-b459-154d17831d07.jpg', '0', '2018-06-28 13:36:12');
+INSERT INTO `t_spu_photo` VALUES ('6', '2', '3', '/goods/547c700f-07a6-4621-85fe-82dfe40271f1.jpg', '0', '2018-06-28 13:36:12');
 INSERT INTO `t_spu_photo` VALUES ('7', '3', '1', 'http', '1', '2018-06-28 13:36:19');
 INSERT INTO `t_spu_photo` VALUES ('8', '3', '2', 'http', '0', '2018-06-28 13:36:19');
 INSERT INTO `t_spu_photo` VALUES ('9', '3', '3', 'http', '0', '2018-06-28 13:36:19');
@@ -6063,7 +7607,7 @@ CREATE TABLE `t_sys_log` (
   `create_user_name` varchar(20) DEFAULT NULL COMMENT ' 用户名称',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COMMENT='系统日志表';
+) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COMMENT='系统日志表';
 
 -- ----------------------------
 -- Records of t_sys_log
@@ -6115,6 +7659,122 @@ INSERT INTO `t_sys_log` VALUES ('44', '发布编辑促销活动', 'com.ishop.con
 INSERT INTO `t_sys_log` VALUES ('45', '新增分类', 'com.ishop.controller.CategoryBaController.addCategory()', '0:0:0:0:0:0:0:1', '{\"name\":[\"护肤\"],\"pid\":[\"0\"],\"lev\":[\"1\"],\"type\":[\"2\"],\"imgUrl\":[\"/1.jpg\"]}', null, null, '2018-07-04 16:55:25');
 INSERT INTO `t_sys_log` VALUES ('46', '新增分类', 'com.ishop.controller.CategoryBaController.addCategory()', '0:0:0:0:0:0:0:1', '{\"name\":[\"彩妆\"],\"pid\":[\"0\"],\"lev\":[\"1\"],\"type\":[\"2\"],\"imgUrl\":[\"/1.jpg\"]}', null, null, '2018-07-04 16:55:41');
 INSERT INTO `t_sys_log` VALUES ('47', '新增分类', 'com.ishop.controller.CategoryBaController.addCategory()', '0:0:0:0:0:0:0:1', '{\"name\":[\"个护\"],\"pid\":[\"0\"],\"lev\":[\"1\"],\"type\":[\"2\"],\"imgUrl\":[\"/1.jpg\"]}', null, null, '2018-07-04 16:55:47');
+INSERT INTO `t_sys_log` VALUES ('48', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 14:04:32');
+INSERT INTO `t_sys_log` VALUES ('49', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 14:05:12');
+INSERT INTO `t_sys_log` VALUES ('50', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 14:29:32');
+INSERT INTO `t_sys_log` VALUES ('51', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 14:55:52');
+INSERT INTO `t_sys_log` VALUES ('52', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 14:56:49');
+INSERT INTO `t_sys_log` VALUES ('53', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 14:59:15');
+INSERT INTO `t_sys_log` VALUES ('54', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:00:21');
+INSERT INTO `t_sys_log` VALUES ('55', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:01:53');
+INSERT INTO `t_sys_log` VALUES ('56', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:04:07');
+INSERT INTO `t_sys_log` VALUES ('57', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:10:33');
+INSERT INTO `t_sys_log` VALUES ('58', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:11:44');
+INSERT INTO `t_sys_log` VALUES ('59', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:20:30');
+INSERT INTO `t_sys_log` VALUES ('60', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:22:56');
+INSERT INTO `t_sys_log` VALUES ('61', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:38:50');
+INSERT INTO `t_sys_log` VALUES ('62', '发布消息配置', 'com.ishop.controller.message.MessageConfigBaController.publishMessageConfig()', '0:0:0:0:0:0:0:1', '{\"mInfo\":[\"{\\\"pushChannel\\\":\\\"MESSAGE_CHANNEL_SMS\\\",\\\"noticeTitle\\\":\\\"资讯头条\\\",\\\"msgTitle\\\":\\\"上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营 / 广州浪奇终止收购三家公司\\\",\\\"msgContent\\\":\\\"7月5日，上海上美CEO吕义雄公开致信CS渠道代理商表示，在未来一年其将深度参与CS渠道的经营，深度参与CS渠道的战略与战术。同时表示，将在明星单品上大力投入，注重产品动销\\\",\\\"pushType\\\":\\\"1\\\",\\\"triggerTime\\\":null,\\\"deviceType\\\":\\\"\\\",\\\"receiveType\\\":1,\\\"smsTemplateId\\\":1,\\\"syncApplicationFlag\\\":1,\\\"linkUrl\\\":\\\"http://m.tmz.com/\\\",\\\"cycleFlag\\\":1,\\\"cycleMinutes\\\":10}\"],\"receiveUsers\":[\"[{\\\"userId\\\":1,\\\"deleteFlag\\\":\\\"1\\\"},{\\\"userId\\\":2,\\\"deleteFlag\\\":\\\"1\\\"}]\"]}', null, null, '2018-07-08 15:50:11');
+INSERT INTO `t_sys_log` VALUES ('63', '批量删除消息配置', 'com.ishop.controller.message.MessageConfigBaController.batchDelete()', '0:0:0:0:0:0:0:1', '{\"ids\":[\"1,2\"]}', null, null, '2018-07-08 17:20:51');
+INSERT INTO `t_sys_log` VALUES ('64', '批量删除消息配置', 'com.ishop.controller.message.MessageConfigBaController.batchDelete()', '0:0:0:0:0:0:0:1', '{\"ids\":[\"1,2\"]}', null, null, '2018-07-08 17:20:57');
+INSERT INTO `t_sys_log` VALUES ('65', '批量删除消息配置', 'com.ishop.controller.message.MessageConfigBaController.batchDelete()', '0:0:0:0:0:0:0:1', '{\"ids\":[\"1,2\"]}', null, null, '2018-07-08 17:22:52');
+INSERT INTO `t_sys_log` VALUES ('66', '新增推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.addRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendType\":[\"APP_HOT_ARTICLE\"],\"articleId\":[\"7\"]}', null, null, '2018-07-10 18:22:33');
+INSERT INTO `t_sys_log` VALUES ('67', '新增推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.addRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendType\":[\"APP_HOT_ARTICLE\"],\"articleId\":[\"6\"]}', null, null, '2018-07-10 18:22:58');
+INSERT INTO `t_sys_log` VALUES ('68', '新增推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.addRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendType\":[\"APP_HOT_ARTICLE\"],\"articleId\":[\"6\"]}', null, null, '2018-07-10 18:23:00');
+INSERT INTO `t_sys_log` VALUES ('69', '新增推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.addRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendType\":[\"APP_HOT_ARTICLE\"],\"articleId\":[\"1\"]}', null, null, '2018-07-10 18:23:04');
+INSERT INTO `t_sys_log` VALUES ('70', '新增推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"3\"]}', null, null, '2018-07-10 18:25:31');
+INSERT INTO `t_sys_log` VALUES ('71', '新增推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"3\"]}', null, null, '2018-07-10 18:25:41');
+INSERT INTO `t_sys_log` VALUES ('72', '移除推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"3\"]}', null, null, '2018-07-10 18:27:20');
+INSERT INTO `t_sys_log` VALUES ('73', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"7\"],\"operationType\":[\"2\"]}', null, null, '2018-07-10 18:32:02');
+INSERT INTO `t_sys_log` VALUES ('74', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"7\"],\"operationType\":[\"2\"]}', null, null, '2018-07-10 18:33:54');
+INSERT INTO `t_sys_log` VALUES ('75', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"7\"],\"operationType\":[\"1\"]}', null, null, '2018-07-10 18:34:05');
+INSERT INTO `t_sys_log` VALUES ('76', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"7\"],\"operationType\":[\"4\"]}', null, null, '2018-07-10 18:34:29');
+INSERT INTO `t_sys_log` VALUES ('77', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"7\"],\"operationType\":[\"4\"]}', null, null, '2018-07-10 18:35:15');
+INSERT INTO `t_sys_log` VALUES ('78', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"7\"],\"operationType\":[\"4\"]}', null, null, '2018-07-10 18:38:53');
+INSERT INTO `t_sys_log` VALUES ('79', '推荐资讯排序修改', 'com.ishop.controller.article.ArticleRecommendBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"1\"],\"operationType\":[\"4\"]}', null, null, '2018-07-10 18:38:59');
+INSERT INTO `t_sys_log` VALUES ('80', '移除推荐资讯文章', 'com.ishop.controller.article.ArticleRecommendBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"recommendId\":[\"3\"]}', null, null, '2018-07-10 18:39:48');
+INSERT INTO `t_sys_log` VALUES ('81', '数据字典排序修改', 'com.ishop.controller.DictBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"31\"],\"operationType\":[\"3\"]}', null, null, '2018-07-11 15:10:22');
+INSERT INTO `t_sys_log` VALUES ('82', '数据字典排序修改', 'com.ishop.controller.DictBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"31\"],\"operationType\":[\"3\"]}', null, null, '2018-07-11 15:13:33');
+INSERT INTO `t_sys_log` VALUES ('83', '数据字典排序修改', 'com.ishop.controller.DictBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"32\"],\"operationType\":[\"3\"]}', null, null, '2018-07-11 15:15:30');
+INSERT INTO `t_sys_log` VALUES ('84', '移除数据字典', 'com.ishop.controller.DictBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"12\"]}', null, null, '2018-07-11 15:17:30');
+INSERT INTO `t_sys_log` VALUES ('85', '移除数据字典', 'com.ishop.controller.DictBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"9\"]}', null, null, '2018-07-11 15:18:48');
+INSERT INTO `t_sys_log` VALUES ('86', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '192.168.168.198', '{\"dictId\":[\"12\"],\"dictName\":[\"测试\"]}', null, null, '2018-07-11 15:21:51');
+INSERT INTO `t_sys_log` VALUES ('87', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '192.168.168.198', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告1\"]}', null, null, '2018-07-11 15:22:09');
+INSERT INTO `t_sys_log` VALUES ('88', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '192.168.168.198', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告1\"]}', null, null, '2018-07-11 15:22:22');
+INSERT INTO `t_sys_log` VALUES ('89', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告2\"]}', null, null, '2018-07-11 15:31:01');
+INSERT INTO `t_sys_log` VALUES ('90', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告3\"]}', null, null, '2018-07-11 15:33:19');
+INSERT INTO `t_sys_log` VALUES ('91', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告4\"]}', null, null, '2018-07-11 15:36:36');
+INSERT INTO `t_sys_log` VALUES ('92', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告5\"]}', null, null, '2018-07-11 15:37:27');
+INSERT INTO `t_sys_log` VALUES ('93', '移除数据字典', 'com.ishop.controller.DictBaController.removeRecommendArticle()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"11\"]}', null, null, '2018-07-11 15:38:09');
+INSERT INTO `t_sys_log` VALUES ('94', '修改数据字典名称', 'com.ishop.controller.DictBaController.updateDictData()', '0:0:0:0:0:0:0:1', '{\"dictId\":[\"11\"],\"dictName\":[\"手机端首页商品广告6\"]}', null, null, '2018-07-11 15:38:33');
+INSERT INTO `t_sys_log` VALUES ('95', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', null, null, '2018-07-16 09:42:47');
+INSERT INTO `t_sys_log` VALUES ('96', '读取所有菜单列表信息', 'com.ishop.controller.auth.AdminMenuController.list()', '0:0:0:0:0:0:0:1', '{}', null, null, '2018-07-16 09:43:11');
+INSERT INTO `t_sys_log` VALUES ('97', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateName\":[\"登录确认验证码\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"验证码${code}，您正在登录，若非本人操作，请勿泄露。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:18:40');
+INSERT INTO `t_sys_log` VALUES ('98', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateName\":[\"登录确认验证码\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"验证码${code}，您正在登录，若非本人操作，请勿泄露。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:20:09');
+INSERT INTO `t_sys_log` VALUES ('99', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateName\":[\"登录确认验证码\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"验证码${code}，您正在登录，若非本人操作，请勿泄露。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:20:20');
+INSERT INTO `t_sys_log` VALUES ('100', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateName\":[\"登录确认验证码\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"验证码${code}，您正在登录，若非本人操作，请勿泄露。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:23:28');
+INSERT INTO `t_sys_log` VALUES ('101', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"RIGISTER_VERIFYCODE\"],\"templateName\":[\"用户注册验证码\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"验证码${code}，您正在注册成为新用户，感谢您的支持！\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_137485025\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:25:22');
+INSERT INTO `t_sys_log` VALUES ('102', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PASSWORD_VERIFYCODE\"],\"templateName\":[\"修改密码验证码\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"验证码${code}，您正在尝试修改登录密码，请妥善保管账户信息。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_137485024\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:26:57');
+INSERT INTO `t_sys_log` VALUES ('103', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MEMBER_BIRTHDAY\"],\"templateName\":[\"会员生日提醒\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"尊敬淘美妆会员，今天是您生日，在此淘美妆商会携全体员工祝您生日快乐，生活愉快！\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139229309\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:28:18');
+INSERT INTO `t_sys_log` VALUES ('104', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MEMBER_AUDIT_PASS\"],\"templateName\":[\"审核通过提醒\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您的${mtname}申请已于${submittime}审批通过，特此通知。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_138130193\"],\"smsTemplateParam\":[\"{\\\"mtname\\\":\\\"%s\\\",\\\"submittime\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:34:53');
+INSERT INTO `t_sys_log` VALUES ('105', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MEMBER_AUDIT_NOT_PASS\"],\"templateName\":[\"审核不通过提醒\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您的${mtname}申请已于${submittime}审批不通过，请前往淘美妆商会APP了解详情\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139244148\"],\"smsTemplateParam\":[\"{\\\"mtname\\\":\\\"%s\\\",\\\"submittime\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:35:58');
+INSERT INTO `t_sys_log` VALUES ('106', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MEMBER_EXPIRING\"],\"templateName\":[\"会员会费即将到期\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"尊敬的淘美妆会员，您的会员服务已到期，请前往淘美妆商会APP进行续费\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139244146\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:37:47');
+INSERT INTO `t_sys_log` VALUES ('107', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"BRAND_EXPIRDED\"],\"templateName\":[\"品牌池品牌到期提醒\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"尊敬的淘美妆品牌方，贵司入驻品牌池的品牌服务已到期，请前往淘美妆商会APP进行续费\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139244147\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:38:37');
+INSERT INTO `t_sys_log` VALUES ('108', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MEMBER_EXPIRING\"],\"templateName\":[\"会员会费即将到期\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"尊敬淘美妆会员，你的会员服务还有${day}天到期，续费请前往淘美妆商会APP进行续费\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_138066013\"],\"smsTemplateParam\":[\"{\\\"day\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:41:38');
+INSERT INTO `t_sys_log` VALUES ('109', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"ACTIVITY_STARTING\"],\"templateName\":[\"活动即将开始\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"亲爱的${name}，您报名参加的${title}活动即将开幕，特此通知\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139244183\"],\"smsTemplateParam\":[\"{\\\"name\\\":\\\"%s\\\",\\\"title\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:42:52');
+INSERT INTO `t_sys_log` VALUES ('110', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"SHIP\"],\"templateName\":[\"发货通知\"],\"msgType\":[\"4\"],\"smsTemplate\":[\"亲爱的${userName}，您购买的宝贝已经由${logistics}快递,单号：${number}安排发货。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139244199\"],\"smsTemplateParam\":[\"{\\\"userName\\\":\\\"%s\\\",\\\"logistics\\\":\\\"%s\\\",\\\"number\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"亲爱的%s，您购买的宝贝已经由【%s快递】单号：%s安排发货\"],\"appNoticeTemplate\":[\"您购买的%s已发货\"]}', null, null, '2018-07-16 18:45:29');
+INSERT INTO `t_sys_log` VALUES ('111', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"PROMOTIONS_SUCCESS\"],\"templateName\":[\"试用/活动报名成功通知\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您的${promotions}申请已于${submittime}审批通过，特此通知\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_139234806\"],\"smsTemplateParam\":[\"{\\\"promotions\\\":\\\"%s\\\",\\\"submittime\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:49:43');
+INSERT INTO `t_sys_log` VALUES ('112', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"ORDER_PAY_SUCCESS\"],\"templateName\":[\"订单支付成功通知\"],\"msgType\":[\"2\"],\"smsTemplate\":[\"\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"\"],\"smsTemplateParam\":[\"亲爱的%s，感谢您选择淘美妆商会。您刚刚在本平台购买的商品,我们会尽快为您安排发货\"],\"appTemplate\":[\"亲爱的%s，感谢您选择淘美妆商会。您刚刚在本平台购买的商品,我们会尽快为您安排发货\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:57:41');
+INSERT INTO `t_sys_log` VALUES ('113', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"ORDER_NOT_PAY\"],\"templateName\":[\"待支付通知\"],\"msgType\":[\"2\"],\"smsTemplate\":[\"\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"\"],\"smsTemplateParam\":[\"您有待付款订单，赶紧去支付吧\"],\"appTemplate\":[\"您有待付款订单，赶紧去支付吧\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 18:59:07');
+INSERT INTO `t_sys_log` VALUES ('114', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"\"],\"templateId\":[\"1\"],\"templateName\":[\"\"],\"smsTemplate\":[\"\",\"\"],\"msgType\":[\"\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 19:02:27');
+INSERT INTO `t_sys_log` VALUES ('115', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateId\":[\"1\"],\"templateName\":[\"登录确认验证码\"],\"smsTemplate\":[\"淘美妆商会\"],\"msgType\":[\"1\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 19:16:22');
+INSERT INTO `t_sys_log` VALUES ('116', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateId\":[\"1\"],\"templateName\":[\"\"],\"smsTemplate\":[\"\",\"\"],\"msgType\":[\"1\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 19:16:52');
+INSERT INTO `t_sys_log` VALUES ('117', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateId\":[\"1\"],\"templateName\":[\"\"],\"smsTemplate\":[\"\",\"\"],\"msgType\":[\"1\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 19:17:06');
+INSERT INTO `t_sys_log` VALUES ('118', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateId\":[\"1\"],\"templateName\":[\"\"],\"smsTemplate\":[\"\",\"\"],\"msgType\":[\"1\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 19:17:12');
+INSERT INTO `t_sys_log` VALUES ('119', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"LOGIN_VERIFYCODE\"],\"templateId\":[\"1\"],\"templateName\":[\"\"],\"smsTemplate\":[\"验证码${code}，您正在登录，若非本人操作，请勿泄露。\"],\"msgType\":[\"1\"],\"smsSignName\":[\"\"],\"smsTemplateCode\":[\"SMS_137485027\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-16 19:17:26');
+INSERT INTO `t_sys_log` VALUES ('120', '新增消息模板', 'com.ishop.controller.message.MessageTemplateBaController.addSmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PHONE\"],\"templateName\":[\"修改绑定手机号\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_140115185\"],\"smsTemplateParam\":[\"\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-23 18:06:59');
+INSERT INTO `t_sys_log` VALUES ('121', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PHONE\"],\"templateId\":[\"15\"],\"templateName\":[\"修改绑定手机号\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_140115185\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-23 18:09:07');
+INSERT INTO `t_sys_log` VALUES ('122', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PHONE\"],\"templateId\":[\"15\"],\"templateName\":[\"修改绑定手机号\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_140115185\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-23 18:13:05');
+INSERT INTO `t_sys_log` VALUES ('123', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PHONE\"],\"templateId\":[\"15\"],\"templateName\":[\"修改绑定手机号\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_140115185\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-23 18:13:58');
+INSERT INTO `t_sys_log` VALUES ('124', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PHONE\"],\"templateId\":[\"15\"],\"templateName\":[\"修改绑定手机号\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_140115185\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-23 18:15:22');
+INSERT INTO `t_sys_log` VALUES ('125', '修改消息模板', 'com.ishop.controller.message.MessageTemplateBaController.modifySmsTemplate()', '0:0:0:0:0:0:0:1', '{\"templateCode\":[\"MODIFY_PHONE\"],\"templateId\":[\"15\"],\"templateName\":[\"修改绑定手机号\"],\"msgType\":[\"1\"],\"smsTemplate\":[\"您正在绑定新手机号，验证码为%s，如非本人操作，可不用理会。\"],\"smsSignName\":[\"淘美妆商会\"],\"smsTemplateCode\":[\"SMS_140115185\"],\"smsTemplateParam\":[\"{\\\"code\\\":\\\"%s\\\"}\"],\"appTemplate\":[\"\"],\"appNoticeTemplate\":[\"\"]}', null, null, '2018-07-23 18:16:20');
+INSERT INTO `t_sys_log` VALUES ('126', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"\"],\"viewMaxNum\":[\"\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 13:37:39');
+INSERT INTO `t_sys_log` VALUES ('127', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"\"],\"viewMaxNum\":[\"\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 15:53:42');
+INSERT INTO `t_sys_log` VALUES ('128', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"1\"],\"viewMaxNum\":[\"\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 15:53:49');
+INSERT INTO `t_sys_log` VALUES ('129', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"1\"],\"viewMaxNum\":[\"1\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 15:53:56');
+INSERT INTO `t_sys_log` VALUES ('130', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"1\"],\"viewMaxNum\":[\"1\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 15:54:27');
+INSERT INTO `t_sys_log` VALUES ('131', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"1\"],\"viewMaxNum\":[\"1\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 15:54:42');
+INSERT INTO `t_sys_log` VALUES ('132', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"1\"],\"viewMaxNum\":[\"1\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 15:57:34');
+INSERT INTO `t_sys_log` VALUES ('133', '删除广告位', 'com.ishop.controller.AdvertisingBaController.removeAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"]}', null, null, '2018-07-24 15:58:36');
+INSERT INTO `t_sys_log` VALUES ('134', '新增广告位广告', 'com.ishop.controller.AdvertisingBaController.addAdvertising()', '0:0:0:0:0:0:0:1', '{\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adName\":[\"集采\"],\"adType\":[\"0\"],\"adImgUrl\":[\"http://link\"],\"adLinkUrl\":[\"http://\"],\"adText\":[\"\"],\"startTime\":[\"2018-06-19 00:00:00\"],\"endTime\":[\"2019-06-19 23:59:59\"]}', null, null, '2018-07-24 16:12:46');
+INSERT INTO `t_sys_log` VALUES ('135', '编辑广告位', 'com.ishop.controller.AdvertisingBaController.updateAdvertisingSite()', '0:0:0:0:0:0:0:1', '{\"adsId\":[\"2\"],\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adsType\":[\"1\"],\"viewMaxNum\":[\"8\"],\"height\":[\"\"],\"width\":[\"\"],\"adsDesc\":[\"手机端APP首页分类\"],\"adsTitle\":[\"菜单分类\"]}', null, null, '2018-07-24 16:13:02');
+INSERT INTO `t_sys_log` VALUES ('136', '新增广告位广告', 'com.ishop.controller.AdvertisingBaController.addAdvertising()', '0:0:0:0:0:0:0:1', '{\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adName\":[\"集采\"],\"adType\":[\"0\"],\"adImgUrl\":[\"http://link\"],\"adLinkUrl\":[\"http://\"],\"adText\":[\"\"],\"startTime\":[\"2018-06-19 00:00:00\"],\"endTime\":[\"2019-06-19 23:59:59\"]}', null, null, '2018-07-24 16:13:07');
+INSERT INTO `t_sys_log` VALUES ('137', '新增广告位广告', 'com.ishop.controller.AdvertisingBaController.addAdvertising()', '0:0:0:0:0:0:0:1', '{\"adsCode\":[\"AD_APP_INDEX_MENU\"],\"adName\":[\"集采列表\"],\"adType\":[\"0\"],\"adImgUrl\":[\"http://goodsImg\"],\"adLinkUrl\":[\"http://goodslist\"],\"adText\":[\"阿凡达\"],\"startTime\":[\"2018-06-19 00:00:00\"],\"endTime\":[\"2019-06-19 23:59:59\"],\"adId\":[\"9\"]}', null, null, '2018-07-24 16:15:42');
+INSERT INTO `t_sys_log` VALUES ('138', '广告排序修改', 'com.ishop.controller.AdvertisingBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"adId\":[\"9\"],\"operationType\":[\"3\"]}', null, null, '2018-07-24 17:27:11');
+INSERT INTO `t_sys_log` VALUES ('139', '广告排序修改', 'com.ishop.controller.AdvertisingBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"adId\":[\"9\"],\"operationType\":[\"1\"]}', null, null, '2018-07-24 17:27:53');
+INSERT INTO `t_sys_log` VALUES ('140', '广告排序修改', 'com.ishop.controller.AdvertisingBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"adId\":[\"9\"],\"operationType\":[\"2\"]}', null, null, '2018-07-24 17:28:08');
+INSERT INTO `t_sys_log` VALUES ('141', '广告排序修改', 'com.ishop.controller.AdvertisingBaController.modifySort()', '0:0:0:0:0:0:0:1', '{\"adId\":[\"9\"],\"operationType\":[\"3\"]}', null, null, '2018-07-24 17:28:27');
+INSERT INTO `t_sys_log` VALUES ('142', '发布编辑酒店', 'com.ishop.controller.activity.HotelBaController.publishGoods()', '0:0:0:0:0:0:0:1', '{\"sInfo\":[\"{\\\"hotelId\\\":null,\\\"name\\\":\\\"上海小南国大酒店\\\",\\\"address\\\":\\\"上海市杨浦区佳木斯林路\\\",\\\"province\\\":\\\"上海市\\\",\\\"region\\\":\\\"杨浦区\\\",\\\"city\\\":\\\"上海市\\\",\\\"location\\\":\\\"\\\",\\\"decorateYear\\\":\\\"2011\\\",\\\"photo\\\":\\\"/hotel/31f34345-15cb-48c1-8210-08a9f3ce2c0f.jpg\\\",\\\"introduction\\\":\\\"上海小南国花园酒店地处杨浦区，步行5分钟即可到达地铁8号线黄兴公园站，坐拥上海浦西市中心不可多得的自然生态环境，为客人提供大隐于市的度假体验。\\\" }\"],\"hotelGoodsList\":[\"[{\\\"hotelGoodsId\\\":null,\\\"goodsType\\\":1,\\\"goodsName\\\":\\\"豪华湖景房\\\",\\\"stockNum\\\":5,\\\"price\\\":\\\"850\\\",\\\"liveNum\\\":2,\\\"image\\\":\\\"\\\",\\\"deleteFlag\\\":1},{\\\"hotelGoodsId\\\":null,\\\"goodsType\\\":1,\\\"goodsName\\\":\\\"至尊湖景房\\\",\\\"stockNum\\\":5,\\\"price\\\":\\\"1500\\\",\\\"liveNum\\\":2,\\\"image\\\":\\\"\\\",\\\"deleteFlag\\\":1}]\"]}', null, null, '2018-08-06 17:03:55');
+INSERT INTO `t_sys_log` VALUES ('143', '发布编辑酒店', 'com.ishop.controller.activity.HotelBaController.publishGoods()', '0:0:0:0:0:0:0:1', '{\"sInfo\":[\"{\\\"hotelId\\\":null,\\\"name\\\":\\\"上海小南国大酒店\\\",\\\"address\\\":\\\"上海市杨浦区佳木斯林路\\\",\\\"province\\\":\\\"\\\",\\\"region\\\":\\\"\\\",\\\"city\\\":\\\"\\\",\\\"location\\\":\\\"\\\",\\\"starLevel\\\":5,\\\"decorateYear\\\":\\\"2011\\\",\\\"photo\\\":\\\"/hotel/31f34345-15cb-48c1-8210-08a9f3ce2c0f.jpg\\\",\\\"introduction\\\":\\\"上海小南国花园酒店地处杨浦区，步行5分钟即可到达地铁8号线黄兴公园站，坐拥上海浦西市中心不可多得的自然生态环境，为客人提供大隐于市的度假体验。\\\" }\"],\"hotelGoodsList\":[\"[{\\\"hotelGoodsId\\\":null,\\\"goodsType\\\":1,\\\"goodsName\\\":\\\"豪华湖景房\\\",\\\"stockNum\\\":5,\\\"price\\\":\\\"850\\\",\\\"liveNum\\\":2,\\\"image\\\":\\\"\\\",\\\"deleteFlag\\\":1},{\\\"hotelGoodsId\\\":null,\\\"goodsType\\\":1,\\\"goodsName\\\":\\\"至尊湖景房\\\",\\\"stockNum\\\":5,\\\"price\\\":\\\"1500\\\",\\\"liveNum\\\":2,\\\"image\\\":\\\"\\\",\\\"deleteFlag\\\":1}]\"]}', null, null, '2018-08-06 17:06:52');
+INSERT INTO `t_sys_log` VALUES ('144', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:20:15');
+INSERT INTO `t_sys_log` VALUES ('145', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:21:25');
+INSERT INTO `t_sys_log` VALUES ('146', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:21:53');
+INSERT INTO `t_sys_log` VALUES ('147', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:23:15');
+INSERT INTO `t_sys_log` VALUES ('148', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:23:57');
+INSERT INTO `t_sys_log` VALUES ('149', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:26:46');
+INSERT INTO `t_sys_log` VALUES ('150', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:28:34');
+INSERT INTO `t_sys_log` VALUES ('151', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:29:19');
+INSERT INTO `t_sys_log` VALUES ('152', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:29:22');
+INSERT INTO `t_sys_log` VALUES ('153', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:29:42');
+INSERT INTO `t_sys_log` VALUES ('154', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:36:30');
+INSERT INTO `t_sys_log` VALUES ('155', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:37:41');
+INSERT INTO `t_sys_log` VALUES ('156', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:39:39');
+INSERT INTO `t_sys_log` VALUES ('157', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:40:25');
+INSERT INTO `t_sys_log` VALUES ('158', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:40:27');
+INSERT INTO `t_sys_log` VALUES ('159', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:40:56');
+INSERT INTO `t_sys_log` VALUES ('160', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:40:57');
+INSERT INTO `t_sys_log` VALUES ('161', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:42:13');
+INSERT INTO `t_sys_log` VALUES ('162', '发布编辑活动', 'com.ishop.controller.activity.ActivityBaController.publishActivity()', '0:0:0:0:0:0:0:1', '{\"aInfo\":[\"{\\\"activityId\\\":null,\\\"title\\\":\\\"2018年终峰会\\\",\\\"main_image\\\":\\\"/activity/cb36803b-db5c-444f-9cef-d97cb7285ce7.jpg\\\",\\\"activityType\\\":\\\"COMPLEX_ACTIVITY\\\",\\\"activityWay\\\":\\\"SUMMIT_MEETING\\\",\\\"startTime\\\":\\\"2018-08-13 00:00:00\\\",\\\"endTime\\\":\\\"2018-08-15 23:59:59\\\",\\\"refundFlag\\\":1,\\\"refundLimitTime\\\":\\\"2018-08-20 23:59:59\\\",\\\"hotelFlag\\\":1,\\\"hotelId\\\":1,\\\"address\\\":\\\"上海嘉定区发放大发放\\\",\\\"process\\\":\\\"1、发打发打发\\\",\\\"introduction\\\":\\\"活动介绍\\\",\\\"feeRemark\\\":\\\"活动费用说明\\\",\\\"province\\\":\\\"上海\\\",\\\"region\\\":\\\"嘉定区市\\\",\\\"city\\\":\\\"上海市\\\"}\"]}', null, null, '2018-08-12 15:43:31');
+INSERT INTO `t_sys_log` VALUES ('163', '批量上下架活动', 'com.ishop.controller.activity.ActivityBaController.batchModifyStatus()', '0:0:0:0:0:0:0:1', '{\"ids\":[\"1\"],\"publishStatus\":[\"1\"]}', null, null, '2018-08-12 15:47:56');
 
 -- ----------------------------
 -- Table structure for t_template
@@ -6149,7 +7809,7 @@ CREATE TABLE `t_user` (
   `grade` varchar(10) DEFAULT '' COMMENT '用户等级',
   `growth_value` int(11) NOT NULL DEFAULT '0' COMMENT '用户成长值',
   `integral` int(11) NOT NULL DEFAULT '0' COMMENT '用户积分',
-  `image_url` varchar(50) DEFAULT NULL COMMENT '头像地址',
+  `image_url` varchar(150) DEFAULT NULL COMMENT '头像地址',
   `nick_name` varchar(20) DEFAULT NULL COMMENT '用户昵称',
   `user_name` varchar(20) DEFAULT NULL COMMENT '用户名称',
   `birthday` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '用户生日',
@@ -6169,18 +7829,35 @@ CREATE TABLE `t_user` (
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   `locked` smallint(1) NOT NULL DEFAULT '0' COMMENT '用户是否被锁定(0:未锁定，1:锁定)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COMMENT='C-端 用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8mb4 COMMENT='C-端 用户表';
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('1', null, '18356238002', '123456', null, '一级', '0', '0', null, null, 'Jack', '2018-07-04 15:02:28', null, null, null, null, null, null, '0', null, '5', '57E62C0CA95999ABE1AEE1F2449DFC0E', '0', null, null, '2018-07-04 15:02:28', '0');
+INSERT INTO `t_user` VALUES ('1', null, '18000000001', '888888', '0', '一级', '0', '0', '/mine/81257157-5625-428d-855e-50fbd2a47079.jpg', '光伟', '18000000001_5b6c1064', '2018-08-13 11:27:42', null, null, null, null, null, '', '0', null, '5', 'B11A38B0435AFA179F3DFC09AE84D2B2', '0', null, null, '2018-08-13 11:27:42', '0');
 INSERT INTO `t_user` VALUES ('6', null, '17856348002', '123456', null, '一级', '0', '0', null, null, '17856348002', null, null, null, null, null, null, null, '0', null, '5', null, '0', null, null, '2018-06-27 18:23:15', '0');
-INSERT INTO `t_user` VALUES ('9', null, '15026486249', '123456lijian', null, '一级', '0', '0', null, null, '15026486249', '2018-06-29 18:01:03', null, null, null, null, null, null, '0', null, '5', '00BDAE16B9C48E9FDB0978C3A03B0D85', '0', null, null, '2018-06-29 18:01:03', '0');
-INSERT INTO `t_user` VALUES ('10', null, '18046438383', '888888a', null, '一级', '0', '0', null, null, '18046438383', '2018-07-03 11:15:57', null, null, null, null, null, null, '0', null, '5', 'B4E0618D168ABFCAF25762C68F2715B7', '0', null, null, '2018-07-03 11:15:57', '0');
-INSERT INTO `t_user` VALUES ('11', null, '18022222222', '888888', null, '一级', '0', '0', null, null, '18022222222', null, null, null, null, null, null, null, '0', null, '5', null, '0', null, null, '2018-06-28 13:10:10', '0');
-INSERT INTO `t_user` VALUES ('12', null, '18011111111', '006fa539472e7208d815ef7ed657a5e1', null, '一级', '0', '0', null, null, '18011111111', null, null, null, null, null, null, null, '0', null, '5', null, '0', null, null, '2018-06-28 14:23:51', '0');
-INSERT INTO `t_user` VALUES ('13', '10010100', '13023189972', '123456789', '0', '一级', '0', '0', null, '廖兵', '13023189972', '2018-06-29 13:45:27', '1100', '2000', '3000', 'wangwang', 'qq', 'weixing', '0', 'huiyuan', '5', null, '0', null, null, '2018-06-29 13:45:27', '0');
+INSERT INTO `t_user` VALUES ('10', null, '18046438383', '888888a', '0', '一级', '0', '0', 'brand/5a92e153-45cb-40d0-ad6d-044b34f4b1bf.jpg', '了是了是了', '18046438383', '2018-07-26 14:35:38', null, null, null, null, null, null, '0', null, '5', '1B00124D6D62B8C4A0705AE59EDB2EF8', '0', null, null, '2018-07-26 14:35:38', '0');
+INSERT INTO `t_user` VALUES ('11', null, '18022222222', '888888', null, '一级', '0', '0', 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTI6J3aB8SFk2opVtBpUOmZiby7FnKU38zlqjibMpEGDHENBLzESyHvZIKunKpGb1GtuyIvOEHG0qSdQ/132', null, '18022222222', '2018-08-09 13:33:15', null, null, null, null, null, null, '0', null, '5', null, '0', null, null, '2018-08-09 13:33:15', '0');
+INSERT INTO `t_user` VALUES ('12', null, '18011111111', '006fa539472e7208d815ef7ed657a5e1', null, '一级', '0', '0', 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTI6J3aB8SFk2opVtBpUOmZiby7FnKU38zlqjibMpEGDHENBLzESyHvZIKunKpGb1GtuyIvOEHG0qSdQ/132', null, '18011111111', '2018-08-09 13:33:16', null, null, null, null, null, null, '0', null, '5', null, '0', null, null, '2018-08-09 13:33:16', '0');
+INSERT INTO `t_user` VALUES ('13', '10010100', '13023189972', '123456789', '0', '一级', '0', '0', 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTI6J3aB8SFk2opVtBpUOmZiby7FnKU38zlqjibMpEGDHENBLzESyHvZIKunKpGb1GtuyIvOEHG0qSdQ/132', '廖兵', '13023189972', '2018-08-09 13:33:17', '1100', '2000', '3000', 'wangwang', 'qq', 'weixing', '0', 'huiyuan', '5', null, '0', null, null, '2018-08-09 13:33:17', '0');
+INSERT INTO `t_user` VALUES ('14', null, '18356238002', '123456', '0', '1', '0', '0', 'http://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTI6J3aB8SFk2opVtBpUOmZiby7FnKU38zlqjibMpEGDHENBLzESyHvZIKunKpGb1GtuyIvOEHG0qSdQ/132', '勿忘ing', '18356238002_84ea3d69', '2018-08-12 10:34:14', null, null, null, null, 'qq', 'weixin', '0', null, '5', '16E1C59CFFB8B51B3C37F5677C231A29', '0', null, null, '2018-08-12 10:34:14', '0');
+INSERT INTO `t_user` VALUES ('59', null, '18000000000', 'E10ADC3949BA59ABBE56E057F20F883E', '0', '1', '0', '0', '/file/images/headingImages\\18000000000_c933dfd5.jpg', '勿忘ing', '18000000000_c933dfd5', '2018-08-12 15:27:39', null, null, null, null, null, '', '0', null, '5', '81DBA201B0D94239C160DF003566CF6F', '0', null, null, '2018-08-12 15:27:39', '0');
+INSERT INTO `t_user` VALUES ('74', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-10 16:49:38', '0');
+INSERT INTO `t_user` VALUES ('75', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-10 17:49:52', '0');
+INSERT INTO `t_user` VALUES ('76', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-10 17:53:43', '0');
+INSERT INTO `t_user` VALUES ('77', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-10 17:53:43', '0');
+INSERT INTO `t_user` VALUES ('78', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 14:52:06', '0');
+INSERT INTO `t_user` VALUES ('79', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 14:52:06', '0');
+INSERT INTO `t_user` VALUES ('80', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 15:42:00', '0');
+INSERT INTO `t_user` VALUES ('81', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 15:42:01', '0');
+INSERT INTO `t_user` VALUES ('82', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 16:02:34', '0');
+INSERT INTO `t_user` VALUES ('83', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 16:02:34', '0');
+INSERT INTO `t_user` VALUES ('84', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 17:17:53', '0');
+INSERT INTO `t_user` VALUES ('85', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 17:17:53', '0');
+INSERT INTO `t_user` VALUES ('86', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 17:22:57', '0');
+INSERT INTO `t_user` VALUES ('87', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 17:22:57', '0');
+INSERT INTO `t_user` VALUES ('88', null, '15895141238', '123456', '0', '', '0', '0', null, '张建', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 17:24:59', '0');
+INSERT INTO `t_user` VALUES ('89', null, '13023189972', '123456', '0', '', '0', '0', null, '廖冰', '搞基的', '1995-03-09 00:00:00', '310000', '310100', '310112', null, null, null, '0', 'PRESIDENT', '5', null, '0', null, null, '2018-08-12 17:24:59', '0');
 
 -- ----------------------------
 -- Table structure for t_user_auths
@@ -6195,7 +7872,7 @@ CREATE TABLE `t_user_auths` (
   `credential` varchar(256) DEFAULT NULL COMMENT '授权凭证',
   `verified` int(1) DEFAULT NULL COMMENT '是否已经验证',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of t_user_auths
@@ -6208,10 +7885,8 @@ INSERT INTO `t_user_auths` VALUES ('5', '5', null, null, null, null, null);
 INSERT INTO `t_user_auths` VALUES ('6', '6', null, null, null, null, null);
 INSERT INTO `t_user_auths` VALUES ('7', '7', null, null, null, null, null);
 INSERT INTO `t_user_auths` VALUES ('8', '8', null, null, null, null, null);
-INSERT INTO `t_user_auths` VALUES ('9', '9', null, null, null, null, null);
-INSERT INTO `t_user_auths` VALUES ('10', '10', null, null, null, null, null);
-INSERT INTO `t_user_auths` VALUES ('11', '11', null, null, null, null, null);
-INSERT INTO `t_user_auths` VALUES ('12', '12', null, null, null, null, null);
+INSERT INTO `t_user_auths` VALUES ('55', '59', 'wx', 'oprq41Qxi6iP3Hzq9Fwkf7UBR93M', null, '12_UOUyUOxtVlFJ65gZ5fs-vV9Vz6eNmxnzjVQDudoY0agXjMGekC_fxMj_QgA6G56hgSwHPQs-W4_e02kWnK9j0FNxMfvQEIHACW2hpFURpOM', null);
+INSERT INTO `t_user_auths` VALUES ('56', '60', 'wx', null, null, null, null);
 
 -- ----------------------------
 -- Table structure for t_user_category
@@ -6225,15 +7900,19 @@ CREATE TABLE `t_user_category` (
   `expiry_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '过期时间',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='用户归属类别';
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COMMENT='用户归属类别';
 
 -- ----------------------------
 -- Records of t_user_category
 -- ----------------------------
-INSERT INTO `t_user_category` VALUES ('1', '1', '商会会员', '4', '2019-08-08 11:26:05', '2018-07-04 11:26:24');
-INSERT INTO `t_user_category` VALUES ('2', '1', '品牌方', '3', '2019-08-04 11:26:50', '2018-07-04 11:27:00');
-INSERT INTO `t_user_category` VALUES ('3', '1', '网红', '4', '2019-08-04 14:44:32', '2018-07-04 14:44:45');
-INSERT INTO `t_user_category` VALUES ('4', '1', 'BRAND_PARTY', '1', null, '2018-07-04 16:19:37');
+INSERT INTO `t_user_category` VALUES ('1', '1', 'MEMBER', '6', '2018-08-02 00:00:00', '2018-08-02 00:00:00');
+INSERT INTO `t_user_category` VALUES ('2', '1', '111', '3', '2018-07-05 17:02:09', '2018-07-05 17:02:09');
+INSERT INTO `t_user_category` VALUES ('3', '1', '111', '6', '2018-07-06 00:00:00', '2018-07-06 00:00:00');
+INSERT INTO `t_user_category` VALUES ('4', '1', '111', '1', '2018-07-05 17:02:13', '2018-07-05 17:02:13');
+INSERT INTO `t_user_category` VALUES ('5', '1', 'BRAND_PARTY', '6', '2018-08-02 00:00:00', '2018-08-02 00:00:00');
+INSERT INTO `t_user_category` VALUES ('6', '14', 'BRAND_PARTY', '4', '2019-07-26 13:18:09', '2018-07-26 13:18:18');
+INSERT INTO `t_user_category` VALUES ('7', '14', 'MEMBER', '6', '2018-08-02 00:00:00', '2018-08-02 00:00:00');
+INSERT INTO `t_user_category` VALUES ('8', '14', 'SENSATION', '4', '2019-07-01 13:22:25', '2018-07-26 13:22:38');
 
 -- ----------------------------
 -- Table structure for t_user_label
@@ -6269,8 +7948,9 @@ CREATE TABLE `t_user_subaccount` (
   `description` varchar(255) DEFAULT NULL COMMENT '描述',
   `create_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户子账号';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='用户子账号';
 
 -- ----------------------------
 -- Records of t_user_subaccount
 -- ----------------------------
+INSERT INTO `t_user_subaccount` VALUES ('1', '1', '18356238002:Jack', '123456', 'Jack', '13323842234', '上海', '13323842234', '13323842234@139.com', null, '1', 'Jack', '2018-07-17 10:44:35');
