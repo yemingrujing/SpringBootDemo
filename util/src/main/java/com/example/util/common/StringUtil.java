@@ -590,6 +590,57 @@ public class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * 判断字符串是否包含某些字符
+     * @param sourceStr 源字符串
+     * @param separator
+     * @return
+     */
+    public static boolean contains(String sourceStr, String separator) {
+        if (StringUtil.isBlank(sourceStr)) {
+            return false;
+        }
+        return sourceStr.trim().contains(separator);
+    }
+
+    /**
+     * 生成随机用户名，数字和字母组成
+     * @param length
+     * @return
+     */
+    public static String getStringRandom(int length) {
+        String val = "";
+        Random random = new Random();
+        //参数length，表示生成几位随机数
+        for (int i = 0; i < length; i++) {
+            String charOrNum = random.nextInt(2) % 2 == 0 ? "char" : "num";
+            //输出字母还是数字
+            if ("char".equalsIgnoreCase(charOrNum)) {
+                //输出是大写字母还是小写字母
+                int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
+                val += (char) (random.nextInt(26) + temp);
+            } else if("num".equalsIgnoreCase(charOrNum)) {
+                val += String.valueOf(random.nextInt(10));
+            }
+        }
+        return "tmz_" + val;
+    }
+
+    /**
+     * 判断url是否为网络地址
+     * @param url
+     * @return
+     */
+    public static boolean isNetUrl(String url) {
+        boolean reault = false;
+        if (url != null) {
+            if (url.toLowerCase().startsWith("http") || url.toLowerCase().startsWith("rtsp") || url.toLowerCase().startsWith("mms")) {
+                reault = true;
+            }
+        }
+        return reault;
+    }
+
     public static void main(String[] a){
         String escapeXML = escapeXML("\\");
         System.out.println(escapeXML);
