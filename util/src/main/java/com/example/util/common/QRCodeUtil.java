@@ -4,6 +4,7 @@ import com.example.util.image.ImageOperateUtil;
 import com.example.util.image.ImageUtils;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
@@ -66,12 +67,12 @@ public class QRCodeUtil {
     /**
      * 默认是黑色
      */
-    private static final int QRCOLOR = 0xFF000000;
+    private static final int QRCOLOR = 0xff0000ff;
 
     /**
      * 背景颜色
      */
-    private static final int BGWHITE = 0xFFFFFFFF;
+    private static final int BGWHITE = 0xffFFFF00;
 
     /**
      * 创建二维码
@@ -84,8 +85,11 @@ public class QRCodeUtil {
      */
     private static BufferedImage createImage(String content, String logoPath, boolean needCompress, String note) throws Exception {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+        // 指定纠错等级
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        // 指定编码格式
         hints.put(EncodeHintType.CHARACTER_SET, CHARSET);
+        // 设置白边
         hints.put(EncodeHintType.MARGIN, 1);
         // 参数顺序分别为：编码内容，编码类型，生成图片宽度，生成图片高度，设置参数
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, QRCODE_SIZE, QRCODE_SIZE, hints);
@@ -94,8 +98,9 @@ public class QRCodeUtil {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                // 开始利用二维码数据创建Bitmap图片，分别设为黑（0xFFFFFFFF）白（0xFF000000）两色
-                image.setRGB(x, y, bitMatrix.get(x, y) ? QRCOLOR : BGWHITE);
+                // 开始利用二维码数据创建Bitmap图片
+                MatrixToImageConfig config = new MatrixToImageConfig(QRCOLOR, BGWHITE);
+                image.setRGB(x, y, bitMatrix.get(x, y) ? config.getPixelOnColor() : config.getPixelOffColor());
             }
         }
         if (StringUtil.isBlank(logoPath)) {
@@ -151,7 +156,7 @@ public class QRCodeUtil {
         // 绘制圆角图片
         src = ImageOperateUtil.makeRoundedCorner(src, src.getWidth(null) / 4);
         // 绘制边框
-        src = ImageOperateUtil.makeRoundBorder(src, src.getWidth(null) / 4, Color.BLUE);
+        //src = ImageOperateUtil.makeRoundBorder(src, src.getWidth(null) / 4, Color.BLUE);
         Graphics2D graph = source.createGraphics();
         //logo放在中心
         int x = (QRCODE_SIZE - width) / 2;
@@ -161,10 +166,13 @@ public class QRCodeUtil {
         //int y = QRCODE_SIZE - height;
 
         graph.setComposite(AlphaComposite.SrcAtop);
+        graph.setColor(Color.GREEN);
         graph.drawImage(src, x, y, width, height, null);
-//        Shape shape = new RoundRectangle2D.Float(x, y, width, height, 6, 6);
-//        graph.setStroke(new BasicStroke(3f));
-//        graph.draw(shape);
+        // 画圆角矩形
+        Shape shape = new RoundRectangle2D.Double(x, y, width, height, 6, 6);
+        // 控制线条的宽度、笔形样式、线段连接方式或短划线图案
+        graph.setStroke(new BasicStroke(3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        graph.draw(shape);
         graph.dispose();
         source.flush();
     }

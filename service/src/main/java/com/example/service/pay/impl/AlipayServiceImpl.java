@@ -10,7 +10,6 @@ import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.example.service.pay.AlipayService;
 import com.example.util.pay.AlipayParam;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
