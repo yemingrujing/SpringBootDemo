@@ -539,7 +539,7 @@ public class QRCodeUtil {
     }
     
     public static void main(String[] args) throws Exception {
-        String text = "http://www.baidu.com";
+        String text = "http://180.175.3.246:9000/bank/queryBankList";
         //不含LOGO
         QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
         //含LOGO，不指定二维码图片
