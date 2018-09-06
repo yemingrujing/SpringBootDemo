@@ -1,7 +1,6 @@
 package com.example.util.common;
 
 import com.example.util.image.ImageOperateUtil;
-import com.example.util.image.ImageUtils;
 import com.google.zxing.*;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
@@ -216,6 +215,7 @@ public class QRCodeUtil {
             throw new Exception("logo file not found");
         }
         Image src = ImageIO.read(file);
+        // 压缩图片大小
         BufferedImage bg = new BufferedImage(QRCODE_SIZE, QRCODE_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics g = bg.getGraphics();
         g.drawImage(src.getScaledInstance(QRCODE_SIZE, QRCODE_SIZE, Image.SCALE_SMOOTH),  0, 0, null);
@@ -284,34 +284,6 @@ public class QRCodeUtil {
         image = outImage;
         image.flush();
         return image;
-    }
-
-    /**
-     * 插入LOGO
-     * @param source 二维码图片
-     * @param logoPath LOGO图片地址
-     * @throws Exception
-     */
-    private static void insertImage(BufferedImage source, String logoPath) throws Exception {
-        File file = new File(logoPath);
-        if (!file.exists()) {
-            throw new Exception("logo file not found");
-        }
-        BufferedImage src = ImageIO.read(new File(logoPath));
-        src = ImageUtils.fromFile(new File(logoPath)).width(LOGO_WIDTH).height(LOGO_HEIGHT).resize(src);
-        Graphics2D graph = source.createGraphics();
-        //logo放在中心
-        int x = (QRCODE_SIZE - LOGO_WIDTH) / 2;
-        int y = (QRCODE_SIZE - LOGO_HEIGHT) / 2;
-        //logo放在右下角
-        //int x = QRCODE_SIZE - width;
-        //int y = QRCODE_SIZE - height;
-
-        graph.drawImage(src, x, y, LOGO_WIDTH, LOGO_HEIGHT, null);
-        Shape shape = new RoundRectangle2D.Float(x, y, LOGO_WIDTH, LOGO_HEIGHT, 6, 6);
-        graph.setStroke(new BasicStroke(3f));
-        graph.draw(shape);
-        graph.dispose();
     }
 
     /**
