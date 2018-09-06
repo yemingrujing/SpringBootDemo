@@ -47,7 +47,7 @@ public class QRCodeUtil {
     /**
      * LOGO宽度
      */
-    private static final int LOGO_WIDTH = 60;
+    private static final int LOGO_WIDTH = 80;
 
     /**
      * LOGO高度
@@ -55,9 +55,9 @@ public class QRCodeUtil {
     private static final int LOGO_HEIGHT = 60;
 
     /**
-     * 圆角半径
+     * 左上角颜色
      */
-    private static final int RADIUS = 10;
+    private static final int RADIUS = 65;
 
     /**
      * 边框边距
@@ -75,15 +75,31 @@ public class QRCodeUtil {
     private static final int BGWHITE = 0xffFFFF00;
 
     /**
+     * 背景图填充样式（1：选择一块区域进行填充， 其他：覆盖方式）
+     */
+    public static final int STYLE = 0;
+
+    /**
+     * 背景图选择区域填充
+     */
+    private static final int BGSTARTX = 10;
+
+    /**
+     * 背景图选择区域填充
+     */
+    private static final int BGSTARTY = 10;
+
+    /**
      * 创建二维码
-     * @param content
-     * @param logoPath
-     * @param needCompress
+     * @param content 二维码内容
+     * @param logoPath logo路径
+     * @param needCompress 是否压缩
+     * @param bgPath 背景图路径
      * @param note
      * @return
      * @throws Exception
      */
-    private static BufferedImage createImage(String content, String logoPath, boolean needCompress, String note) throws Exception {
+    private static BufferedImage createImage(String content, String logoPath, boolean needCompress, String bgPath, String note) throws Exception {
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
         // 指定纠错等级
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
@@ -98,21 +114,27 @@ public class QRCodeUtil {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                // 开始利用二维码数据创建Bitmap图片
                 MatrixToImageConfig config = new MatrixToImageConfig(QRCOLOR, BGWHITE);
-                image.setRGB(x, y, bitMatrix.get(x, y) ? config.getPixelOnColor() : config.getPixelOffColor());
+                if (x > 0 && x < RADIUS && y > 0 && y < RADIUS) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? Color.RED.getRGB() : config.getPixelOffColor());
+                } else {
+                    // 开始利用二维码数据创建Bitmap图片
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? config.getPixelOnColor() : config.getPixelOffColor());
+                }
             }
         }
-        if (StringUtil.isBlank(logoPath)) {
-            return image;
-        }
         // 插入图片
-        QRCodeUtil.insertImage(image, logoPath, needCompress);
-        if (StringUtil.isBlank(note)) {
-            return image;
+        if (StringUtil.isNotBlank(logoPath)) {
+            image = QRCodeUtil.insertImage(image, logoPath, needCompress);
+        }
+        // 添加背景图
+        if (StringUtil.isNotBlank(bgPath)) {
+            image = QRCodeUtil.drawBackground(image, bgPath);
         }
         // 插入文字
-        image = QRCodeUtil.insertStr(image, note);
+        if (StringUtil.isNotBlank(note)) {
+            image = QRCodeUtil.insertStr(image, note);
+        }
         return image;
     }
 
@@ -123,12 +145,12 @@ public class QRCodeUtil {
      * @param needCompress 是否压缩
      * @throws Exception
      */
-    private static void insertImage(BufferedImage source, String logoPath, boolean needCompress) throws Exception {
+    private static BufferedImage insertImage(BufferedImage source, String logoPath, boolean needCompress) throws Exception {
         File file = new File(logoPath);
         if (!file.exists()) {
             throw new Exception("logo file not found");
         }
-        Image src = ImageIO.read(new File(logoPath));
+        Image src = ImageIO.read(file);
         int width =  src.getWidth(null);
         int height =  src.getHeight(null);
         if (needCompress) {
@@ -166,6 +188,7 @@ public class QRCodeUtil {
         //int y = QRCODE_SIZE - height;
 
         graph.setComposite(AlphaComposite.SrcAtop);
+        // 设置颜色
         graph.setColor(Color.GREEN);
         graph.drawImage(src, x, y, width, height, null);
         // 画圆角矩形
@@ -175,6 +198,48 @@ public class QRCodeUtil {
         graph.draw(shape);
         graph.dispose();
         source.flush();
+        return source;
+    }
+
+    /**
+     * 绘制背景图
+     * @param source 二维码图
+     * @param bgPath 背景图路径
+     * @return
+     * @throws Exception
+     */
+    public static BufferedImage drawBackground(BufferedImage source, String bgPath) throws Exception {
+        int sW = source.getWidth();
+        int sH = source.getHeight();
+        File file = new File(bgPath);
+        if (!file.exists()) {
+            throw new Exception("logo file not found");
+        }
+        Image src = ImageIO.read(file);
+        BufferedImage bg = new BufferedImage(QRCODE_SIZE, QRCODE_SIZE, BufferedImage.TYPE_INT_RGB);
+        Graphics g = bg.getGraphics();
+        g.drawImage(src.getScaledInstance(QRCODE_SIZE, QRCODE_SIZE, Image.SCALE_SMOOTH),  0, 0, null);
+        g.dispose();
+
+        Graphics2D graph = bg.createGraphics();
+        if (STYLE == 1) {
+            // 选择一块区域进行填充
+            graph.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
+            graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graph.drawImage(source, BGSTARTX, BGSTARTY, sW, sH, null);
+        } else {
+            // 覆盖方式
+            int x = (sW - QRCODE_SIZE) >> 1;
+            int y = (sH - QRCODE_SIZE) >> 1;
+            // 透明度， 避免看不到背景
+            graph.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0.8f));
+            graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            graph.drawImage(source, x, y, sW, sH, null);
+            graph.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
+        }
+        graph.dispose();
+        bg.flush();
+        return bg;
     }
 
     /**
@@ -255,11 +320,12 @@ public class QRCodeUtil {
      * @param content 内容
      * @param logoPath LOGO地址
      * @param destPath 存放目录
+     * @param bgPath 背景图地址
      * @param needCompress 是否压缩LOGO
      * @return
      */
-    public static String encode(String content, String logoPath, String destPath, boolean needCompress, String note) throws Exception {
-        BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress, note);
+    public static String encode(String content, String logoPath, String destPath, boolean needCompress, String bgPath, String note) throws Exception {
+        BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress, bgPath, note);
         mkdirs(destPath);
         String fileName = UUID.randomUUID().toString() + "." + FORMAT.toLowerCase();
         ImageIO.write(image, FORMAT, new File(destPath + File.separator + fileName));
@@ -273,11 +339,13 @@ public class QRCodeUtil {
      * @param destPath 存放目录
      * @param fileName 二维码文件名
      * @param needCompress 是否压缩LOGO
+     * @param bgPath 背景图地址
+     * @param note
      * @return
      * @throws Exception
      */
-    public static String encode(String content, String logoPath, String destPath, String fileName, boolean needCompress, String note) throws Exception {
-        BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress, note);
+    public static String encode(String content, String logoPath, String destPath, String fileName, boolean needCompress, String bgPath, String note) throws Exception {
+        BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress, bgPath, note);
         mkdirs(destPath);
         fileName = fileName.substring(0, fileName.indexOf(".") > 0 ? fileName.indexOf(".") : fileName.length()) + "." + FORMAT.toLowerCase();
         ImageIO.write(image, FORMAT, new File(destPath + "/" + fileName));
@@ -296,6 +364,78 @@ public class QRCodeUtil {
     }
 
     /**
+     * 生成二维码(内嵌LOGO) + 背景图
+     * @param content 内容
+     * @param logoPath LOGO地址
+     * @param destPath 存储地址
+     * @param fileName 二维码文件名
+     * @param note 嵌入文字内容
+     * @param bgPath 背景图地址
+     * @return
+     * @throws Exception
+     */
+    public static String encode(String content, String logoPath, String destPath, String fileName, String bgPath, String note) throws Exception {
+        return QRCodeUtil.encode(content, logoPath, destPath, fileName, false, bgPath, note);
+    }
+
+    /**
+     * 生成二维码(内嵌LOGO) + 背景图
+     * @param content 内容
+     * @param logoPath LOGO地址
+     * @param destPath 存储地址
+     * @param note 嵌入文字内容
+     * @param bgPath 背景图地址
+     * @return
+     * @throws Exception
+     */
+    public static String encode(String content, String logoPath, String destPath, String bgPath, String note) throws Exception {
+        return QRCodeUtil.encode(content, logoPath, destPath, false, bgPath, note);
+    }
+
+    /**
+     * 生成二维码(内嵌LOGO)
+     * @param content 内容
+     * @param logoPath LOGO地址
+     * @param destPath 存储地址
+     * @param note 嵌入文字内容
+     * @param fileName 二维码文件名
+     * @param needCompress 是否压缩LOGO
+     * @return
+     * @throws Exception
+     */
+    public static String encode(String content, String logoPath, String destPath, String fileName, boolean needCompress,  String note) throws Exception {
+        return QRCodeUtil.encode(content, logoPath, destPath, fileName, needCompress, null, note);
+    }
+
+    /**
+     * 生成二维码(内嵌LOGO)
+     * @param content 内容
+     * @param logoPath LOGO地址
+     * @param destPath 存储地址
+     * @param bgPath 背景图地址
+     * @param needCompress 是否压缩LOGO
+     * @return
+     * @throws Exception
+     */
+    public static String encode(String content, String logoPath, String destPath, String bgPath, boolean needCompress) throws Exception {
+        return QRCodeUtil.encode(content, logoPath, destPath, needCompress, bgPath, null);
+    }
+
+    /**
+     * 生成二维码(内嵌LOGO)
+     * @param content 内容
+     * @param logoPath LOGO地址
+     * @param destPath 存储地址
+     * @param note 嵌入文字内容
+     * @param needCompress 是否压缩LOGO
+     * @return
+     * @throws Exception
+     */
+    public static String encode(String content, String logoPath, String destPath, boolean needCompress,  String note) throws Exception {
+        return QRCodeUtil.encode(content, logoPath, destPath, needCompress, null, note);
+    }
+
+    /**
      * 生成二维码(内嵌LOGO)
      * @param content 内容
      * @param logoPath LOGO地址
@@ -305,19 +445,32 @@ public class QRCodeUtil {
      * @throws Exception
      */
     public static String encode(String content, String logoPath, String destPath, String note) throws Exception {
-        return QRCodeUtil.encode(content, logoPath, destPath, false, note);
+        return QRCodeUtil.encode(content, logoPath, destPath, false, null, note);
     }
 
     /**
      * 生成二维码
      * @param content 内容
      * @param destPath 存储地址
+     * @param logoPath LOGO地址
      * @param needCompress 是否压缩LOGO
      * @return
      * @throws Exception
      */
-    public static String encode(String content, String destPath, boolean needCompress) throws Exception {
-        return QRCodeUtil.encode(content, null, destPath, needCompress, null);
+    public static String encode(String content, String destPath, String logoPath, boolean needCompress) throws Exception {
+        return QRCodeUtil.encode(content, logoPath, destPath, needCompress, null, null);
+    }
+
+    /**
+     * 生成二维码 + 背景图
+     * @param content 内容
+     * @param destPath 存储地址
+     * @param bgPath 背景图地址
+     * @return
+     * @throws Exception
+     */
+    public static String encode(String content, String destPath, String bgPath) throws Exception {
+        return QRCodeUtil.encode(content, null, destPath, false, bgPath, null);
     }
 
     /**
@@ -328,21 +481,45 @@ public class QRCodeUtil {
      * @throws Exception
      */
     public static String encode(String content, String destPath) throws Exception {
-        return QRCodeUtil.encode(content, null, destPath, false, null);
+        return QRCodeUtil.encode(content, null, destPath, false, null, null);
+    }
+
+    /**
+     * 生成二维码(内嵌LOGO) + 背景
+     * @param content 内容
+     * @param logoPath LOGO地址
+     * @param outputStream 输出流
+     * @param needCompress 是否压缩LOGO
+     * @param bgPath 背景图地址
+     * @param note 嵌入文字内容
+     * @throws Exception
+     */
+    public static void encode(String content, String logoPath, OutputStream outputStream, boolean needCompress, String bgPath, String note) throws Exception {
+        BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress, bgPath, note);
+        ImageIO.write(image, FORMAT, outputStream);
+    }
+
+    /**
+     * 生成二维码 + 背景图
+     * @param content 内容
+     * @param outputStream 输出流
+     * @param bgPath 背景图地址
+     * @throws Exception
+     */
+    public static void encode(String content, OutputStream outputStream, String bgPath) throws Exception {
+        QRCodeUtil.encode(content, null, outputStream, false, bgPath, null);
     }
 
     /**
      * 生成二维码(内嵌LOGO)
      * @param content 内容
-     * @param logoPath LOGO地址
      * @param outputStream 输出流
-     * @param needCompress 是否压缩LOGO
-     * @param note 嵌入文字内容
+     * @param logoPath LOGO地址
+     * @param needCompress 是否压缩
      * @throws Exception
      */
-    public static void encode(String content, String logoPath, OutputStream outputStream, boolean needCompress, String note) throws Exception {
-        BufferedImage image = QRCodeUtil.createImage(content, logoPath, needCompress, note);
-        ImageIO.write(image, FORMAT, outputStream);
+    public static void encode(String content, OutputStream outputStream, String logoPath, boolean needCompress) throws Exception {
+        QRCodeUtil.encode(content, logoPath, outputStream, needCompress, null, null);
     }
 
     /**
@@ -352,7 +529,7 @@ public class QRCodeUtil {
      * @throws Exception
      */
     public static void encode(String content, OutputStream outputStream) throws Exception {
-        QRCodeUtil.encode(content, null, outputStream, false, null);
+        QRCodeUtil.encode(content, null, outputStream, false, null, null);
     }
 
     /**
@@ -394,8 +571,15 @@ public class QRCodeUtil {
         //不含LOGO
         QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
         //含LOGO，不指定二维码图片
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\logo.jpg", "E:\\file\\qrcode", true, "淘美妆");
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆");
         //含LOGO，指定二维码图片名
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\logo.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆");
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆");
+
+        //含LOGO，背景图
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg", true);
+        //背景图
+        QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
+        //含LOGO，背景图，文本
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆");
     }
 }
