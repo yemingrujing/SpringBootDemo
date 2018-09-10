@@ -330,7 +330,7 @@ public class FFMpegUtil {
         return item;
     }
 
-    public static void main(String[] args){
-        MultipartFile file = getMulFileByPath("");
-    }
+//    public static void main(String[] args){
+//        MultipartFile file = getMulFileByPath("");
+//    }
 }

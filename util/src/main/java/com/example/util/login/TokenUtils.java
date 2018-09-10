@@ -120,34 +120,34 @@ public class TokenUtils {
         return Base64Utils.encode(username + "_" + localTime);
     }
 
-    public static void main(String[] args){
-
-        //获取生成token
-        Map<String, Object> map = new HashMap<>();
-        String uid = "kkksuejrmf";
-
-        String token = null;
-        try {
-            token = TokenUtils.getToken(uid, 0);
-            System.out.println("token=" + token);
-
-            if (token != null) {
-
-                Map<String, Object> validMap = TokenUtils.valid(token);
-                System.out.println(validMap);
-                int i = (int) validMap.get("result");
-                if (i == 0) {
-                    System.out.println("token解析成功");
-                    JSONObject jsonObject = (JSONObject) validMap.get("data");
-                    System.out.println("uid是" + jsonObject.get("uid"));
-                    System.out.println("sta是" + jsonObject.get("sta"));
-                    System.out.println("exp是" + jsonObject.get("exp"));
-                } else if (i == 2) {
-                    System.out.println("token已经过期");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public static void main(String[] args){
+//
+//        //获取生成token
+//        Map<String, Object> map = new HashMap<>();
+//        String uid = "kkksuejrmf";
+//
+//        String token = null;
+//        try {
+//            token = TokenUtils.getToken(uid, 0);
+//            System.out.println("token=" + token);
+//
+//            if (token != null) {
+//
+//                Map<String, Object> validMap = TokenUtils.valid(token);
+//                System.out.println(validMap);
+//                int i = (int) validMap.get("result");
+//                if (i == 0) {
+//                    System.out.println("token解析成功");
+//                    JSONObject jsonObject = (JSONObject) validMap.get("data");
+//                    System.out.println("uid是" + jsonObject.get("uid"));
+//                    System.out.println("sta是" + jsonObject.get("sta"));
+//                    System.out.println("exp是" + jsonObject.get("exp"));
+//                } else if (i == 2) {
+//                    System.out.println("token已经过期");
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
