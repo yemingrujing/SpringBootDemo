@@ -35,9 +35,9 @@ spring:
     test2:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://192.168.168.5:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull
+      url: jdbc:mysql://39.105.75.88:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull
       username: root
-      password: MyNewPass4!
+      password: q123456789
       druid:
         #初始化大小，最小，最大
         initial-size: 5
