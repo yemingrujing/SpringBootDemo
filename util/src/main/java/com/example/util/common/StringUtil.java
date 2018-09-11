@@ -641,8 +641,8 @@ public class StringUtil {
         return reault;
     }
 
-    public static void main(String[] a){
-        String escapeXML = escapeXML("\\");
-        System.out.println(escapeXML);
-    }
+//    public static void main(String[] a){
+//        String escapeXML = escapeXML("\\");
+//        System.out.println(escapeXML);
+//    }
 }

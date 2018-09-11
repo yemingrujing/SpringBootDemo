@@ -102,7 +102,7 @@ public class MD5Utils {
         return reMd5.toUpperCase();
     }
     
-    public static void main(String[] args){
-        System.out.println(encryption("haha"));
-    }
+//    public static void main(String[] args){
+//        System.out.println(encryption("haha"));
+//    }
 }

@@ -320,12 +320,12 @@ public class Base64Utils {
         }
     }
     
-    public static void main(String[] args){
-        System.out.println(encode("yifei"));
-        System.out.println(decode("eWlmZWk="));
-        String local = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        System.out.println(local);
-        System.out.println(encode(local));
-        System.out.println(MD5Utils.encryption("yifei"));
-    }
+//    public static void main(String[] args){
+//        System.out.println(encode("yifei"));
+//        System.out.println(decode("eWlmZWk="));
+//        String local = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+//        System.out.println(local);
+//        System.out.println(encode(local));
+//        System.out.println(MD5Utils.encryption("yifei"));
+//    }
 }
