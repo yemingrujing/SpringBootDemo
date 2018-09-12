@@ -17,6 +17,7 @@ package com.example.util.unionpay;
 
 import com.example.util.config.SDKConfig;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import cn.hutool.core.io.resource.ClassPathResource;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -255,18 +256,16 @@ public class CertUtil {
 	private static X509Certificate initCert(String path) {
 		X509Certificate encryptCertTemp = null;
 		CertificateFactory cf = null;
-		FileInputStream in = null;
+		InputStream in = null;
 		try {
 			cf = CertificateFactory.getInstance("X.509", "BC");
-			in = new FileInputStream(CertUtil.class.getClassLoader().getResource(path).getPath());
+			in = new ClassPathResource(path).getStream();
 			encryptCertTemp = (X509Certificate) cf.generateCertificate(in);
 			// 打印证书加载信息,供测试阶段调试
 			LogUtil.writeLog("[" + path + "][CertId="
 					+ encryptCertTemp.getSerialNumber().toString() + "]");
 		} catch (CertificateException e) {
 			LogUtil.writeErrorLog("InitCert Error", e);
-		} catch (FileNotFoundException e) {
-			LogUtil.writeErrorLog("InitCert Error File Not Found", e);
 		} catch (NoSuchProviderException e) {
 			LogUtil.writeErrorLog("LoadVerifyCert Error No BC Provider", e);
 		} finally {
@@ -460,23 +459,23 @@ public class CertUtil {
 	private static KeyStore getKeyInfo(String pfxkeyfile, String keypwd,
 			String type) throws IOException {
 		LogUtil.writeLog("加载签名证书==>" + pfxkeyfile);
-		FileInputStream fis = null;
+		InputStream is = null;
 		try {
 			KeyStore ks = KeyStore.getInstance(type, "BC");
 			LogUtil.writeLog("Load RSA CertPath=[" + pfxkeyfile + "],Pwd=[" + keypwd + "],type=[" + type + "]");
-			fis = new FileInputStream(CertUtil.class.getClassLoader().getResource(pfxkeyfile).getPath());
+			is = new ClassPathResource(pfxkeyfile).getStream();
 			char[] nPassword = null;
 			nPassword = null == keypwd || "".equals(keypwd.trim()) ? null: keypwd.toCharArray();
 			if (null != ks) {
-				ks.load(fis, nPassword);
+				ks.load(is, nPassword);
 			}
 			return ks;
 		} catch (Exception e) {
 			LogUtil.writeErrorLog("getKeyInfo Error", e);
 			return null;
 		} finally {
-			if (null != fis)
-				fis.close();
+			if (null != is)
+				is.close();
 		}
 	}
 	
