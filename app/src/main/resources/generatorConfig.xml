@@ -46,7 +46,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/commerce?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false"
+                        connectionURL="jdbc:mysql://39.105.75.88:3306/commerce?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false"
                         userId="root"
                         password="q123456789">
             <!-- 针对mysql数据库 -->
