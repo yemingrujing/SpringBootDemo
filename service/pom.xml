@@ -89,7 +89,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <classifier>exec</classifier>
-                    <mainClass>com.example.controller.UserController</mainClass>
+                    <mainClass>com.example.ControllerApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

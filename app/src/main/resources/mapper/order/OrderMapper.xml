@@ -18,9 +18,10 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="over_time" jdbcType="TIMESTAMP" property="overTime" />
     <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="address" jdbcType="INTEGER" property="address" />
+    <result column="promotions_id" jdbcType="INTEGER" property="promotionsId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="logistics_num" jdbcType="VARCHAR" property="logisticsNum" />
     <result column="courier_num" jdbcType="VARCHAR" property="courierNum" />

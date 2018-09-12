@@ -30,7 +30,7 @@ public class Order {
     private BigDecimal payment;
 
     /**
-     * 支付类型(0支付宝/1微信)
+     * 支付类型(0支付宝/1微信/2银联/3线下支付)
      */
     @Column(name = "pay_type")
     private Short payType;
@@ -42,13 +42,13 @@ public class Order {
     private Short payStatus;
 
     /**
-     * 订单类型(0普通/1活动/2集采)
+     * 订单类型(0普通/1活动/2集采/3品牌/4会员)
      */
     @Column(name = "order_type")
     private Short orderType;
 
     /**
-     * 订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
+     * 订单状态(0待付款/1待发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      */
     @Column(name = "order_status")
     private Short orderStatus;
@@ -84,10 +84,10 @@ public class Order {
     private Date closeTime;
 
     /**
-     * 用户姓名
+     * 用户ID
      */
-    @Column(name = "user_name")
-    private String userName;
+    @Column(name = "user_id")
+    private Integer userId;
 
     /**
      * 手机号码
@@ -98,6 +98,12 @@ public class Order {
      * 收货地址
      */
     private Integer address;
+
+    /**
+     * 活动ID
+     */
+    @Column(name = "promotions_id")
+    private Integer promotionsId;
 
     /**
      * 创建时间
@@ -190,18 +196,18 @@ public class Order {
     }
 
     /**
-     * 获取支付类型(0支付宝/1微信)
+     * 获取支付类型(0支付宝/1微信/2银联/3线下支付)
      *
-     * @return pay_type - 支付类型(0支付宝/1微信)
+     * @return pay_type - 支付类型(0支付宝/1微信/2银联/3线下支付)
      */
     public Short getPayType() {
         return payType;
     }
 
     /**
-     * 设置支付类型(0支付宝/1微信)
+     * 设置支付类型(0支付宝/1微信/2银联/3线下支付)
      *
-     * @param payType 支付类型(0支付宝/1微信)
+     * @param payType 支付类型(0支付宝/1微信/2银联/3线下支付)
      */
     public void setPayType(Short payType) {
         this.payType = payType;
@@ -226,36 +232,36 @@ public class Order {
     }
 
     /**
-     * 获取订单类型(0普通/1活动/2集采)
+     * 获取订单类型(0普通/1活动/2集采/3品牌/4会员)
      *
-     * @return order_type - 订单类型(0普通/1活动/2集采)
+     * @return order_type - 订单类型(0普通/1活动/2集采/3品牌/4会员)
      */
     public Short getOrderType() {
         return orderType;
     }
 
     /**
-     * 设置订单类型(0普通/1活动/2集采)
+     * 设置订单类型(0普通/1活动/2集采/3品牌/4会员)
      *
-     * @param orderType 订单类型(0普通/1活动/2集采)
+     * @param orderType 订单类型(0普通/1活动/2集采/3品牌/4会员)
      */
     public void setOrderType(Short orderType) {
         this.orderType = orderType;
     }
 
     /**
-     * 获取订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
+     * 获取订单状态(0待付款/1待发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      *
-     * @return order_status - 订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
+     * @return order_status - 订单状态(0待付款/1待发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      */
     public Short getOrderStatus() {
         return orderStatus;
     }
 
     /**
-     * 设置订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
+     * 设置订单状态(0待付款/1待发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      *
-     * @param orderStatus 订单状态(0新订单/1未发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
+     * @param orderStatus 订单状态(0待付款/1待发货/2已发货/3完成/4订单取消/5超时/6退货/7关闭)
      */
     public void setOrderStatus(Short orderStatus) {
         this.orderStatus = orderStatus;
@@ -352,21 +358,21 @@ public class Order {
     }
 
     /**
-     * 获取用户姓名
+     * 获取用户ID
      *
-     * @return user_name - 用户姓名
+     * @return user_id - 用户ID
      */
-    public String getUserName() {
-        return userName;
+    public Integer getUserId() {
+        return userId;
     }
 
     /**
-     * 设置用户姓名
+     * 设置用户ID
      *
-     * @param userName 用户姓名
+     * @param userId 用户ID
      */
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     /**
@@ -403,6 +409,24 @@ public class Order {
      */
     public void setAddress(Integer address) {
         this.address = address;
+    }
+
+    /**
+     * 获取活动ID
+     *
+     * @return promotions_id - 活动ID
+     */
+    public Integer getPromotionsId() {
+        return promotionsId;
+    }
+
+    /**
+     * 设置活动ID
+     *
+     * @param promotionsId 活动ID
+     */
+    public void setPromotionsId(Integer promotionsId) {
+        this.promotionsId = promotionsId;
     }
 
     /**
