@@ -173,6 +173,12 @@
             <artifactId>hutool-all</artifactId>
             <version>4.1.7</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.chinapay</groupId>
+            <artifactId>secure</artifactId>
+            <version>1.5</version>
+        </dependency>
     </dependencies>
 
     <build>
