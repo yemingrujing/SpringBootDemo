@@ -1,7 +1,6 @@
 package com.example.util.chinapay;
 
 import cn.hutool.core.io.resource.ClassPathResource;
-import com.example.util.unionpay.LogUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -96,7 +95,7 @@ public class CertUtil {
                     }
                 }
             } catch (Exception var17) {
-                LogUtil.writeErrorLog("初始化验签证书异常", var17);
+                log.error("初始化验签证书异常", var17);
                 if (in != null) {
                     try {
                         in.close();

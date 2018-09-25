@@ -1,6 +1,6 @@
 package com.example.util.chinapay;
 
-import com.example.util.unionpay.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.security.Security;
 
+@Slf4j
 public class CPEncryptAndDecrypt
 {
   private String keyStr = "ChinaPay20150708";
@@ -34,7 +35,7 @@ public class CPEncryptAndDecrypt
     }
     catch (Exception e)
     {
-      LogUtil.writeErrorLog("加密所需密钥发错误！", e);
+      log.error("加密所需密钥发错误！", e);
       throw new Exception("加密所需密钥发错误！");
     }
     return encPassBytes;
@@ -55,7 +56,7 @@ public class CPEncryptAndDecrypt
     }
     catch (Exception e)
     {
-      LogUtil.writeErrorLog("解密密钥发错误！", e);
+      log.error("解密密钥发错误！", e);
       throw new Exception("解密钥发错误！");
     }
     return decPassBytes;
