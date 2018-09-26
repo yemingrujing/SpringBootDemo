@@ -35,7 +35,7 @@ import java.util.*;
  **/
 public class ExcelImportServer extends ImportBaseService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ExcelImportServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExcelImportServer.class);
 
     private CellValueServer cellValueServer;
 
