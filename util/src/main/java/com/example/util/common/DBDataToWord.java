@@ -62,7 +62,24 @@ public class DBDataToWord {
                 String tableName = entry.getKey();
                 String tableName_CN = String.valueOf(entry.getValue());
                 xsg_data.createTable(xdoc, tableName, tableName_CN);
-                addRow(block, 1, tableName_CN, 1, tableName_CN);
+            }
+            List<XWPFParagraph> paragraphs = xdoc.getParagraphs();
+            for (XWPFParagraph par : paragraphs) {
+                String parStyle = par.getStyle();
+                if (parStyle != null && parStyle.startsWith("Heading")) {
+                    try {
+                        int level = Integer.parseInt(parStyle.substring("Heading".length()));
+                        if (level == 1){
+                            //添加栏目
+                            addRowOnlyTitle(block, level, par.getText());
+                        } else {
+                            //添加标题
+                            addRow(block, level, par.getText(), level, par.getText());
+                        }
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
             xsg_data.saveDocument(xdoc, "e:/" + "xsg" + ".docx");
         }
@@ -82,23 +99,25 @@ public class DBDataToWord {
         if (rs.next()) {
             count = rs.getInt(1);
         }
+        setCustomHeadingStyle(xdoc, "Heading1", 1);
         XWPFParagraph p = xdoc.createParagraph();
         setParagraphSpacingInfo(p, true, "0", "80", null, null, true, "500", STLineSpacingRule.EXACT);
         setParagraphAlignInfo(p, ParagraphAlignment.CENTER, TextAlignment.CENTER);
-        XWPFRun pRun = getOrAddParagraphFirstRun(p, false, false);
-        /**
-         * 设置标题头 start
-         */
+        XWPFRun pRun = getOrAddParagraphFirstRun(p, 1, false, false);
+//        /**
+//         * 设置标题头 start
+//         */
         setParagraphRunFontInfo(p, pRun, tableName_CN, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90);
+        setCustomHeadingStyle(xdoc, "Heading2", 2);
         p = xdoc.createParagraph();
-        setParagraphSpacingInfo(p, true, "0", "80", null, null, true, "500", STLineSpacingRule.EXACT);
+        setParagraphSpacingInfo(p, false, "0", "80", null, null, true, "500", STLineSpacingRule.AUTO);
         setParagraphAlignInfo(p, ParagraphAlignment.CENTER, TextAlignment.CENTER);
-        pRun = getOrAddParagraphFirstRun(p, false, false);        /**end*/
+        pRun = getOrAddParagraphFirstRun(p, 2, false, false);        /**end*/
         setParagraphRunFontInfo(p, pRun, tableName, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90);
         p = xdoc.createParagraph();
         setParagraphSpacingInfo(p, true, "0", "0", "0", "0", true, "240", STLineSpacingRule.AUTO);
         setParagraphAlignInfo(p, ParagraphAlignment.LEFT, TextAlignment.CENTER);
-        pRun = getOrAddParagraphFirstRun(p, false, false);
+        pRun = getOrAddParagraphFirstRun(p, 0, false, false);
         // 创建表格21行3列
         XWPFTable table = xdoc.createTable((count == 1 ? 1 : count + 1), FILEDS.length);
         setTableBorders(table, STBorder.SINGLE, "4", "auto", "0");
@@ -110,7 +129,7 @@ public class DBDataToWord {
         XWPFTableCell cell = row.getCell(0);
         setCellShdStyle(cell, true, "FFFFFF", null);
         p = getCellFirstParagraph(cell);
-        pRun = getOrAddParagraphFirstRun(p, false, false);
+        pRun = getOrAddParagraphFirstRun(p, 0, false, false);
         int index = 0;
         //创建行
         row = table.getRow(index);
@@ -120,7 +139,7 @@ public class DBDataToWord {
             cell = row.getCell(i);
             setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.TOP);
             p = getCellFirstParagraph(cell);
-            pRun = getOrAddParagraphFirstRun(p, false, false);
+            pRun = getOrAddParagraphFirstRun(p, 0, false, false);
             setParagraphRunFontInfo(p, pRun, FILEDS[i], "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0);
         }
         index = 1;
@@ -147,7 +166,7 @@ public class DBDataToWord {
                 cell = row.getCell(i);
                 setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.TOP);
                 p = getCellFirstParagraph(cell);
-                pRun = getOrAddParagraphFirstRun(p, false, false);
+                pRun = getOrAddParagraphFirstRun(p, 0, false, false);
                 setParagraphRunFontInfo(p, pRun, columnValue, "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0);
             }
             index++;
@@ -347,8 +366,13 @@ public class DBDataToWord {
         }
     }
 
-    public XWPFRun getOrAddParagraphFirstRun(XWPFParagraph p, boolean isInsert, boolean isNewLine) {
-        XWPFRun pRun = null;
+    public XWPFRun getOrAddParagraphFirstRun(XWPFParagraph p, int level, boolean isInsert, boolean isNewLine) {
+        XWPFRun pRun;
+        if (level == 1) {
+            p.setStyle("Heading1");
+        } else if (level == 2) {
+            p.setStyle("Heading2");
+        }
         if (isInsert) {
             pRun = p.createRun();
         } else {
@@ -358,9 +382,7 @@ public class DBDataToWord {
                 pRun = p.createRun();
             }
         }
-        if (isNewLine) {
-            pRun.addBreak();
-        }
+
         return pRun;
     }
 
@@ -462,6 +484,47 @@ public class DBDataToWord {
         if (position != 0) {
             pRun.setTextPosition(position);
         }
+    }
+
+    /**
+     * 增加自定义标题样式。这里用的是stackoverflow的源码
+     *
+     * @param docxDocument 目标文档
+     * @param strStyleId 样式名称
+     * @param headingLevel 样式级别
+     */
+    public static void setCustomHeadingStyle(XWPFDocument docxDocument, String strStyleId, int headingLevel) {
+        CTStyle ctStyle = CTStyle.Factory.newInstance();
+        ctStyle.setStyleId(strStyleId);
+
+        CTString styleName = CTString.Factory.newInstance();
+        styleName.setVal(strStyleId);
+        ctStyle.setName(styleName);
+
+        CTDecimalNumber indentNumber = CTDecimalNumber.Factory.newInstance();
+        indentNumber.setVal(BigInteger.valueOf(headingLevel));
+
+        // lower number > style is more prominent in the formats bar
+        ctStyle.setUiPriority(indentNumber);
+
+        CTOnOff onoffnull = CTOnOff.Factory.newInstance();
+        ctStyle.setUnhideWhenUsed(onoffnull);
+
+        // style shows up in the formats bar
+        ctStyle.setQFormat(onoffnull);
+
+        // style defines a heading of the given level
+        CTPPr ppr = CTPPr.Factory.newInstance();
+        ppr.setOutlineLvl(indentNumber);
+        ctStyle.setPPr(ppr);
+
+        XWPFStyle style = new XWPFStyle(ctStyle);
+
+        // is a null op if already defined
+        XWPFStyles styles = docxDocument.createStyles();
+
+        style.setType(STStyleType.PARAGRAPH);
+        styles.addStyle(style);
     }
 
     /**
@@ -593,7 +656,7 @@ public class DBDataToWord {
         p.setRsidR("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
         p.setRsidRDefault("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
         p.addNewPPr().addNewPStyle().setVal("TOCHeading");
-        p.addNewR().addNewT().setStringValue("目     录");//源码中为"Table of contents"
+        p.addNewR().addNewT().setStringValue("目     录");
         //设置段落对齐方式，即将“目录”二字居中
         CTPPr pr = p.getPPr();
         CTJc jc = pr.isSetJc() ? pr.getJc() : pr.addNewJc();
@@ -612,5 +675,41 @@ public class DBDataToWord {
         CTHpsMeasure sz = pRpr.isSetSz() ? pRpr.getSz() : pRpr.addNewSz();
         sz.setVal(new BigInteger("36"));
         return block;
+    }
+
+    public static void addRowOnlyTitle(CTSdtBlock block, int level, String title) {
+        CTSdtContentBlock contentBlock = block.getSdtContent();
+        CTP p = contentBlock.addNewP();
+        p.setRsidR("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
+        p.setRsidRDefault("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
+        CTPPr pPr = p.addNewPPr();
+        pPr.addNewPStyle().setVal("TOC" + level);
+        CTTabs tabs = pPr.addNewTabs();
+        CTTabStop tab = tabs.addNewTab();
+        tab.setVal(STTabJc.RIGHT);
+        tab.setLeader(STTabTlc.DOT);
+        tab.setPos(new BigInteger("9190"));
+        pPr.addNewRPr().addNewNoProof();
+        CTR run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        run.addNewT().setStringValue(title);
+        //设置行间距
+        CTSpacing pSpacing = pPr.getSpacing() != null ? pPr.getSpacing(): pPr.addNewSpacing();
+        pSpacing.setLineRule(STLineSpacingRule.AUTO);
+        pSpacing.setLine(new BigInteger("360"));
+        pSpacing.setBeforeLines(new BigInteger("20"));
+        pSpacing.setAfterLines(new BigInteger("10"));
+        //设置字体
+        CTRPr pRpr = run.getRPr();
+        CTFonts fonts = pRpr.isSetRFonts() ? pRpr.getRFonts() : pRpr.addNewRFonts();
+        fonts.setAscii("Times New Roman");
+        fonts.setEastAsia("黑体");
+        fonts.setHAnsi("黑体");
+        // 设置字体大小
+        CTHpsMeasure sz = pRpr.isSetSz() ? pRpr.getSz() : pRpr.addNewSz();
+        sz.setVal(new BigInteger("24"));
+
+        CTHpsMeasure szCs = pRpr.isSetSzCs() ? pRpr.getSzCs() : pRpr.addNewSzCs();
+        szCs.setVal(new BigInteger("24"));
     }
 }
