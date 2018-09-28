@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 数据库生成文档
@@ -46,6 +47,9 @@ public class DBDataToWord {
      */
     public static String DATABASE = "commerce";
 
+    private static final AtomicInteger atomicInteger = new AtomicInteger(10000);
+    private static BigInteger markId;
+
     public static void main(String[] args) throws Exception {
         Map<String, Object> params = new LinkedHashMap<>();
         JDBCUtils jdbcUtils = new JDBCUtils();
@@ -67,6 +71,7 @@ public class DBDataToWord {
             for (XWPFParagraph par : paragraphs) {
                 String parStyle = par.getStyle();
                 if (parStyle != null && parStyle.startsWith("Heading")) {
+                    List<CTBookmark> bookmarkList = par.getCTP().getBookmarkStartList();
                     try {
                         int level = Integer.parseInt(parStyle.substring("Heading".length()));
                         if (level == 1){
@@ -74,14 +79,14 @@ public class DBDataToWord {
                             addRowOnlyTitle(block, level, par.getText());
                         } else {
                             //添加标题
-                            addRow(block, level, par.getText(), level, par.getText());
+                            addRow(block, level, par.getText(), level, bookmarkList.get(0).getName());
                         }
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            xsg_data.saveDocument(xdoc, "e:/" + "xsg" + ".docx");
+            xsg_data.saveDocument(xdoc, "e:/" + "commerce" + ".docx");
         }
 
     }
@@ -99,25 +104,29 @@ public class DBDataToWord {
         if (rs.next()) {
             count = rs.getInt(1);
         }
+
         setCustomHeadingStyle(xdoc, "Heading1", 1);
         XWPFParagraph p = xdoc.createParagraph();
         setParagraphSpacingInfo(p, true, "0", "80", null, null, true, "500", STLineSpacingRule.EXACT);
         setParagraphAlignInfo(p, ParagraphAlignment.CENTER, TextAlignment.CENTER);
-        XWPFRun pRun = getOrAddParagraphFirstRun(p, 1, false, false);
+        XWPFRun pRun = getOrAddParagraphFirstRun(p, 1, false, false, null);
 //        /**
 //         * 设置标题头 start
 //         */
         setParagraphRunFontInfo(p, pRun, tableName_CN, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90);
+
         setCustomHeadingStyle(xdoc, "Heading2", 2);
         p = xdoc.createParagraph();
         setParagraphSpacingInfo(p, false, "0", "80", null, null, true, "500", STLineSpacingRule.AUTO);
         setParagraphAlignInfo(p, ParagraphAlignment.CENTER, TextAlignment.CENTER);
-        pRun = getOrAddParagraphFirstRun(p, 2, false, false);        /**end*/
+        pRun = getOrAddParagraphFirstRun(p, 2, false, false, tableName);
         setParagraphRunFontInfo(p, pRun, tableName, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90);
+        addParagraphContentBookmarkEnd(p, markId);
+
         p = xdoc.createParagraph();
         setParagraphSpacingInfo(p, true, "0", "0", "0", "0", true, "240", STLineSpacingRule.AUTO);
         setParagraphAlignInfo(p, ParagraphAlignment.LEFT, TextAlignment.CENTER);
-        pRun = getOrAddParagraphFirstRun(p, 0, false, false);
+        pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
         // 创建表格21行3列
         XWPFTable table = xdoc.createTable((count == 1 ? 1 : count + 1), FILEDS.length);
         setTableBorders(table, STBorder.SINGLE, "4", "auto", "0");
@@ -128,8 +137,9 @@ public class DBDataToWord {
         setRowHeight(row, "460");
         XWPFTableCell cell = row.getCell(0);
         setCellShdStyle(cell, true, "FFFFFF", null);
+
         p = getCellFirstParagraph(cell);
-        pRun = getOrAddParagraphFirstRun(p, 0, false, false);
+        pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
         int index = 0;
         //创建行
         row = table.getRow(index);
@@ -139,7 +149,7 @@ public class DBDataToWord {
             cell = row.getCell(i);
             setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.TOP);
             p = getCellFirstParagraph(cell);
-            pRun = getOrAddParagraphFirstRun(p, 0, false, false);
+            pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
             setParagraphRunFontInfo(p, pRun, FILEDS[i], "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0);
         }
         index = 1;
@@ -166,7 +176,7 @@ public class DBDataToWord {
                 cell = row.getCell(i);
                 setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.TOP);
                 p = getCellFirstParagraph(cell);
-                pRun = getOrAddParagraphFirstRun(p, 0, false, false);
+                pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
                 setParagraphRunFontInfo(p, pRun, columnValue, "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0);
             }
             index++;
@@ -366,13 +376,19 @@ public class DBDataToWord {
         }
     }
 
-    public XWPFRun getOrAddParagraphFirstRun(XWPFParagraph p, int level, boolean isInsert, boolean isNewLine) {
+    public XWPFRun getOrAddParagraphFirstRun(XWPFParagraph p, int level, boolean isInsert, boolean isNewLine, String bookMarkName) {
         XWPFRun pRun;
         if (level == 1) {
             p.setStyle("Heading1");
         } else if (level == 2) {
+            CTBookmark bookStart = p.getCTP().addNewBookmarkStart();
+            markId = BigInteger.valueOf(atomicInteger.getAndIncrement());
+            System.out.println(markId);
+            bookStart.setId(markId);
+            bookStart.setName(bookMarkName);
             p.setStyle("Heading2");
         }
+
         if (isInsert) {
             pRun = p.createRun();
         } else {
@@ -566,6 +582,16 @@ public class DBDataToWord {
         FileOutputStream fos = new FileOutputStream(savePath);
         document.write(fos);
         fos.close();
+    }
+
+    /**
+     * 标签末尾
+     * @param p
+     * @param markId
+     */
+    public void addParagraphContentBookmarkEnd(XWPFParagraph p, BigInteger markId) {
+        CTMarkupRange bookEnd = p.getCTP().addNewBookmarkEnd();
+        bookEnd.setId(markId);
     }
 
     public static void addRow(CTSdtBlock block, int level, String title, int page, String bookmarkRef) {
