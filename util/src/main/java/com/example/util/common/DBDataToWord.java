@@ -3,11 +3,13 @@ package com.example.util.common;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.LocaleUtil;
+import org.apache.poi.util.Units;
+import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.apache.xmlbeans.impl.xb.xmlschema.SpaceAttribute;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
 
-import java.io.FileOutputStream;
+import java.io.*;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -74,11 +76,11 @@ public class DBDataToWord {
                     List<CTBookmark> bookmarkList = par.getCTP().getBookmarkStartList();
                     try {
                         int level = Integer.parseInt(parStyle.substring("Heading".length()));
-                        if (level == 1){
-                            //添加栏目
+                        if (level == 1) {
+                            // 添加栏目
                             addRowOnlyTitle(block, level, par.getText());
-                        } else {
-                            //添加标题
+                        } else if (level == 2) {
+                            // 添加标题
                             addRow(block, level, par.getText(), level, bookmarkList.get(0).getName());
                         }
                     } catch (NumberFormatException e) {
@@ -86,6 +88,10 @@ public class DBDataToWord {
                     }
                 }
             }
+            createHeader(xdoc, "C:\\Users\\guang\\Desktop\\logo.jpg");
+            createFooter(xdoc, "淘 美 妆 商 会");
+            // 强制执行制度保护
+            //xdoc.enforceReadonlyProtection();
             xsg_data.saveDocument(xdoc, "e:/" + "commerce" + ".docx");
         }
 
@@ -110,17 +116,17 @@ public class DBDataToWord {
         setParagraphSpacingInfo(p, true, "0", "80", null, null, true, "500", STLineSpacingRule.EXACT);
         setParagraphAlignInfo(p, ParagraphAlignment.CENTER, TextAlignment.CENTER);
         XWPFRun pRun = getOrAddParagraphFirstRun(p, 1, false, false, null);
-//        /**
-//         * 设置标题头 start
-//         */
-        setParagraphRunFontInfo(p, pRun, tableName_CN, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90);
+        /**
+         * 设置标题头 start
+         */
+        setParagraphRunFontInfo(p, pRun, tableName_CN, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90, "9A32CD", true);
 
         setCustomHeadingStyle(xdoc, "Heading2", 2);
         p = xdoc.createParagraph();
-        setParagraphSpacingInfo(p, false, "0", "80", null, null, true, "500", STLineSpacingRule.AUTO);
+        setParagraphSpacingInfo(p, true, "0", "80", null, null, true, "500", STLineSpacingRule.EXACT);
         setParagraphAlignInfo(p, ParagraphAlignment.CENTER, TextAlignment.CENTER);
         pRun = getOrAddParagraphFirstRun(p, 2, false, false, tableName);
-        setParagraphRunFontInfo(p, pRun, tableName, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90);
+        setParagraphRunFontInfo(p, pRun, tableName, "宋体", "华文楷体", "36", true, false, false, false, null, null, 0, 0, 90, "9A32CD", true);
         addParagraphContentBookmarkEnd(p, markId);
 
         p = xdoc.createParagraph();
@@ -129,7 +135,7 @@ public class DBDataToWord {
         pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
         // 创建表格21行3列
         XWPFTable table = xdoc.createTable((count == 1 ? 1 : count + 1), FILEDS.length);
-        setTableBorders(table, STBorder.SINGLE, "4", "auto", "0");
+        setTableBorders(table, STBorder.SINGLE, "4", "00CD00", "0");
         setTableWidthAndHAlign(table, "9024", STJc.CENTER);
         setTableCellMargin(table, 0, 108, 0, 108);
         setTableGridCol(table, COLUMN_WIDTHS);
@@ -147,10 +153,11 @@ public class DBDataToWord {
         //创建列
         for (int i = 0; i < FILEDS.length; i++) {
             cell = row.getCell(i);
-            setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.TOP);
+            setCellShdStyle(cell, true, "FFFACD", STShd.SOLID);
+            setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.CENTER);
             p = getCellFirstParagraph(cell);
             pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
-            setParagraphRunFontInfo(p, pRun, FILEDS[i], "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0);
+            setParagraphRunFontInfo(p, pRun, FILEDS[i], "宋体", "Times New Roman", "21", true, false, false, false, null, null, 0, 6, 0, "8B2500", false);
         }
         index = 1;
         //查询数据库表
@@ -177,7 +184,7 @@ public class DBDataToWord {
                 setCellWidthAndVAlign(cell, String.valueOf(COLUMN_WIDTHS[i]), STTblWidth.DXA, STVerticalJc.TOP);
                 p = getCellFirstParagraph(cell);
                 pRun = getOrAddParagraphFirstRun(p, 0, false, false, null);
-                setParagraphRunFontInfo(p, pRun, columnValue, "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0);
+                setParagraphRunFontInfo(p, pRun, columnValue, "宋体", "Times New Roman", "21", false, false, false, false, null, null, 0, 6, 0, "8968CD", false);
             }
             index++;
         }
@@ -434,13 +441,14 @@ public class DBDataToWord {
     }
 
     /**
-     * @Description: 设置段落文本样式(高亮与底纹显示效果不同)设置字符间距信息(CTSignedTwipsMeasure)
      * @param verticalAlign : SUPERSCRIPT上标 SUBSCRIPT下标
-     * @param position :字符间距位置：>0提升 <0降低=磅值*2 如3磅=6
-     * @param spacingValue :字符间距间距 >0加宽 <0紧缩 =磅值*20 如2磅=40
-     * @param indent :字符间距缩进 <100 缩
+     * @param position      :字符间距位置：>0提升 <0降低=磅值*2 如3磅=6
+     * @param spacingValue  :字符间距间距 >0加宽 <0紧缩 =磅值*20 如2磅=40
+     * @param indent        :字符间距缩进 <100 缩
+     * @param colorVal      字体颜色
+     * @Description: 设置段落文本样式(高亮与底纹显示效果不同)设置字符间距信息(CTSignedTwipsMeasure)
      */
-    public void setParagraphRunFontInfo(XWPFParagraph p, XWPFRun pRun, String content, String cnFontFamily, String enFontFamily, String fontSize, boolean isBlod, boolean isItalic, boolean isStrike, boolean isShd, String shdColor, STShd.Enum shdStyle, int position, int spacingValue, int indent) {
+    public void setParagraphRunFontInfo(XWPFParagraph p, XWPFRun pRun, String content, String cnFontFamily, String enFontFamily, String fontSize, boolean isBlod, boolean isItalic, boolean isStrike, boolean isShd, String shdColor, STShd.Enum shdStyle, int position, int spacingValue, int indent, String colorVal, boolean isShadow) {
         CTRPr pRpr = getRunCTRPr(p, pRun);
         if (StringUtils.isNotBlank(content)) {
             pRun.setText(content);
@@ -458,6 +466,7 @@ public class DBDataToWord {
                 pRun.setText(content, 0);
             }
         }
+
         // 设置字体
         CTFonts fonts = pRpr.isSetRFonts() ? pRpr.getRFonts() : pRpr.addNewRFonts();
         if (StringUtils.isNotBlank(enFontFamily)) {
@@ -467,6 +476,7 @@ public class DBDataToWord {
         if (StringUtils.isNotBlank(cnFontFamily)) {
             fonts.setEastAsia(cnFontFamily);
         }
+
         // 设置字体大小
         CTHpsMeasure sz = pRpr.isSetSz() ? pRpr.getSz() : pRpr.addNewSz();
         sz.setVal(new BigInteger(fontSize));
@@ -485,6 +495,15 @@ public class DBDataToWord {
         if (isStrike) {
             pRun.setStrike(isStrike);
         }
+        // 字体颜色
+        if (StringUtil.isNotBlank(colorVal)) {
+            pRun.setColor(colorVal);
+        }
+        // 文本会变粗有重影
+        if (isShadow) {
+            pRun.setShadow(true);
+        }
+
         if (isShd) {
             // 设置底纹
             CTShd shd = pRpr.isSetShd() ? pRpr.getShd() : pRpr.addNewShd();
@@ -506,7 +525,7 @@ public class DBDataToWord {
      * 增加自定义标题样式。这里用的是stackoverflow的源码
      *
      * @param docxDocument 目标文档
-     * @param strStyleId 样式名称
+     * @param strStyleId   样式名称
      * @param headingLevel 样式级别
      */
     public static void setCustomHeadingStyle(XWPFDocument docxDocument, String strStyleId, int headingLevel) {
@@ -586,6 +605,7 @@ public class DBDataToWord {
 
     /**
      * 标签末尾
+     *
      * @param p
      * @param markId
      */
@@ -594,73 +614,14 @@ public class DBDataToWord {
         bookEnd.setId(markId);
     }
 
-    public static void addRow(CTSdtBlock block, int level, String title, int page, String bookmarkRef) {
-        CTSdtContentBlock contentBlock = block.getSdtContent();
-        CTP p = contentBlock.addNewP();
-        p.setRsidR("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
-        p.setRsidRDefault("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
-        CTPPr pPr = p.addNewPPr();
-        pPr.addNewPStyle().setVal("TOC" + level);
-        CTTabs tabs = pPr.addNewTabs();
-        CTTabStop tab = tabs.addNewTab();
-        tab.setVal(STTabJc.RIGHT);
-        tab.setLeader(STTabTlc.DOT);
-        tab.setPos(new BigInteger("9100"));
-        pPr.addNewRPr().addNewNoProof();
-        CTR run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        run.addNewT().setStringValue(title);
-        //设置标题字体
-        CTRPr pRpr = run.getRPr();
-        CTFonts fonts = pRpr.isSetRFonts() ? pRpr.getRFonts() : pRpr.addNewRFonts();
-        fonts.setAscii("Times New Roman");
-        fonts.setEastAsia("楷体");
-        fonts.setHAnsi("楷体");
-        // 设置标题字体大小
-        CTHpsMeasure sz = pRpr.isSetSz() ? pRpr.getSz() : pRpr.addNewSz();
-        sz.setVal(new BigInteger("21"));
-        CTHpsMeasure szCs = pRpr.isSetSzCs() ? pRpr.getSzCs() : pRpr.addNewSzCs();
-        szCs.setVal(new BigInteger("21"));
-        //添加制表符
-        run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        run.addNewTab();
-        //添加页码左括号
-        p.addNewR().addNewT().setStringValue("(");
-        //STFldCharType.BEGIN标识与结尾处STFldCharType.END相对应
-        run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        run.addNewFldChar().setFldCharType(STFldCharType.BEGIN);
-        // pageref run
-        run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        CTText text = run.addNewInstrText();
-        text.setSpace(SpaceAttribute.Space.PRESERVE);
-        // bookmark reference
-        //源码的域名为" PAGEREF _Toc","\h"含义为在目录内建立目录项与页码的超链接
-        text.setStringValue(" PAGEREF " + bookmarkRef + " \\h ");
-        p.addNewR().addNewRPr().addNewNoProof();
-        run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        run.addNewFldChar().setFldCharType(STFldCharType.SEPARATE);
-        // page number run
-        run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        run.addNewT().setStringValue(Integer.toString(page));
-        run = p.addNewR();
-        run.addNewRPr().addNewNoProof();
-        //STFldCharType.END标识与上面STFldCharType.BEGIN相对应
-        run.addNewFldChar().setFldCharType(STFldCharType.END);
-        //添加页码右括号
-        p.addNewR().addNewT().setStringValue(")");
-        //设置行间距
-        CTSpacing pSpacing = pPr.getSpacing() != null ? pPr.getSpacing() : pPr.addNewSpacing();
-        pSpacing.setLineRule(STLineSpacingRule.AUTO);
-        pSpacing.setLine(new BigInteger("360"));
-    }
-
+    /**
+     * 设置目录
+     * @param xdoc
+     * @return
+     */
     public static CTSdtBlock CustomTOC(XWPFDocument xdoc) {
         CTSdtBlock block = xdoc.getDocument().getBody().addNewSdt();
+        //setCustomHeadingStyle(xdoc, "Heading1", 1);
         CTSdtPr sdtPr = block.addNewSdtPr();
         CTDecimalNumber id = sdtPr.addNewId();
         id.setVal(new BigInteger("4844945"));
@@ -683,18 +644,18 @@ public class DBDataToWord {
         p.setRsidRDefault("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
         p.addNewPPr().addNewPStyle().setVal("TOCHeading");
         p.addNewR().addNewT().setStringValue("目     录");
-        //设置段落对齐方式，即将“目录”二字居中
+        // 设置段落对齐方式，即将“目录”二字居中
         CTPPr pr = p.getPPr();
         CTJc jc = pr.isSetJc() ? pr.getJc() : pr.addNewJc();
         STJc.Enum en = STJc.Enum.forInt(ParagraphAlignment.CENTER.getValue());
         jc.setVal(en);
-        //"目录"二字的字体
+        // "目录"二字的字体
         CTRPr pRpr = p.getRArray(0).addNewRPr();
         fonts = pRpr.isSetRFonts() ? pRpr.getRFonts() : pRpr.addNewRFonts();
         fonts.setAscii("Times New Roman");
         fonts.setEastAsia("华文中宋");
         fonts.setHAnsi("华文中宋");
-        //"目录"二字加粗
+        // "目录"二字加粗
         CTOnOff bold = pRpr.isSetB() ? pRpr.getB() : pRpr.addNewB();
         bold.setVal(STOnOff.TRUE);
         // 设置“目录”二字字体大小为24号
@@ -703,6 +664,90 @@ public class DBDataToWord {
         return block;
     }
 
+    /**
+     * 添加标题
+     * @param block
+     * @param level
+     * @param title
+     * @param page
+     * @param bookmarkRef
+     */
+    public static void addRow(CTSdtBlock block, int level, String title, int page, String bookmarkRef) {
+        CTSdtContentBlock contentBlock = block.getSdtContent();
+        CTP p = contentBlock.addNewP();
+        p.setRsidR("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
+        p.setRsidRDefault("00EF7E24".getBytes(LocaleUtil.CHARSET_1252));
+        CTPPr pPr = p.addNewPPr();
+        pPr.addNewPStyle().setVal("TOC" + level);
+        CTTabs tabs = pPr.addNewTabs();
+        CTTabStop tab = tabs.addNewTab();
+        tab.setVal(STTabJc.RIGHT);
+        tab.setLeader(STTabTlc.DOT);
+        tab.setPos(new BigInteger("9100"));
+        pPr.addNewRPr().addNewNoProof();
+
+        // STFldCharType.BEGIN标识与结尾处STFldCharType.END相对应
+        CTR run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        run.addNewFldChar().setFldCharType(STFldCharType.BEGIN);
+        // pageref run
+        run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        CTText text = run.addNewInstrText();
+        text.setSpace(SpaceAttribute.Space.PRESERVE);
+        // bookmark reference
+        // 源码的域名为" PAGEREF _Toc","\h"含义为在目录内建立目录项与页码的超链接
+        text.setStringValue(" PAGEREF " + bookmarkRef + " \\h ");
+        p.addNewR().addNewRPr().addNewNoProof();
+        run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        run.addNewFldChar().setFldCharType(STFldCharType.SEPARATE);
+
+        run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        run.addNewT().setStringValue(title);
+        // 设置标题字体
+        CTRPr pRpr = run.getRPr();
+        CTFonts fonts = pRpr.isSetRFonts() ? pRpr.getRFonts() : pRpr.addNewRFonts();
+        fonts.setAscii("Times New Roman");
+        fonts.setEastAsia("楷体");
+        fonts.setHAnsi("楷体");
+        // 设置标题字体大小
+        CTHpsMeasure sz = pRpr.isSetSz() ? pRpr.getSz() : pRpr.addNewSz();
+        sz.setVal(new BigInteger("21"));
+        // 设置颜色
+        CTColor ctColor = pRpr.isSetColor() ? pRpr.getColor() : pRpr.addNewColor();
+        ctColor.setVal("6C7B8B");
+
+        run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        // STFldCharType.END标识与上面STFldCharType.BEGIN相对应
+        run.addNewFldChar().setFldCharType(STFldCharType.END);
+
+        // 添加制表符
+        run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        run.addNewTab();
+        // 添加页码左括号
+        p.addNewR().addNewT().setStringValue("(");
+        // page number run
+        run = p.addNewR();
+        run.addNewRPr().addNewNoProof();
+        run.addNewT().setStringValue(Integer.toString(page));
+        // 添加页码右括号
+        p.addNewR().addNewT().setStringValue(")");
+        // 设置行间距
+        CTSpacing pSpacing = pPr.getSpacing() != null ? pPr.getSpacing() : pPr.addNewSpacing();
+        pSpacing.setLineRule(STLineSpacingRule.AUTO);
+        pSpacing.setLine(new BigInteger("360"));
+    }
+
+    /**
+     * 添加栏目
+     * @param block
+     * @param level
+     * @param title
+     */
     public static void addRowOnlyTitle(CTSdtBlock block, int level, String title) {
         CTSdtContentBlock contentBlock = block.getSdtContent();
         CTP p = contentBlock.addNewP();
@@ -719,13 +764,13 @@ public class DBDataToWord {
         CTR run = p.addNewR();
         run.addNewRPr().addNewNoProof();
         run.addNewT().setStringValue(title);
-        //设置行间距
-        CTSpacing pSpacing = pPr.getSpacing() != null ? pPr.getSpacing(): pPr.addNewSpacing();
+        // 设置行间距
+        CTSpacing pSpacing = pPr.getSpacing() != null ? pPr.getSpacing() : pPr.addNewSpacing();
         pSpacing.setLineRule(STLineSpacingRule.AUTO);
         pSpacing.setLine(new BigInteger("360"));
         pSpacing.setBeforeLines(new BigInteger("20"));
         pSpacing.setAfterLines(new BigInteger("10"));
-        //设置字体
+        // 设置字体
         CTRPr pRpr = run.getRPr();
         CTFonts fonts = pRpr.isSetRFonts() ? pRpr.getRFonts() : pRpr.addNewRFonts();
         fonts.setAscii("Times New Roman");
@@ -735,7 +780,266 @@ public class DBDataToWord {
         CTHpsMeasure sz = pRpr.isSetSz() ? pRpr.getSz() : pRpr.addNewSz();
         sz.setVal(new BigInteger("24"));
 
+        // 设置颜色
+        CTColor ctColor = pRpr.isSetColor() ? pRpr.getColor() : pRpr.addNewColor();
+        ctColor.setVal("EE9572");
+
         CTHpsMeasure szCs = pRpr.isSetSzCs() ? pRpr.getSzCs() : pRpr.addNewSzCs();
         szCs.setVal(new BigInteger("24"));
     }
+
+    /**
+     * 设置页眉
+     * @param doc
+     * @param orgFullName
+     * @param imgFile
+     * @throws Exception
+     */
+    public static void createHeader(XWPFDocument doc, String imgFile) throws Exception {
+        /*
+         * 对页眉段落作处理，使公司logo图片在页眉左边，公司全称在页眉右边
+         * */
+        CTSectPr sectPr = doc.getDocument().getBody().addNewSectPr();
+        XWPFHeaderFooterPolicy headerFooterPolicy = new XWPFHeaderFooterPolicy(doc, sectPr);
+        XWPFHeader header = headerFooterPolicy.createHeader(XWPFHeaderFooterPolicy.DEFAULT);
+
+        XWPFParagraph paragraph = header.getParagraphArray(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setBorderBottom(Borders.THICK);
+
+        CTTabStop tabStop = paragraph.getCTP().getPPr().addNewTabs().addNewTab();
+        tabStop.setVal(STTabJc.RIGHT);
+        int twipsPerInch = 1440;
+        tabStop.setPos(BigInteger.valueOf(6 * twipsPerInch));
+
+        XWPFRun run = paragraph.createRun();
+        setXWPFRunStyle(run, "新宋体", 10, "00FF00");
+
+        /*
+         * 根据公司logo在ftp上的路径获取到公司到图片字节流
+         * 添加公司logo到页眉，logo在左边
+         * */
+        if (StringUtils.isNotBlank(imgFile)) {
+            InputStream is = new FileInputStream(new File(imgFile));
+
+            XWPFPicture picture = run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgFile, Units.toEMU(30), Units.toEMU(30));
+
+            String blipID = "";
+            // 这段必须有，不然打开的logo图片不显示
+            for (XWPFPictureData picturedata : header.getAllPackagePictures()) {
+                blipID = header.getRelationId(picturedata);
+            }
+            picture.getCTPicture().getBlipFill().getBlip().setEmbed(blipID);
+            run.addTab();
+            is.close();
+        }
+
+        /*
+         * 添加字体页眉，公司全称
+         * 公司全称在右边
+         * */
+        run = paragraph.createRun();
+        CTFldChar fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("begin"));
+
+        run = paragraph.createRun();
+        CTText ctText = run.getCTR().addNewInstrText();
+        //ctText.setStringValue("TIME \\@ \"EEEE\"");
+        //ctText.setStringValue("DATE \\@ \"yyyy\"");
+        ctText.setStringValue("DATE \\@ \"h:mm am/pm\"");
+        ctText.setSpace(SpaceAttribute.Space.Enum.forString("preserve"));
+        run.setFontSize(11);
+        CTRPr rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        CTFonts fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("微软雅黑");
+        fonts.setEastAsia("微软雅黑");
+        fonts.setHAnsi("微软雅黑");
+
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("end"));
+
+        run = paragraph.createRun();
+        //run.setText("年");
+        run.setText(" ");
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("微软雅黑");
+        fonts.setEastAsia("微软雅黑");
+        fonts.setHAnsi("微软雅黑");
+
+        run = paragraph.createRun();
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("begin"));
+
+        run = paragraph.createRun();
+        ctText = run.getCTR().addNewInstrText();
+        //ctText.setStringValue("TIME \\@ \"O\"");
+        //ctText.setStringValue("DATE \\@ \"M\"");
+        ctText.setStringValue("DATE \\@ \"dddd\"");
+        ctText.setSpace(SpaceAttribute.Space.Enum.forString("preserve"));
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("微软雅黑");
+        fonts.setEastAsia("微软雅黑");
+        fonts.setHAnsi("微软雅黑");
+
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("end"));
+
+        run = paragraph.createRun();
+        //run.setText("月");
+        run.setText(" ");
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("微软雅黑");
+        fonts.setEastAsia("微软雅黑");
+        fonts.setHAnsi("微软雅黑");
+
+        run = paragraph.createRun();
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("begin"));
+
+        run = paragraph.createRun();
+        ctText = run.getCTR().addNewInstrText();
+        //ctText.setStringValue("TIME \\@ \"A\"");
+        //ctText.setStringValue("DATE \\@ \"D\"");
+        ctText.setStringValue("DATE \\@ \"MMMM d\"");
+        ctText.setSpace(SpaceAttribute.Space.Enum.forString("preserve"));
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("微软雅黑");
+        fonts.setEastAsia("微软雅黑");
+        fonts.setHAnsi("微软雅黑");
+
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("end"));
+
+        run = paragraph.createRun();
+        //run.setText("日");
+        run.setText(" ");
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("微软雅黑");
+        fonts.setEastAsia("微软雅黑");
+        fonts.setHAnsi("微软雅黑");
+    }
+
+    /**
+     * 设置页脚
+     * @param document
+     * @throws Exception
+     */
+    public static void createFooter(XWPFDocument document, String content) throws Exception {
+        CTP ctp = CTP.Factory.newInstance();
+        XWPFParagraph paragraph = new XWPFParagraph(ctp, document);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setVerticalAlignment(TextAlignment.CENTER);
+        paragraph.setBorderTop(Borders.THICK);
+        CTTabStop tabStop = paragraph.getCTP().getPPr().addNewTabs().addNewTab();
+        tabStop.setVal(STTabJc.RIGHT);
+        int twipsPerInch =  1440;
+        tabStop.setPos(BigInteger.valueOf(6 * twipsPerInch));
+
+        XWPFRun run;
+
+        if (StringUtil.isNotBlank(content)) {
+            run = paragraph.createRun();
+            run.setText(content);
+            setXWPFRunStyle(run, "宋体", 12, "EE30A7");
+            run.addTab();
+        }
+
+        run = paragraph.createRun();
+        run.setText("第");
+        run.setFontSize(11);
+        CTRPr rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        CTFonts fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("宋体");
+        fonts.setEastAsia("宋体");
+        fonts.setHAnsi("宋体");
+
+        run = paragraph.createRun();
+        CTFldChar fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("begin"));
+
+        run = paragraph.createRun();
+        CTText ctText = run.getCTR().addNewInstrText();
+        ctText.setStringValue("PAGE  \\* MERGEFORMAT");
+        ctText.setSpace(SpaceAttribute.Space.Enum.forString("preserve"));
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("宋体");
+        fonts.setEastAsia("宋体");
+        fonts.setHAnsi("宋体");
+
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("end"));
+
+        run = paragraph.createRun();
+        run.setText("页 总共");
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("宋体");
+        fonts.setEastAsia("宋体");
+        fonts.setHAnsi("宋体");
+
+        run = paragraph.createRun();
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("begin"));
+
+        run = paragraph.createRun();
+        ctText = run.getCTR().addNewInstrText();
+        ctText.setStringValue("NUMPAGES  \\* MERGEFORMAT ");
+        ctText.setSpace(SpaceAttribute.Space.Enum.forString("preserve"));
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("宋体");
+        fonts.setEastAsia("宋体");
+        fonts.setHAnsi("宋体");
+
+        fldChar = run.getCTR().addNewFldChar();
+        fldChar.setFldCharType(STFldCharType.Enum.forString("end"));
+
+        run = paragraph.createRun();
+        run.setText("页");
+        run.setFontSize(11);
+        rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii("宋体");
+        fonts.setEastAsia("宋体");
+        fonts.setHAnsi("宋体");
+
+        XWPFParagraph[] newparagraphs = new XWPFParagraph[1];
+        newparagraphs[0] = paragraph;
+        CTSectPr sectPr = document.getDocument().getBody().addNewSectPr();
+        XWPFHeaderFooterPolicy headerFooterPolicy = new XWPFHeaderFooterPolicy(document, sectPr);
+        headerFooterPolicy.createFooter(STHdrFtr.DEFAULT, newparagraphs);
+    }
+
+    /**
+     * 设置页脚样式
+     * @param run
+     * @param font
+     * @param fontSize
+     */
+    private static void setXWPFRunStyle(XWPFRun run, String font, int fontSize, String color) {
+        run.setFontSize(fontSize);
+        CTRPr rpr = run.getCTR().isSetRPr() ? run.getCTR().getRPr() : run.getCTR().addNewRPr();
+        CTFonts fonts = rpr.isSetRFonts() ? rpr.getRFonts() : rpr.addNewRFonts();
+        fonts.setAscii(font);
+        fonts.setEastAsia(font);
+        fonts.setHAnsi(font);
+        if (StringUtil.isNotBlank(color)) {
+            run.setColor(color);
+        }
+    }
+
 }
