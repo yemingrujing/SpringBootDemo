@@ -2,6 +2,7 @@ package com.example;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 import com.example.util.common.SpringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,7 @@ import java.io.File;
 @EnableAsync
 @EnableAspectJAutoProxy
 @Import(SpringUtil.class)
+@Slf4j
 public class ControllerApplication {
 
     public static void main(String[] args) {
@@ -48,6 +50,7 @@ public class ControllerApplication {
         Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
         try {
             File keystore = new ClassPathResource("properties/keystore.p12").getFile();
+            log.info(keystore.getAbsolutePath());
             connector.setScheme("https");
             connector.setSecure(true);
             connector.setPort(port);
