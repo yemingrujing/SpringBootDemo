@@ -50,14 +50,13 @@ public class ControllerApplication {
         Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
         try {
             log.info("================================================================================");
-            File keystore = new ClassPathResource("properties/keystore.p12").getFile();
-            log.info(keystore.getAbsolutePath());
+            String keystore = Thread.currentThread().getContextClassLoader().getResource("properties/keystore.p12").getPath();
             log.info("================================================================================");
             connector.setScheme("https");
             connector.setSecure(true);
             connector.setPort(port);
             protocol.setSSLEnabled(true);
-            protocol.setKeystoreFile(keystore.getAbsolutePath());
+            protocol.setKeystoreFile(keystore);
             protocol.setKeystorePass(key_store_password);
             protocol.setKeyPass(key_password);
             return connector;

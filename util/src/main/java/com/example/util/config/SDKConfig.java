@@ -18,7 +18,6 @@ import com.example.util.unionpay.LogUtil;
 import com.example.util.unionpay.SDKUtil;
 import com.example.util.constant.SDKConstants;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.util.Properties;
