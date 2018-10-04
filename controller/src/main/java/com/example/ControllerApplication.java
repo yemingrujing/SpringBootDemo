@@ -49,8 +49,10 @@ public class ControllerApplication {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
         try {
+            log.info("================================================================================");
             File keystore = new ClassPathResource("properties/keystore.p12").getFile();
             log.info(keystore.getAbsolutePath());
+            log.info("================================================================================");
             connector.setScheme("https");
             connector.setSecure(true);
             connector.setPort(port);
