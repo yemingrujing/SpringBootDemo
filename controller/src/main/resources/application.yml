@@ -1,13 +1,13 @@
 #服务端口server:
 server:
-  port: 8080
-
-https:
   port: 8443
   ssl:
     key-store: classpath:properties/keystore.p12
     key-store-password: gw123456
     key-password: gw123456
+
+http:
+  port: 8080
 
 #基础配置
 spring:
