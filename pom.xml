@@ -14,6 +14,7 @@
         <module>util</module>
         <module>service</module>
         <module>eurekaServer</module>
+        <module>bootAdminServer</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -37,6 +38,10 @@
         <pagehelper.mybatis.version>1.2.3</pagehelper.mybatis.version>
         <tk.mybatis.version>1.2.4</tk.mybatis.version>
         <alibaba.version>1.1.10</alibaba.version>
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        <spring.boot.admin.version>2.0.3</spring.boot.admin.version>
+        <eureka.client.version>2.0.1.RELEASE</eureka.client.version>
+        <eureka.server.version>1.4.5.RELEASE</eureka.server.version>
     </properties>
 
     <dependencyManagement>
@@ -68,6 +73,26 @@
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${springboot.version}</version>
+            </dependency>
+
+            <!-- Euraka -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+                <version>${eureka.client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-eureka-server</artifactId>
+                <version>${eureka.server.version}</version>
+            </dependency>
+
             <!-- pagehelper 分页-->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
