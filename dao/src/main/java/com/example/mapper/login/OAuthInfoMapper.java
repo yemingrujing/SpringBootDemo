@@ -8,12 +8,14 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
 
     /**
      * 插入用户授权验证信息
+     *
      * @param authInfo
      */
     int saveAuthInfo(@Param("authInfo") OAuthInfo authInfo);
 
     /**
      * 根据id查询授权信息
+     *
      * @param id
      * @return
      */
@@ -21,6 +23,7 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
 
     /**
      * 根据openId查询用户ID
+     *
      * @param openId
      * @param idenType
      * @return
@@ -29,6 +32,7 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
 
     /**
      * 是否有授权
+     *
      * @param authInfo 授权信息
      * @return
      */
@@ -36,6 +40,7 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
 
     /**
      * 根据openId获取授权信息
+     *
      * @param openId
      * @param idenType
      * @return
@@ -44,6 +49,7 @@ public interface OAuthInfoMapper extends Mapper<OAuthInfo> {
 
     /**
      * 更新授权信息
+     *
      * @param authInfo
      * @return
      */

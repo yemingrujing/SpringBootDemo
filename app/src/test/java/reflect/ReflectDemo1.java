@@ -10,7 +10,7 @@ import java.util.Iterator;
  * @create 2018-08-10 9:41
  **/
 public class ReflectDemo1 {
-    
+
     public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         ArrayList<Integer> list = new ArrayList<Integer>();
         list.add(123);
@@ -26,7 +26,7 @@ public class ReflectDemo1 {
         m.invoke(list, "adc");
         m.invoke(list, "sss");
         m.invoke(list, "qqq");
-        
+
         System.out.println(list);
 
         Iterator it = list.iterator();

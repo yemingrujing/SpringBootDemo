@@ -24,6 +24,7 @@ import java.util.*;
 
 /**
  * 导入基础和,普通方法和Sax共用
+ *
  * @author Wei.Guang
  * @create 2018-07-17 16:57
  **/
@@ -66,6 +67,7 @@ public class ImportBaseService {
 
     /**
      * 获取需要导出的全部字段
+     *
      * @param targetId
      * @param fields
      * @param excelParams
@@ -122,6 +124,7 @@ public class ImportBaseService {
 
     /**
      * 追加集合名称到前面
+     *
      * @param collection
      */
     private void additionalCollectionName(ExcelCollectionParams collection) {
@@ -140,7 +143,7 @@ public class ImportBaseService {
         if (StringUtils.isNoneEmpty(excel.groupName())) {
             excelEntity.setName(excel.groupName() + "_" + excelEntity.getName());
         }
-        if(excelEntityAnn != null && excelEntityAnn.show()){
+        if (excelEntityAnn != null && excelEntityAnn.show()) {
             excelEntity.setName(excelEntityAnn.name() + "_" + excelEntity.getName());
         }
         String fieldname = field.getName();
@@ -231,7 +234,6 @@ public class ImportBaseService {
     }
 
     /**
-     *
      * @param entity
      * @param object
      * @param value

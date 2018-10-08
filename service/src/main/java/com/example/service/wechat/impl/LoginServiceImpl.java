@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public User loginByToken(String userName, String token) {
-        return userMapper.loginByToken(userName,token);
+        return userMapper.loginByToken(userName, token);
     }
 
     @Override

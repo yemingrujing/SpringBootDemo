@@ -6,7 +6,7 @@ public class ChinaPayServiceImpl implements ChinaPayService {
 
     @Override
     public String querySign(String cardNo) {
-        
+
         return null;
     }
 }

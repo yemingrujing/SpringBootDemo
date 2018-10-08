@@ -11,6 +11,7 @@ public final class DateUtils {
     public static final String DATATIMEF_STR_MI = "yyyy-MM-dd HH:mm";
 
     public static final String TIME_STAMP_PATTERN = "yyyyMMddHHmmSS";
+
     /**
      * 格式化时间  yyyy-MM-dd
      *

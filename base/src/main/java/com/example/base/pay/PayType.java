@@ -51,7 +51,7 @@ public enum PayType implements BasePayType {
     /**
      * 微信支付
      */
-    wxPay{
+    wxPay {
         /**
          * 根据支付类型获取交易类型
          * @param transactionType 类型值
@@ -82,7 +82,7 @@ public enum PayType implements BasePayType {
             httpConfigStorage.setKeystore("证书信息串");
             httpConfigStorage.setStorePassword("证书密码");
             httpConfigStorage.setPath(false);
-            return  new WxPayService(wxPayConfigStorage, httpConfigStorage);
+            return new WxPayService(wxPayConfigStorage, httpConfigStorage);
         }
     };
 

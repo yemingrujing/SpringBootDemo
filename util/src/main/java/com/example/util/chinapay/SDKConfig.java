@@ -74,17 +74,18 @@ public class SDKConfig {
     public static final String SDK_IF_VALIDATE_REMOTE_CERT = "acpsdk.ifValidateRemoteCert";
 
 
-
     /**
      * 操作对象
      */
     private static SDKConfig config = new SDKConfig();
+
     private SDKConfig() {
         super();
     }
 
     /**
      * 获取config对象.
+     *
      * @return
      */
     public static SDKConfig getConfig() {
@@ -94,8 +95,7 @@ public class SDKConfig {
     /**
      * 从properties文件加载
      *
-     * @param rootPath
-     *            不包含文件名的目录.
+     * @param rootPath 不包含文件名的目录.
      */
     public void loadPropertiesFromPath(String rootPath) {
         if (StringUtils.isNotBlank(rootPath)) {

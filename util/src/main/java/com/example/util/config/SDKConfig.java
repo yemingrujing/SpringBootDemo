@@ -23,7 +23,6 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- *
  * @ClassName SDKConfig
  * @Description acpsdk配置文件acp_sdk.properties配置信息类
  * @date 2016-7-22 下午4:04:55
@@ -31,59 +30,113 @@ import java.util.Properties;
  */
 public class SDKConfig {
     public static final String FILE_NAME = "properties/acp_sdk.properties";
-    /** 前台请求URL. */
+    /**
+     * 前台请求URL.
+     */
     private String frontRequestUrl;
-    /** 后台请求URL. */
+    /**
+     * 后台请求URL.
+     */
     private String backRequestUrl;
-    /** 单笔查询 */
+    /**
+     * 单笔查询
+     */
     private String singleQueryUrl;
-    /** 批量查询 */
+    /**
+     * 批量查询
+     */
     private String batchQueryUrl;
-    /** 批量交易 */
+    /**
+     * 批量交易
+     */
     private String batchTransUrl;
-    /** 文件传输 */
+    /**
+     * 文件传输
+     */
     private String fileTransUrl;
-    /** 签名证书路径. */
+    /**
+     * 签名证书路径.
+     */
     private String signCertPath;
-    /** 签名证书密码. */
+    /**
+     * 签名证书密码.
+     */
     private String signCertPwd;
-    /** 签名证书类型. */
+    /**
+     * 签名证书类型.
+     */
     private String signCertType;
-    /** 加密公钥证书路径. */
+    /**
+     * 加密公钥证书路径.
+     */
     private String encryptCertPath;
-    /** 验证签名公钥证书目录. */
+    /**
+     * 验证签名公钥证书目录.
+     */
     private String validateCertDir;
-    /** 按照商户代码读取指定签名证书目录. */
+    /**
+     * 按照商户代码读取指定签名证书目录.
+     */
     private String signCertDir;
-    /** 磁道加密证书路径. */
+    /**
+     * 磁道加密证书路径.
+     */
     private String encryptTrackCertPath;
-    /** 磁道加密公钥模数. */
+    /**
+     * 磁道加密公钥模数.
+     */
     private String encryptTrackKeyModulus;
-    /** 磁道加密公钥指数. */
+    /**
+     * 磁道加密公钥指数.
+     */
     private String encryptTrackKeyExponent;
-    /** 有卡交易. */
+    /**
+     * 有卡交易.
+     */
     private String cardRequestUrl;
-    /** app交易 */
+    /**
+     * app交易
+     */
     private String appRequestUrl;
-    /** 证书使用模式(单证书/多证书) */
+    /**
+     * 证书使用模式(单证书/多证书)
+     */
     private String singleMode;
-    /** 安全密钥(SHA256和SM3计算时使用) */
+    /**
+     * 安全密钥(SHA256和SM3计算时使用)
+     */
     private String secureKey;
-    /** 中级证书路径  */
+    /**
+     * 中级证书路径
+     */
     private String middleCertPath;
-    /** 根证书路径  */
+    /**
+     * 根证书路径
+     */
     private String rootCertPath;
-    /** 是否验证验签证书CN，除了false都验  */
+    /**
+     * 是否验证验签证书CN，除了false都验
+     */
     private boolean ifValidateCNName = true;
-    /** 是否验证https证书，默认都不验  */
+    /**
+     * 是否验证https证书，默认都不验
+     */
     private boolean ifValidateRemoteCert = false;
-    /** signMethod，没配按01吧  */
+    /**
+     * signMethod，没配按01吧
+     */
     private String signMethod = "01";
-    /** version，没配按5.0.0  */
+    /**
+     * version，没配按5.0.0
+     */
     private String version = "5.0.0";
-    /** frontUrl  */
+    /**
+     * frontUrl
+     */
     private String frontUrl;
-    /** backUrl  */
+    /**
+     * backUrl
+     */
     private String backUrl;
 
     /*缴费相关地址*/
@@ -97,24 +150,42 @@ public class SDKConfig {
     private String qrcB2cIssBackTransUrl;
     private String qrcB2cMerBackTransUrl;
 
-    /** 配置文件中的前台URL常量. */
+    /**
+     * 配置文件中的前台URL常量.
+     */
     public static final String SDK_FRONT_URL = "acpsdk.frontTransUrl";
-    /** 配置文件中的后台URL常量. */
+    /**
+     * 配置文件中的后台URL常量.
+     */
     public static final String SDK_BACK_URL = "acpsdk.backTransUrl";
-    /** 配置文件中的单笔交易查询URL常量. */
+    /**
+     * 配置文件中的单笔交易查询URL常量.
+     */
     public static final String SDK_SIGNQ_URL = "acpsdk.singleQueryUrl";
-    /** 配置文件中的批量交易查询URL常量. */
+    /**
+     * 配置文件中的批量交易查询URL常量.
+     */
     public static final String SDK_BATQ_URL = "acpsdk.batchQueryUrl";
-    /** 配置文件中的批量交易URL常量. */
+    /**
+     * 配置文件中的批量交易URL常量.
+     */
     public static final String SDK_BATTRANS_URL = "acpsdk.batchTransUrl";
-    /** 配置文件中的文件类交易URL常量. */
+    /**
+     * 配置文件中的文件类交易URL常量.
+     */
     public static final String SDK_FILETRANS_URL = "acpsdk.fileTransUrl";
-    /** 配置文件中的有卡交易URL常量. */
+    /**
+     * 配置文件中的有卡交易URL常量.
+     */
     public static final String SDK_CARD_URL = "acpsdk.cardTransUrl";
-    /** 配置文件中的app交易URL常量. */
+    /**
+     * 配置文件中的app交易URL常量.
+     */
     public static final String SDK_APP_URL = "acpsdk.appTransUrl";
 
-    /** 以下缴费产品使用，其余产品用不到，无视即可 */
+    /**
+     * 以下缴费产品使用，其余产品用不到，无视即可
+     */
     // 前台请求地址
     public static final String JF_SDK_FRONT_TRANS_URL = "acpsdk.jfFrontTransUrl";
     // 后台请求地址
@@ -133,52 +204,98 @@ public class SDKConfig {
     public static final String QRC_B2C_MER_BACK_TRANS_URL = "acpsdk.qrcB2cMerBackTransUrl";
 
 
-    /** 配置文件中签名证书路径常量. */
+    /**
+     * 配置文件中签名证书路径常量.
+     */
     public static final String SDK_SIGNCERT_PATH = "acpsdk.signCert.path";
-    /** 配置文件中签名证书密码常量. */
+    /**
+     * 配置文件中签名证书密码常量.
+     */
     public static final String SDK_SIGNCERT_PWD = "acpsdk.signCert.pwd";
-    /** 配置文件中签名证书类型常量. */
+    /**
+     * 配置文件中签名证书类型常量.
+     */
     public static final String SDK_SIGNCERT_TYPE = "acpsdk.signCert.type";
-    /** 配置文件中密码加密证书路径常量. */
+    /**
+     * 配置文件中密码加密证书路径常量.
+     */
     public static final String SDK_ENCRYPTCERT_PATH = "acpsdk.encryptCert.path";
-    /** 配置文件中磁道加密证书路径常量. */
+    /**
+     * 配置文件中磁道加密证书路径常量.
+     */
     public static final String SDK_ENCRYPTTRACKCERT_PATH = "acpsdk.encryptTrackCert.path";
-    /** 配置文件中磁道加密公钥模数常量. */
+    /**
+     * 配置文件中磁道加密公钥模数常量.
+     */
     public static final String SDK_ENCRYPTTRACKKEY_MODULUS = "acpsdk.encryptTrackKey.modulus";
-    /** 配置文件中磁道加密公钥指数常量. */
+    /**
+     * 配置文件中磁道加密公钥指数常量.
+     */
     public static final String SDK_ENCRYPTTRACKKEY_EXPONENT = "acpsdk.encryptTrackKey.exponent";
-    /** 配置文件中验证签名证书目录常量. */
+    /**
+     * 配置文件中验证签名证书目录常量.
+     */
     public static final String SDK_VALIDATECERT_DIR = "acpsdk.validateCert.dir";
 
-    /** 配置文件中是否加密cvn2常量. */
+    /**
+     * 配置文件中是否加密cvn2常量.
+     */
     public static final String SDK_CVN_ENC = "acpsdk.cvn2.enc";
-    /** 配置文件中是否加密cvn2有效期常量. */
+    /**
+     * 配置文件中是否加密cvn2有效期常量.
+     */
     public static final String SDK_DATE_ENC = "acpsdk.date.enc";
-    /** 配置文件中是否加密卡号常量. */
+    /**
+     * 配置文件中是否加密卡号常量.
+     */
     public static final String SDK_PAN_ENC = "acpsdk.pan.enc";
-    /** 配置文件中证书使用模式 */
+    /**
+     * 配置文件中证书使用模式
+     */
     public static final String SDK_SINGLEMODE = "acpsdk.singleMode";
-    /** 配置文件中安全密钥 */
+    /**
+     * 配置文件中安全密钥
+     */
     public static final String SDK_SECURITYKEY = "acpsdk.secureKey";
-    /** 配置文件中根证书路径常量  */
+    /**
+     * 配置文件中根证书路径常量
+     */
     public static final String SDK_ROOTCERT_PATH = "acpsdk.rootCert.path";
-    /** 配置文件中根证书路径常量  */
+    /**
+     * 配置文件中根证书路径常量
+     */
     public static final String SDK_MIDDLECERT_PATH = "acpsdk.middleCert.path";
-    /** 配置是否需要验证验签证书CN，除了false之外的值都当true处理 */
+    /**
+     * 配置是否需要验证验签证书CN，除了false之外的值都当true处理
+     */
     public static final String SDK_IF_VALIDATE_CN_NAME = "acpsdk.ifValidateCNName";
-    /** 配置是否需要验证https证书，除了true之外的值都当false处理 */
+    /**
+     * 配置是否需要验证https证书，除了true之外的值都当false处理
+     */
     public static final String SDK_IF_VALIDATE_REMOTE_CERT = "acpsdk.ifValidateRemoteCert";
-    /** signmethod */
+    /**
+     * signmethod
+     */
     public static final String SDK_SIGN_METHOD = "acpsdk.signMethod";
-    /** version */
+    /**
+     * version
+     */
     public static final String SDK_VERSION = "acpsdk.version";
-    /** 后台通知地址  */
+    /**
+     * 后台通知地址
+     */
     public static final String SDK_BACKURL = "acpsdk.backUrl";
-    /** 前台通知地址  */
+    /**
+     * 前台通知地址
+     */
     public static final String SDK_FRONTURL = "acpsdk.frontUrl";
-    /** 操作对象. */
+    /**
+     * 操作对象.
+     */
     private static SDKConfig config = new SDKConfig();
-    /** 属性文件对象. */
+    /**
+     * 属性文件对象.
+     */
     private Properties properties;
 
     private SDKConfig() {
@@ -187,6 +304,7 @@ public class SDKConfig {
 
     /**
      * 获取config对象.
+     *
      * @return
      */
     public static SDKConfig getConfig() {
@@ -196,8 +314,7 @@ public class SDKConfig {
     /**
      * 从properties文件加载
      *
-     * @param rootPath
-     *            不包含文件名的目录.
+     * @param rootPath 不包含文件名的目录.
      */
     public void loadPropertiesFromPath(String rootPath) {
         if (StringUtils.isNotBlank(rootPath)) {

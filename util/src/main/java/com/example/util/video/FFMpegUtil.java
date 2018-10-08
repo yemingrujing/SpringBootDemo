@@ -54,6 +54,7 @@ public class FFMpegUtil {
 
     /**
      * 生成下载根目录
+     *
      * @return
      */
     public static File mkUploadRootDir() {
@@ -62,6 +63,7 @@ public class FFMpegUtil {
 
     /**
      * 返回原文件的后缀
+     *
      * @param originalFileName
      * @return
      */
@@ -75,8 +77,7 @@ public class FFMpegUtil {
     }
 
     /**
-     *
-     * @param path upload的子目录路径
+     * @param path             upload的子目录路径
      * @param originalFileName
      * @return
      */
@@ -92,6 +93,7 @@ public class FFMpegUtil {
 
     /**
      * 返回从upload目录下面的相对路径
+     *
      * @param file
      * @return
      */
@@ -100,7 +102,7 @@ public class FFMpegUtil {
             return "";
         }
         String absolutePath = file.getAbsolutePath();
-        if (absolutePath.indexOf(ROOT_PATH ) != -1 && ROOT_PATH.length() < absolutePath.length()) {
+        if (absolutePath.indexOf(ROOT_PATH) != -1 && ROOT_PATH.length() < absolutePath.length()) {
             return absolutePath.substring(absolutePath.indexOf(ROOT_PATH) + ROOT_PATH.length());
         } else {
             return "";
@@ -109,6 +111,7 @@ public class FFMpegUtil {
 
     /**
      * 单个文件转换成MP4
+     *
      * @param file
      * @return
      */
@@ -124,7 +127,8 @@ public class FFMpegUtil {
                 while ((length = inputStream.read(buffer)) != -1) {
                     stream.write(buffer, 0, length);
                 }
-                stream.flush();;
+                stream.flush();
+                ;
                 stream.close();
 
                 log.info("Server File Location = " + serverFile.getAbsolutePath());
@@ -291,6 +295,7 @@ public class FFMpegUtil {
 
     /**
      * 将file转换成MultipartFile
+     *
      * @param picPath
      * @return
      */
@@ -300,8 +305,7 @@ public class FFMpegUtil {
         return mfile;
     }
 
-    private static FileItem createFileItem(String filePath)
-    {
+    private static FileItem createFileItem(String filePath) {
         FileItemFactory factory = new DiskFileItemFactory(16, null);
         String textFieldName = "textField";
         int num = filePath.lastIndexOf(".");
@@ -311,20 +315,16 @@ public class FFMpegUtil {
         File newfile = new File(filePath);
         int bytesRead = 0;
         byte[] buffer = new byte[8192];
-        try
-        {
+        try {
             FileInputStream fis = new FileInputStream(newfile);
             OutputStream os = item.getOutputStream();
             while ((bytesRead = fis.read(buffer, 0, 8192))
-                    != -1)
-            {
+                    != -1) {
                 os.write(buffer, 0, bytesRead);
             }
             os.close();
             fis.close();
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return item;

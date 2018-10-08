@@ -16,7 +16,8 @@ import java.util.Map;
  **/
 public class CheckoutUtil {
 
-    private CheckoutUtil(){}
+    private CheckoutUtil() {
+    }
 
     /**
      * 与接口配置信息中的Token要一致

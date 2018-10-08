@@ -7,6 +7,7 @@ public interface ChinaPayService {
 
     /**
      * 查询签约接口
+     *
      * @param cardNo
      * @return
      */

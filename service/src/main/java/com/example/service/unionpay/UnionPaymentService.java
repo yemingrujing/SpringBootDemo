@@ -10,6 +10,7 @@ public interface UnionPaymentService {
 
     /**
      * 支付
+     *
      * @param request
      * @param response
      */
@@ -17,6 +18,7 @@ public interface UnionPaymentService {
 
     /**
      * 后台回调
+     *
      * @param request
      * @param response
      */
@@ -24,6 +26,7 @@ public interface UnionPaymentService {
 
     /**
      * 前台回调
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -32,6 +35,7 @@ public interface UnionPaymentService {
 
     /**
      * 交易状态查询
+     *
      * @param request
      * @param response
      */
@@ -39,6 +43,7 @@ public interface UnionPaymentService {
 
     /**
      * 支付成功后的跳转
+     *
      * @param request
      * @param response
      */
@@ -46,6 +51,7 @@ public interface UnionPaymentService {
 
     /**
      * 检查支付结果
+     *
      * @param shopOrderId
      * @throws IOException
      */

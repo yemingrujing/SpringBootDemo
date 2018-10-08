@@ -45,15 +45,15 @@ public class GetSign {
         AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
         //SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-         model.setBody("我是测试数据");
-         model.setSubject("App支付测试Java");
-         //OutTradeNo只能为数字、英文或下划线,OutTradeNo不可以重复，若重复则会出现系统繁忙等错误
-         model.setOutTradeNo("100342312764512");
-         model.setTimeExpire("30m");
-         model.setTotalAmount("0.01");
-         model.setProductCode("QUICK_MSECURITY_PAY");
-         request.setBizModel(model);
-         request.setNotifyUrl("商户外网可以访问的异步地址");
+        model.setBody("我是测试数据");
+        model.setSubject("App支付测试Java");
+        //OutTradeNo只能为数字、英文或下划线,OutTradeNo不可以重复，若重复则会出现系统繁忙等错误
+        model.setOutTradeNo("100342312764512");
+        model.setTimeExpire("30m");
+        model.setTotalAmount("0.01");
+        model.setProductCode("QUICK_MSECURITY_PAY");
+        request.setBizModel(model);
+        request.setNotifyUrl("商户外网可以访问的异步地址");
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute
             response = alipayClient.sdkExecute(request);

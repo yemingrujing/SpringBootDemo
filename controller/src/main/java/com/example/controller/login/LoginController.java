@@ -70,6 +70,7 @@ public class LoginController {
 
     /**
      * welcome跳转
+     *
      * @return
      */
     @RequestMapping(value = "/index", method = RequestMethod.GET)
@@ -79,6 +80,7 @@ public class LoginController {
 
     /**
      * welcome跳转
+     *
      * @return
      */
     @RequestMapping(value = "/welcome", method = RequestMethod.GET)
@@ -89,6 +91,7 @@ public class LoginController {
 
     /**
      * login跳转
+     *
      * @param model
      * @param user
      * @return
@@ -103,6 +106,7 @@ public class LoginController {
 
     /**
      * 注册页面
+     *
      * @param model
      * @return
      */
@@ -113,6 +117,7 @@ public class LoginController {
 
     /**
      * 注册方法
+     *
      * @param user
      * @param model
      * @return
@@ -123,7 +128,7 @@ public class LoginController {
         if (i > 0) {
             model.addAttribute("info", "注册成功");
             return "login";
-        } else{
+        } else {
             model.addAttribute("info", "注册失败");
             return "register";
         }
@@ -132,6 +137,7 @@ public class LoginController {
 
     /**
      * 微信登录授权判断
+     *
      * @param request
      * @return
      */
@@ -188,6 +194,7 @@ public class LoginController {
 
     /**
      * 执行登录
+     *
      * @param userName
      * @param passWord
      * @param returnUrl
@@ -212,8 +219,8 @@ public class LoginController {
         if (userName.matches(ph)) {
             User user = loginService.loginByPhone(userName);
             if (user != null) {
-                if (StringUtil.isBlank(passWord)){
-                    if (user.getToKen() != toKen){
+                if (StringUtil.isBlank(passWord)) {
+                    if (user.getToKen() != toKen) {
                         model.addAttribute("error", "密码已过期，请重新登录");
                         return "login";
                     } else {
@@ -221,7 +228,7 @@ public class LoginController {
                         return "redirect:/index";
                     }
                 } else {
-                    if (passWord.equals(user.getPassWord())){
+                    if (passWord.equals(user.getPassWord())) {
                         //获取token
                         toKen = TokenUtils.getToken(userName);
                         //保存token
@@ -241,9 +248,9 @@ public class LoginController {
             }
         } else {
             User user = loginService.loginByUsername(userName);
-            if (user != null){
-                if (StringUtil.isBlank(passWord)){
-                    if (user.getToKen() != toKen){
+            if (user != null) {
+                if (StringUtil.isBlank(passWord)) {
+                    if (user.getToKen() != toKen) {
                         model.addAttribute("error", "密码已过期，请重新登录");
                         return "login";
                     } else {
@@ -251,7 +258,7 @@ public class LoginController {
                         return "redirect:/index";
                     }
                 } else {
-                    if (passWord.equals(user.getPassWord())){
+                    if (passWord.equals(user.getPassWord())) {
                         //获取token
                         toKen = TokenUtils.getToken(userName);
                         //保存token
@@ -274,6 +281,7 @@ public class LoginController {
 
     /**
      * 生成验证码
+     *
      * @param request
      * @param response
      * @throws Exception

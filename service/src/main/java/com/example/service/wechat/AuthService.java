@@ -13,7 +13,8 @@ public interface AuthService {
 
     /**
      * 查询授权信息
-     * @param openId 授权用户唯一标识
+     *
+     * @param openId   授权用户唯一标识
      * @param idenType 授权类型
      * @return
      */
@@ -21,7 +22,8 @@ public interface AuthService {
 
     /**
      * 根据openId获取用户信息
-     * @param openId 授权用户唯一标识
+     *
+     * @param openId   授权用户唯一标识
      * @param idenType 授权类型
      * @return
      */

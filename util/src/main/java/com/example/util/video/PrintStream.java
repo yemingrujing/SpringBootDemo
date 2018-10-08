@@ -9,6 +9,7 @@ import java.io.InputStream;
  **/
 public class PrintStream extends Thread {
     InputStream _is = null;
+
     public PrintStream(InputStream is) {
         _is = is;
     }

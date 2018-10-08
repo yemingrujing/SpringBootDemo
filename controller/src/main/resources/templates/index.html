@@ -8,23 +8,25 @@
     <link rel="stylesheet" th:href="@{css/customer/login.css}"/>
 </head>
 <body>
-    <div class="container">
-        <h3 align="center">这是一个带有登录框的主页</h3>
-        <form action="/user/login"  method="post">
-            <table>
-                <tr>
-                    <td>用户名：</td>
-                    <td><input type="text" name="userName"></td>
-                </tr>
-                <tr>
-                    <td>密码：</td>
-                    <td><input type="password" name="passWord"></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><button type="submit">登录</button></td>
-                </tr>
-            </table>
-        </form>
-    </div>
+<div class="container">
+    <h3 align="center">这是一个带有登录框的主页</h3>
+    <form action="/user/login" method="post">
+        <table>
+            <tr>
+                <td>用户名：</td>
+                <td><input type="text" name="userName"></td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td><input type="password" name="passWord"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit">登录</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 </body>
 </html>

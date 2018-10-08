@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  * @create 2018-08-10 10:42
  **/
 public class Main {
-    
+
     public static void main(String[] args) throws Exception {
         Class clazz = Class.forName("reflect.demo.Student");
         Method methodMain = clazz.getMethod("main", String[].class);

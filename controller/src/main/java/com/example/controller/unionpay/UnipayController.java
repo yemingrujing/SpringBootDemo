@@ -27,12 +27,13 @@ public class UnipayController {
 
     /**
      * 支付
+     *
      * @param request
      * @param response
      * @throws IOException
      */
     @RequestMapping(value = "/pay", method = {RequestMethod.POST, RequestMethod.GET})
-    public String pay(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    public String pay(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         return service.pay(request, response);
 
@@ -40,6 +41,7 @@ public class UnipayController {
 
     /**
      * 后台回调
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -53,6 +55,7 @@ public class UnipayController {
 
     /**
      * 前台回调
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -66,6 +69,7 @@ public class UnipayController {
 
     /**
      * 成功后跳转
+     *
      * @param request
      * @param response
      * @throws IOException
@@ -79,6 +83,7 @@ public class UnipayController {
 
     /**
      * 查询、检查交易状态
+     *
      * @param request
      * @param response
      */
@@ -91,6 +96,7 @@ public class UnipayController {
 
     /**
      * 交易状态查询
+     *
      * @param orderId
      */
     @RequestMapping(value = "/check", method = RequestMethod.POST)

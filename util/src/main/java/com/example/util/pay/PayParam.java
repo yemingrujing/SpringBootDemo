@@ -22,7 +22,7 @@ public class PayParam {
     /**
      * 预支付请求地址
      */
-    public static final String  PREPAYURL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
+    public static final String PREPAYURL = "https://api.mch.weixin.qq.com/pay/unifiedorder";
 
     /**
      * 支付订单查询

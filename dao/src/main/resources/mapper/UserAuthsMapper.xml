@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.login.UserAuthsMapper">
-  <resultMap id="BaseResultMap" type="com.example.base.login.UserAuths">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="identify_type" jdbcType="VARCHAR" property="identifyType" />
-    <result column="wx_openid" jdbcType="VARCHAR" property="wxOpenid" />
-    <result column="qq_openid" jdbcType="VARCHAR" property="qqOpenid" />
-    <result column="credential" jdbcType="VARCHAR" property="credential" />
-    <result column="verified" jdbcType="INTEGER" property="verified" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.example.base.login.UserAuths">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="identify_type" jdbcType="VARCHAR" property="identifyType"/>
+        <result column="wx_openid" jdbcType="VARCHAR" property="wxOpenid"/>
+        <result column="qq_openid" jdbcType="VARCHAR" property="qqOpenid"/>
+        <result column="credential" jdbcType="VARCHAR" property="credential"/>
+        <result column="verified" jdbcType="INTEGER" property="verified"/>
+    </resultMap>
 
-  <select id="getToken" parameterType="string" resultType="int">
-    select credential
-    from t_user_auths
-    where user_id = #{userId}
-  </select>
+    <select id="getToken" parameterType="string" resultType="int">
+        select credential
+        from t_user_auths
+        where user_id = #{userId}
+    </select>
 
-  <update id="saveToken">
-    update t_user_auths set credential = #{token}
-    where user_id = #{userId}
-  </update>
-  
-  <insert id="register" parameterType="int">
-    insert into t_user_auths(user_id) values(#{userId})
-  </insert>
+    <update id="saveToken">
+        update t_user_auths set credential = #{token}
+        where user_id = #{userId}
+    </update>
+
+    <insert id="register" parameterType="int">
+        insert into t_user_auths(user_id) values(#{userId})
+    </insert>
 </mapper>

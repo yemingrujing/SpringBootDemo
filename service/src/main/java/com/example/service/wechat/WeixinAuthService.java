@@ -14,6 +14,7 @@ public interface WeixinAuthService extends OAuthService {
 
     /**
      * 第二步：通过code获取access_token
+     *
      * @param code 授权临时票据
      * @return
      */
@@ -21,6 +22,7 @@ public interface WeixinAuthService extends OAuthService {
 
     /**
      * 第三步：刷新或续期access_token使用(如果需要)
+     *
      * @param refreshToken 用户刷新access_token
      * @return
      */
@@ -28,9 +30,10 @@ public interface WeixinAuthService extends OAuthService {
 
     /**
      * 第四步：拉取用户信息(需scope为 snsapi_userinfo)
+     *
      * @param accessToken 接口调用凭证
-     * @param openId 授权用户唯一标识
-     * @param idenType 登录类型
+     * @param openId      授权用户唯一标识
+     * @param idenType    登录类型
      * @return
      */
     OUserInfo saveUserInfo(String accessToken, String openId, String idenType);

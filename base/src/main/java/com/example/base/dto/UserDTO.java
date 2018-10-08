@@ -27,7 +27,8 @@ public class UserDTO implements Serializable {
         this.createTime = createTime;
     }
 
-    public UserDTO(){}
+    public UserDTO() {
+    }
 
     @Excel(name = "姓名", orderNum = "0")
     private Integer id;
@@ -38,12 +39,11 @@ public class UserDTO implements Serializable {
     @Excel(name = "用户名", orderNum = "0")
     private String username;
 
-    @Excel(name = "性别",replace = {"男_0", "女_1", "男_null"}, orderNum = "0")
+    @Excel(name = "性别", replace = {"男_0", "女_1", "男_null"}, orderNum = "0")
     private String sex;
 
     @Excel(name = "创建时间", exportFormat = "yyyy-MM-dd HH:mm:ss", importFormat = "yyyy-MM-dd HH:mm:ss", orderNum = "0")
     private Date createTime;
-
 
 
 }

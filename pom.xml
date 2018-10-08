@@ -13,6 +13,7 @@
         <module>dao</module>
         <module>util</module>
         <module>service</module>
+        <module>eurekaServer</module>
     </modules>
     <packaging>pom</packaging>
 

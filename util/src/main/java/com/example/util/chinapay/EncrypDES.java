@@ -71,8 +71,7 @@ public class EncrypDES {
      * Description 根据键值进行解密
      *
      * @param data
-     * @param key
-     *            加密键byte数组
+     * @param key  加密键byte数组
      * @return
      * @throws IOException
      * @throws Exception
@@ -91,8 +90,7 @@ public class EncrypDES {
      * Description 根据键值进行加密
      *
      * @param data
-     * @param key
-     *            加密键byte数组
+     * @param key  加密键byte数组
      * @return
      * @throws Exception
      */
@@ -121,8 +119,7 @@ public class EncrypDES {
      * Description 根据键值进行解密
      *
      * @param data
-     * @param key
-     *            加密键byte数组
+     * @param key  加密键byte数组
      * @return
      * @throws Exception
      */
@@ -174,6 +171,7 @@ public class EncrypDES {
 
     /**
      * token加密
+     *
      * @param phone
      * @param token
      * @param args
@@ -189,6 +187,7 @@ public class EncrypDES {
 
     /**
      * token解密
+     *
      * @param data
      * @return
      */
@@ -196,7 +195,7 @@ public class EncrypDES {
         String str = decrypt(data);
         return str.split(":");
     }
-    
+
     public static void main(String[] args) throws Exception {
         System.out.println(encode("18356238002", "D78098E2D1BA5AC7F19CA7F476BC88E1"));
         System.out.println(decode(encode("18356238002", "FBBA28FD0DEC35D31A97312BDC959846"))[1]);

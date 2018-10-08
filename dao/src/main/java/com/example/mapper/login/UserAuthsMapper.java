@@ -8,6 +8,7 @@ public interface UserAuthsMapper extends Mapper<UserAuths> {
 
     /**
      * 根据userId查询token
+     *
      * @param userId
      * @return
      */
@@ -15,6 +16,7 @@ public interface UserAuthsMapper extends Mapper<UserAuths> {
 
     /**
      * 保存token
+     *
      * @param userId
      * @param token
      */
@@ -22,6 +24,7 @@ public interface UserAuthsMapper extends Mapper<UserAuths> {
 
     /**
      * 注册
+     *
      * @param userId
      * @return
      */

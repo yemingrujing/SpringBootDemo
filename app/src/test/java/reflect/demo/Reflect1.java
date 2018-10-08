@@ -7,7 +7,7 @@ package reflect.demo;
  * @create 2018-08-10 10:04
  **/
 public class Reflect1 {
-    
+
     public static void main(String[] args) throws ClassNotFoundException {
         //第一种方式获取Class对象
         Student stu1 = new Student();

@@ -23,7 +23,7 @@ public class JDBCUtils {
     /**
      * 数据库密码
      */
-    private static final String PASSWORD = "MyNewPass4!";
+    private static final String PASSWORD = "q123456789";
 
     /**
      * 驱动信息
@@ -33,7 +33,7 @@ public class JDBCUtils {
     /**
      * 数据库地址
      */
-    private static final String URL = "jdbc:mysql://192.168.168.5:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull";
+    private static final String URL = "jdbc:mysql://39.105.75.88:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull";
 
     //数据库连接
     private static Connection connection;
@@ -56,6 +56,7 @@ public class JDBCUtils {
 
     /**
      * 获取数据库的连接
+     *
      * @return
      */
     public static Connection getConnection() {
@@ -70,6 +71,7 @@ public class JDBCUtils {
 
     /**
      * 查询单条记录
+     *
      * @param sql
      * @param params
      * @return
@@ -103,6 +105,7 @@ public class JDBCUtils {
 
     /**
      * 查询多条记录
+     *
      * @param sql
      * @param params
      * @return
@@ -138,6 +141,7 @@ public class JDBCUtils {
 
     /**
      * 通过反射机制查询单条记录
+     *
      * @param sql
      * @param params
      * @param cls
@@ -175,6 +179,7 @@ public class JDBCUtils {
 
     /**
      * 通过反射机制查询多条记录
+     *
      * @param sql
      * @param params
      * @param cls

@@ -15,7 +15,7 @@ public class ImageOperateUtil {
     /**
      * 将矩形图变成圆图，常用于logo的处理
      *
-     * @param image        原始图片
+     * @param image 原始图片
      * @return 返回圆图
      */
     public static BufferedImage makeRoundImg(Image image,
@@ -29,11 +29,11 @@ public class ImageOperateUtil {
         } else {
             size = image.getWidth(null);
             x = 0;
-            y = (image.getHeight(null)- image.getWidth(null)) >> 1;
+            y = (image.getHeight(null) - image.getWidth(null)) >> 1;
         }
 
         // 设置原图
-        BufferedImage ans =  makeRoundImg(image, new Rectangle(x, y, size, size), size);
+        BufferedImage ans = makeRoundImg(image, new Rectangle(x, y, size, size), size);
 
         // 设置边框
         if (borderEnable) {
@@ -75,7 +75,6 @@ public class ImageOperateUtil {
         g2.dispose();
         return output;
     }
-
 
 
     /**

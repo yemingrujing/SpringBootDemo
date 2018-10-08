@@ -16,7 +16,8 @@ public enum OrderTraceEnum {
     SUCCESS((short) 3, "订单完成"),
     CANCEL((short) 4, "取消订单"),
     REFUND((short) 5, "退款"),
-    REFUNDREFUND((short) 6, "退货"),;
+    REFUNDREFUND((short) 6, "退货"),
+    ;
 
     private Short code;
     private String message;

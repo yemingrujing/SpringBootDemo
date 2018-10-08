@@ -22,21 +22,22 @@ public class RedisService {
 
     /**
      * 获取唯一id
-     * @param key key
+     *
+     * @param key     key
      * @param hashKey hashKey
-     * @param delta 增加量（不传采用1）
+     * @param delta   增加量（不传采用1）
      * @return
      */
     public Long incrementHash(String key, String hashKey, Long delta) {
         try {
-            if(null == delta) {
+            if (null == delta) {
                 delta = 1L;
             }
             return redisTemplate.opsForHash().increment(key, hashKey, delta);
         } catch (Exception e) { //redis宕机时采用uuid的方式生成唯一id
             int first = new Random(10).nextInt(8) + 1;
             int randNo = UUID.randomUUID().toString().hashCode();
-            if(randNo < 0) {
+            if (randNo < 0) {
                 randNo = -randNo;
             }
             return Long.valueOf(first + String.format("%16d", randNo));

@@ -21,6 +21,7 @@ public class StringUtil {
 
     /**
      * 首字母变小写
+     *
      * @param str
      * @return
      */
@@ -36,6 +37,7 @@ public class StringUtil {
 
     /**
      * 首字母变大写
+     *
      * @param str
      * @return
      */
@@ -51,6 +53,7 @@ public class StringUtil {
 
     /**
      * 判断是否为空
+     *
      * @param str
      * @return
      */
@@ -60,6 +63,7 @@ public class StringUtil {
 
     /**
      * 判断是否不为空
+     *
      * @param str
      * @return
      */
@@ -69,6 +73,7 @@ public class StringUtil {
 
     /**
      * 判断是否空白
+     *
      * @param str
      * @return
      */
@@ -87,6 +92,7 @@ public class StringUtil {
 
     /**
      * 判断是否不是空白
+     *
      * @param str
      * @return
      */
@@ -96,6 +102,7 @@ public class StringUtil {
 
     /**
      * 判断多个字符串全部是否为空
+     *
      * @param strings
      * @return
      */
@@ -113,6 +120,7 @@ public class StringUtil {
 
     /**
      * 判断多个字符串其中任意一个是否为空
+     *
      * @param strings
      * @return
      */
@@ -130,6 +138,7 @@ public class StringUtil {
 
     /**
      * checkValue为 null 或者为 "" 时返回 defaultValue
+     *
      * @param checkValue
      * @param defaultValue
      * @return
@@ -140,6 +149,7 @@ public class StringUtil {
 
     /**
      * 字符串不为 null 而且不为 "" 并且等于other
+     *
      * @param str
      * @param other
      * @return
@@ -153,6 +163,7 @@ public class StringUtil {
 
     /**
      * 字符串不为 null 而且不为 "" 并且不等于other
+     *
      * @param str
      * @param other
      * @return
@@ -171,6 +182,7 @@ public class StringUtil {
 
     /**
      * 字符串不等于other
+     *
      * @param str
      * @param other
      * @return
@@ -186,6 +198,7 @@ public class StringUtil {
 
     /**
      * 判断字符串不为空
+     *
      * @param strings
      * @return
      */
@@ -203,6 +216,7 @@ public class StringUtil {
 
     /**
      * 比较字符相等
+     *
      * @param value
      * @param equals
      * @return
@@ -216,6 +230,7 @@ public class StringUtil {
 
     /**
      * 比较字符串不相等
+     *
      * @param value
      * @param equals
      * @return
@@ -314,6 +329,7 @@ public class StringUtil {
 
     /**
      * 消除转义字符
+     *
      * @param str
      * @return
      */
@@ -359,16 +375,14 @@ public class StringUtil {
     /**
      * 将字符串中特定模式的字符转换成map中对应的值
      *
-     * @param s
-     *            需要转换的字符串
-     * @param map
-     *            转换所需的键值对集合
+     * @param s   需要转换的字符串
+     * @param map 转换所需的键值对集合
      * @return 转换后的字符串
      */
     public static String replace(String s, Map<String, Object> map) {
         StringBuilder ret = new StringBuilder((int) (s.length() * 1.5));
         int cursor = 0;
-        for (int start, end; (start = s.indexOf("${", cursor)) != -1 && (end = s.indexOf("}", start)) != -1;) {
+        for (int start, end; (start = s.indexOf("${", cursor)) != -1 && (end = s.indexOf("}", start)) != -1; ) {
             ret.append(s.substring(cursor, start)).append(map.get(s.substring(start + 2, end)));
             cursor = end + 1;
         }
@@ -384,7 +398,7 @@ public class StringUtil {
         StringBuilder ret = new StringBuilder((int) (s.length() * 1.5));
         int cursor = 0;
         int index = 0;
-        for (int start; (start = s.indexOf("{}", cursor)) != -1;) {
+        for (int start; (start = s.indexOf("{}", cursor)) != -1; ) {
             ret.append(s.substring(cursor, start));
             if (index < objs.length)
                 ret.append(objs[index]);
@@ -400,10 +414,8 @@ public class StringUtil {
     /**
      * 字符串格式化工具,参数必须以{0}之类的样式标示出来.大括号中的数字从0开始。
      *
-     * @param source
-     *            源字符串
-     * @param params
-     *            需要替换的参数列表,写入时会调用每个参数的toString().
+     * @param source 源字符串
+     * @param params 需要替换的参数列表,写入时会调用每个参数的toString().
      * @return 替换完成的字符串。如果原始字符串为空或者参数为空那么将直接返回原始字符串。
      */
     public static String replaceArgs(String source, Object... params) {
@@ -485,10 +497,11 @@ public class StringUtil {
 
     /**
      * 转换为字节数组
+     *
      * @param str
      * @return
      */
-    public static String toString(byte[] bytes){
+    public static String toString(byte[] bytes) {
         try {
             return new String(bytes, "utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -498,37 +511,40 @@ public class StringUtil {
 
     /**
      * 转换为字节数组
+     *
      * @param str
      * @return
      */
-    public static byte[] getBytes(String str){
-        if (str != null){
+    public static byte[] getBytes(String str) {
+        if (str != null) {
             try {
                 return str.getBytes("utf-8");
             } catch (UnsupportedEncodingException e) {
                 return null;
             }
-        }else{
+        } else {
             return null;
         }
     }
 
     /**
      * 产生len长度的随机字符串
+     *
      * @param len
      * @return
      */
-    public static String generateStr(int len){
+    public static String generateStr(int len) {
         StringBuffer sb = new StringBuffer();
         Random random = new Random();
-        for (int i = 0; i <len ; i++) {
+        for (int i = 0; i < len; i++) {
             sb.append(allChar.charAt(random.nextInt(allChar.length())));
         }
-        return  sb.toString();
+        return sb.toString();
     }
 
     /**
      * 返回一个定长的随机纯字母字符串(只包含大小写字母)
+     *
      * @param length 随机字符串长度
      * @return 随机字符串
      */
@@ -543,6 +559,7 @@ public class StringUtil {
 
     /**
      * 返回一个定长的随机纯大写字母字符串(只包含大小写字母)
+     *
      * @param length 随机字符串长度
      * @return 随机字符串
      */
@@ -552,6 +569,7 @@ public class StringUtil {
 
     /**
      * 返回一个定长的随机纯小写字母字符串(只包含大小写字母)
+     *
      * @param length 随机字符串长度
      * @return 随机字符串
      */
@@ -561,6 +579,7 @@ public class StringUtil {
 
     /**
      * 生成一个定长的纯0字符串
+     *
      * @param length 字符串长度
      * @return 纯0字符串
      */
@@ -574,6 +593,7 @@ public class StringUtil {
 
     /**
      * 根据数字生成一个定长的字符串，长度不够前面补0
+     *
      * @param num       数字
      * @param fixdlenth 字符串长度
      * @return 定长的字符串
@@ -592,6 +612,7 @@ public class StringUtil {
 
     /**
      * 判断字符串是否包含某些字符
+     *
      * @param sourceStr 源字符串
      * @param separator
      * @return
@@ -605,6 +626,7 @@ public class StringUtil {
 
     /**
      * 生成随机用户名，数字和字母组成
+     *
      * @param length
      * @return
      */
@@ -619,7 +641,7 @@ public class StringUtil {
                 //输出是大写字母还是小写字母
                 int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
                 val += (char) (random.nextInt(26) + temp);
-            } else if("num".equalsIgnoreCase(charOrNum)) {
+            } else if ("num".equalsIgnoreCase(charOrNum)) {
                 val += String.valueOf(random.nextInt(10));
             }
         }
@@ -628,6 +650,7 @@ public class StringUtil {
 
     /**
      * 判断url是否为网络地址
+     *
      * @param url
      * @return
      */

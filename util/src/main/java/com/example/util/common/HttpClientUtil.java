@@ -56,7 +56,7 @@ public final class HttpClientUtil {
     /**
      * 发送HTTP_GET请求
      *
-     * @param reqURL    请求地址(含参数)
+     * @param reqURL        请求地址(含参数)
      * @param decodeCharset 解码字符集,解析响应数据时用之,其为null时默认采用UTF-8解码
      * @return 远程主机响应正文
      * @see 该方法会自动关闭连接,释放资源
@@ -93,7 +93,7 @@ public final class HttpClientUtil {
     /**
      * 发送HTTP_GET请求
      *
-     * @param reqURL 请求地址(含参数)
+     * @param reqURL        请求地址(含参数)
      * @param decodeCharset 解码字符集,解析响应数据时用之,其为null时默认采用UTF-8解码
      * @return 远程主机响应正文
      */
@@ -246,7 +246,7 @@ public final class HttpClientUtil {
      * @see 该方法会自动关闭连接,释放资源
      * @see 该方法会自动对<code>params</code>中的[中文][|][ ]等特殊字符进行<code>URLEncoder.encode(string,encodeCharset)</code>
      */
-    public static String sendPostSSLRequest(String reqURL, Map<String,String> params, String encodeCharset, String decodeCharset) {
+    public static String sendPostSSLRequest(String reqURL, Map<String, String> params, String encodeCharset, String decodeCharset) {
         String responseContent = "";
         HttpClient httpClient = new DefaultHttpClient();
         X509TrustManager xtm = new X509TrustManager() {
@@ -268,7 +268,7 @@ public final class HttpClientUtil {
 
             HttpPost httpPost = new HttpPost(reqURL);
             List formParams = new ArrayList();
-            for (Map.Entry<String,String> entry : params.entrySet()) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
                 formParams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
             }
             httpPost.setEntity(new UrlEncodedFormEntity(formParams, encodeCharset == null ? "UTF-8" : encodeCharset));

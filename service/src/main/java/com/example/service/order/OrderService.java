@@ -17,12 +17,14 @@ public interface OrderService {
 
     /**
      * 创建订单
+     *
      * @param order
      */
     void addOrder(Order order);
 
     /**
      * 查询订单
+     *
      * @param username
      * @return
      */
@@ -30,13 +32,15 @@ public interface OrderService {
 
     /**
      * 根据订单号查询订单
+     *
      * @param order
      * @return
      */
     Order findOne(Order order);
 
     /**
-     *  更新订单
+     * 更新订单
+     *
      * @param order
      * @return
      */
@@ -49,12 +53,14 @@ public interface OrderService {
 
     /**
      * 导出订单信息
+     *
      * @param response
      */
     void export(HttpServletResponse response);
 
     /**
      * 导出模板
+     *
      * @param response
      */
     void downTemplate(HttpServletResponse response);

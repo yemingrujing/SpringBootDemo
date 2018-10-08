@@ -491,6 +491,7 @@ public class UnionPaymentServiceImpl implements UnionPaymentService {
 
     /**
      * 收费比率 精确到分保留两位小数四舍五入
+     *
      * @param amount
      * @param feeRatio
      * @param feeMax

@@ -30,7 +30,6 @@ import java.util.zip.Inflater;
 import static com.example.util.constant.SDKConstants.*;
 
 /**
- *
  * @ClassName SDKUtil
  * @Description acpsdk工具类
  * @date 2016-7-22 下午4:06:18
@@ -41,10 +40,8 @@ public class SDKUtil {
     /**
      * 根据signMethod的值，提供三种计算签名的方法
      *
-     * @param data
-     *            待签名数据Map键值对形式
-     * @param encoding
-     *            编码
+     * @param data     待签名数据Map键值对形式
+     * @param encoding 编码
      * @return 签名是否成功
      */
     public static boolean sign(Map<String, String> data, String encoding) {
@@ -122,14 +119,10 @@ public class SDKUtil {
     /**
      * 通过传入的证书绝对路径和证书密码读取签名证书进行签名并返回签名值<br>
      *
-     * @param data
-     *            待签名数据Map键值对形式
-     * @param encoding
-     *            编码
-     * @param certPath
-     *            证书绝对路径
-     * @param certPwd
-     *            证书密码
+     * @param data     待签名数据Map键值对形式
+     * @param encoding 编码
+     * @param certPath 证书绝对路径
+     * @param certPwd  证书密码
      * @return 签名值
      */
     public static boolean signBySecureKey(Map<String, String> data, String secureKey,
@@ -177,14 +170,10 @@ public class SDKUtil {
     /**
      * 通过传入的签名密钥进行签名并返回签名值<br>
      *
-     * @param data
-     *            待签名数据Map键值对形式
-     * @param encoding
-     *            编码
-     * @param certPath
-     *            证书绝对路径
-     * @param certPwd
-     *            证书密码
+     * @param data     待签名数据Map键值对形式
+     * @param encoding 编码
+     * @param certPath 证书绝对路径
+     * @param certPwd  证书密码
      * @return 签名值
      */
     public static boolean signByCertInfo(Map<String, String> data,
@@ -262,10 +251,8 @@ public class SDKUtil {
     /**
      * 验证签名
      *
-     * @param resData
-     *            返回报文数据
-     * @param encoding
-     *            编码格式
+     * @param resData  返回报文数据
+     * @param encoding 编码格式
      * @return
      */
     public static boolean validateBySecureKey(Map<String, String> resData, String secureKey, String encoding) {
@@ -307,10 +294,8 @@ public class SDKUtil {
     /**
      * 验证签名
      *
-     * @param resData
-     *            返回报文数据
-     * @param encoding
-     *            编码格式
+     * @param resData  返回报文数据
+     * @param encoding 编码格式
      * @return
      */
     public static boolean validate(Map<String, String> resData, String encoding) {
@@ -417,8 +402,7 @@ public class SDKUtil {
     /**
      * 将Map中的数据转换成key1=value1&key2=value2的形式 不包含签名域signature
      *
-     * @param data
-     *            待拼接的Map数据
+     * @param data 待拼接的Map数据
      * @return 拼接好后的字符串
      */
     public static String coverMap2String(Map<String, String> data) {
@@ -475,8 +459,7 @@ public class SDKUtil {
     /**
      * 解析应答字符串，生成应答要素
      *
-     * @param str
-     *            需要解析的字符串
+     * @param str 需要解析的字符串
      * @return 解析的结果map
      * @throws UnsupportedEncodingException
      */
@@ -551,7 +534,6 @@ public class SDKUtil {
     }
 
     /**
-     *
      * 获取应答报文中的加密公钥证书,并存储到本地,并备份原始证书<br>
      * 更新成功则返回1，无更新返回0，失败异常返回-1。
      *
@@ -614,10 +596,8 @@ public class SDKUtil {
     /**
      * 文件拷贝方法
      *
-     * @param srcFile
-     *            源文件
-     * @param destFile
-     *            目标文件
+     * @param srcFile  源文件
+     * @param destFile 目标文件
      * @return
      * @throws IOException
      */
@@ -674,12 +654,9 @@ public class SDKUtil {
     /**
      * 写文件方法
      *
-     * @param filePath
-     *            文件路径
-     * @param fileContent
-     *            文件内容
-     * @param encoding
-     *            编码
+     * @param filePath    文件路径
+     * @param fileContent 文件内容
+     * @param encoding    编码
      * @return
      */
     public static boolean writeFile(String filePath, String fileContent,
@@ -768,6 +745,7 @@ public class SDKUtil {
 
     /**
      * 过滤请求报文中的空字符串或者空字符串
+     *
      * @param contentData
      * @return
      */
@@ -790,8 +768,7 @@ public class SDKUtil {
     /**
      * 解压缩.
      *
-     * @param inputByte
-     *            byte[]数组类型的数据
+     * @param inputByte byte[]数组类型的数据
      * @return 解压缩后的数据
      * @throws IOException
      */
@@ -822,8 +799,7 @@ public class SDKUtil {
     /**
      * 压缩.
      *
-     * @param inputByte
-     *            需要解压缩的byte[]数组
+     * @param inputByte 需要解压缩的byte[]数组
      * @return 压缩后的数据
      * @throws IOException
      */
@@ -849,8 +825,7 @@ public class SDKUtil {
     /**
      * 判断字符串是否为NULL或空
      *
-     * @param s
-     *            待判断的字符串数据
+     * @param s 待判断的字符串数据
      * @return 判断结果 true-是 false-否
      */
     public static boolean isEmpty(String s) {

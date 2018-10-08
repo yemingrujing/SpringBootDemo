@@ -102,8 +102,8 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="com.ishop.mapper" level="DEBUG" >
-        <appender-ref ref="STDOUT" />
+    <logger name="com.ishop.mapper" level="DEBUG">
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <!-- Logger 根目录 -->

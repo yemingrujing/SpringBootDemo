@@ -8,13 +8,13 @@ package reflect.demo;
  **/
 public class Parent {
 
-    public String publicField  = "1";
+    public String publicField = "1";
 
     String defaultField = "2";
 
     protected String protectedField = "3";
 
-    private String privateField = "4" ;
+    private String privateField = "4";
 
     public void publicMethod() {
         System.out.println("publicMethod...");

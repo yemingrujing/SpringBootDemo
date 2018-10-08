@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
  * @create 2018-08-10 10:21
  **/
 public class Fields {
-    
+
     public static void main(String[] args) throws Exception {
         Class stuClass = Class.forName("reflect.demo.Student");
         System.out.println("********************获取所有公有的字段********************");
@@ -34,7 +34,7 @@ public class Fields {
         //验证
         Student stu = (Student) obj;
         System.out.println("验证姓名：" + stu.name);
-        
+
         System.out.println("********************************获取私有字段并调用********************************");
         f = stuClass.getDeclaredField("phoneNum");
         System.out.println(f);

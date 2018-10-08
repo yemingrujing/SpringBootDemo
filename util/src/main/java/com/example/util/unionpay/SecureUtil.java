@@ -26,7 +26,6 @@ import java.security.PublicKey;
 import java.security.Signature;
 
 /**
- *
  * @ClassName SecureUtil
  * @Description acpsdk安全算法工具类
  * @date 2016-7-22 下午4:08:32
@@ -53,10 +52,8 @@ public class SecureUtil {
     /**
      * sm3计算后进行16进制转换
      *
-     * @param data
-     *            待计算的数据
-     * @param encoding
-     *            编码
+     * @param data     待计算的数据
+     * @param encoding 编码
      * @return 计算结果
      */
     public static String sm3X16Str(String data, String encoding) {
@@ -76,10 +73,8 @@ public class SecureUtil {
     /**
      * sha1计算后进行16进制转换
      *
-     * @param data
-     *            待计算的数据
-     * @param encoding
-     *            编码
+     * @param data     待计算的数据
+     * @param encoding 编码
      * @return 计算结果
      */
     public static byte[] sha1X16(String data, String encoding) {
@@ -105,10 +100,8 @@ public class SecureUtil {
     /**
      * sha256计算后进行16进制转换
      *
-     * @param data
-     *            待计算的数据
-     * @param encoding
-     *            编码
+     * @param data     待计算的数据
+     * @param encoding 编码
      * @return 计算结果
      */
     public static String sha256X16Str(String data, String encoding) {
@@ -128,10 +121,8 @@ public class SecureUtil {
     /**
      * sha256计算后进行16进制转换
      *
-     * @param data
-     *            待计算的数据
-     * @param encoding
-     *            编码
+     * @param data     待计算的数据
+     * @param encoding 编码
      * @return 计算结果
      */
     public static byte[] sha256X16(String data, String encoding) {
@@ -156,8 +147,7 @@ public class SecureUtil {
     /**
      * sha1计算.
      *
-     * @param datas
-     *            待计算的数据
+     * @param datas 待计算的数据
      * @return 计算结果
      */
     private static byte[] sha1(byte[] data) {
@@ -176,8 +166,7 @@ public class SecureUtil {
     /**
      * sha256计算.
      *
-     * @param datas
-     *            待计算的数据
+     * @param datas 待计算的数据
      * @return 计算结果
      */
     private static byte[] sha256(byte[] data) {
@@ -196,8 +185,7 @@ public class SecureUtil {
     /**
      * SM3计算.
      *
-     * @param datas
-     *            待计算的数据
+     * @param datas 待计算的数据
      * @return 计算结果
      */
     private static byte[] sm3(byte[] data) {
@@ -211,10 +199,8 @@ public class SecureUtil {
     /**
      * sha1计算
      *
-     * @param datas
-     *            待计算的数据
-     * @param encoding
-     *            字符集编码
+     * @param datas    待计算的数据
+     * @param encoding 字符集编码
      * @return
      */
     private static byte[] sha1(String datas, String encoding) {
@@ -229,10 +215,8 @@ public class SecureUtil {
     /**
      * sha256计算
      *
-     * @param datas
-     *            待计算的数据
-     * @param encoding
-     *            字符集编码
+     * @param datas    待计算的数据
+     * @param encoding 字符集编码
      * @return
      */
     private static byte[] sha256(String datas, String encoding) {
@@ -247,10 +231,8 @@ public class SecureUtil {
     /**
      * sm3计算
      *
-     * @param datas
-     *            待计算的数据
-     * @param encoding
-     *            字符集编码
+     * @param datas    待计算的数据
+     * @param encoding 字符集编码
      * @return
      */
     private static byte[] sm3(String datas, String encoding) {
@@ -263,7 +245,6 @@ public class SecureUtil {
     }
 
     /**
-     *
      * @param privateKey
      * @param data
      * @return
@@ -314,12 +295,9 @@ public class SecureUtil {
     /**
      * 对数据通过公钥进行加密，并进行base64计算
      *
-     * @param dataString
-     *            待处理数据
-     * @param encoding
-     *            字符编码
-     * @param key
-     *            公钥
+     * @param dataString 待处理数据
+     * @param encoding   字符编码
+     * @param key        公钥
      * @return
      */
     public static String encryptData(String dataString, String encoding,
@@ -338,12 +316,9 @@ public class SecureUtil {
     /**
      * 对数据通过公钥进行加密，并进行base64计算
      *
-     * @param dataString
-     *            待处理数据
-     * @param encoding
-     *            字符编码
-     * @param key
-     *            公钥
+     * @param dataString 待处理数据
+     * @param encoding   字符编码
+     * @param key        公钥
      * @return
      */
     public static String encryptPin(String accNo, String pin, String encoding,
@@ -363,12 +338,9 @@ public class SecureUtil {
     /**
      * 通过私钥解密
      *
-     * @param dataString
-     *            base64过的数据
-     * @param encoding
-     *            编码
-     * @param key
-     *            私钥
+     * @param dataString base64过的数据
+     * @param encoding   编码
+     * @param key        私钥
      * @return 解密后的数据
      */
     public static String decryptData(String dataString, String encoding,
@@ -387,8 +359,7 @@ public class SecureUtil {
     /**
      * BASE64解码
      *
-     * @param inputByte
-     *            待解码数据
+     * @param inputByte 待解码数据
      * @return 解码后的数据
      * @throws IOException
      */
@@ -399,8 +370,7 @@ public class SecureUtil {
     /**
      * BASE64编码
      *
-     * @param inputByte
-     *            待编码数据
+     * @param inputByte 待编码数据
      * @return 解码后的数据
      * @throws IOException
      */
@@ -446,7 +416,6 @@ public class SecureUtil {
     }
 
     /**
-     *
      * @param aPin
      * @return
      */
@@ -503,7 +472,6 @@ public class SecureUtil {
     }
 
     /**
-     *
      * @param aPan
      * @return
      */
@@ -526,7 +494,6 @@ public class SecureUtil {
     }
 
     /**
-     *
      * @param aPin
      * @param aCardNO
      * @return

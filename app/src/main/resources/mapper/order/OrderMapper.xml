@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.dao.order.OrderMapper">
-  <resultMap id="BaseResultMap" type="com.example.order.Order">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
-    <result column="total_fee" jdbcType="DECIMAL" property="totalFee" />
-    <result column="payment" jdbcType="DECIMAL" property="payment" />
-    <result column="pay_type" jdbcType="SMALLINT" property="payType" />
-    <result column="pay_status" jdbcType="SMALLINT" property="payStatus" />
-    <result column="order_type" jdbcType="SMALLINT" property="orderType" />
-    <result column="order_status" jdbcType="SMALLINT" property="orderStatus" />
-    <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime" />
-    <result column="consign_time" jdbcType="TIMESTAMP" property="consignTime" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="over_time" jdbcType="TIMESTAMP" property="overTime" />
-    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="address" jdbcType="INTEGER" property="address" />
-    <result column="promotions_id" jdbcType="INTEGER" property="promotionsId" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="logistics_num" jdbcType="VARCHAR" property="logisticsNum" />
-    <result column="courier_num" jdbcType="VARCHAR" property="courierNum" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.example.order.Order">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_code" jdbcType="VARCHAR" property="orderCode"/>
+        <result column="total_fee" jdbcType="DECIMAL" property="totalFee"/>
+        <result column="payment" jdbcType="DECIMAL" property="payment"/>
+        <result column="pay_type" jdbcType="SMALLINT" property="payType"/>
+        <result column="pay_status" jdbcType="SMALLINT" property="payStatus"/>
+        <result column="order_type" jdbcType="SMALLINT" property="orderType"/>
+        <result column="order_status" jdbcType="SMALLINT" property="orderStatus"/>
+        <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime"/>
+        <result column="consign_time" jdbcType="TIMESTAMP" property="consignTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="over_time" jdbcType="TIMESTAMP" property="overTime"/>
+        <result column="close_time" jdbcType="TIMESTAMP" property="closeTime"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="address" jdbcType="INTEGER" property="address"/>
+        <result column="promotions_id" jdbcType="INTEGER" property="promotionsId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="logistics_num" jdbcType="VARCHAR" property="logisticsNum"/>
+        <result column="courier_num" jdbcType="VARCHAR" property="courierNum"/>
+    </resultMap>
 </mapper>

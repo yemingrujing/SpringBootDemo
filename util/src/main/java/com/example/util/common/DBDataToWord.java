@@ -616,6 +616,7 @@ public class DBDataToWord {
 
     /**
      * 设置目录
+     *
      * @param xdoc
      * @return
      */
@@ -666,6 +667,7 @@ public class DBDataToWord {
 
     /**
      * 添加标题
+     *
      * @param block
      * @param level
      * @param title
@@ -744,6 +746,7 @@ public class DBDataToWord {
 
     /**
      * 添加栏目
+     *
      * @param block
      * @param level
      * @param title
@@ -790,6 +793,7 @@ public class DBDataToWord {
 
     /**
      * 设置页眉
+     *
      * @param doc
      * @param orgFullName
      * @param imgFile
@@ -931,6 +935,7 @@ public class DBDataToWord {
 
     /**
      * 设置页脚
+     *
      * @param document
      * @throws Exception
      */
@@ -942,7 +947,7 @@ public class DBDataToWord {
         paragraph.setBorderTop(Borders.THICK);
         CTTabStop tabStop = paragraph.getCTP().getPPr().addNewTabs().addNewTab();
         tabStop.setVal(STTabJc.RIGHT);
-        int twipsPerInch =  1440;
+        int twipsPerInch = 1440;
         tabStop.setPos(BigInteger.valueOf(6 * twipsPerInch));
 
         XWPFRun run;
@@ -1026,6 +1031,7 @@ public class DBDataToWord {
 
     /**
      * 设置页脚样式
+     *
      * @param run
      * @param font
      * @param fontSize

@@ -13,6 +13,7 @@ public class GenericsUtils {
 
     /**
      * 通过反射,获得定义Class时声明的父类的范型参数的类型.
+     *
      * @param clazz
      * @return
      */
@@ -22,6 +23,7 @@ public class GenericsUtils {
 
     /**
      * 通过反射,获得定义Class时声明的父类的范型参数的类型.
+     *
      * @param clazz
      * @param index
      * @return
@@ -34,7 +36,7 @@ public class GenericsUtils {
 
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
 
-        if(index >= params.length || index < 0) {
+        if (index >= params.length || index < 0) {
             return Object.class;
         }
 

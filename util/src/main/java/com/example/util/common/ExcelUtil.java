@@ -24,9 +24,11 @@ import java.util.Map;
 public class ExcelUtil<T> {
 
     Class<T> clazz;
+
     public ExcelUtil(Class<T> clazz) {
         this.clazz = clazz;
     }
+
     public List<T> importExcel(String sheetName, InputStream input) {
         List<T> list = new ArrayList<T>();
         try {
@@ -144,15 +146,13 @@ public class ExcelUtil<T> {
         }
         return list;
     }
+
     /**
      * 对list数据源将其里面的数据导入到excel表单
      *
-     * @param sheetName
-     *            工作表的名称
-     * @param sheetSize
-     *            每个sheet中数据的行数,此数值必须小于65536
-     * @param output
-     *            java输出流
+     * @param sheetName 工作表的名称
+     * @param sheetSize 每个sheet中数据的行数,此数值必须小于65536
+     * @param output    java输出流
      */
     public boolean exportExcel(List<T> list, String sheetName, int sheetSize,
                                OutputStream output) {
@@ -236,6 +236,7 @@ public class ExcelUtil<T> {
             return false;
         }
     }
+
     /**
      * 将EXCEL中A,B,C,D,E列映射成0,1,2,3
      *
@@ -251,23 +252,17 @@ public class ExcelUtil<T> {
         }
         return count;
     }
+
     /**
      * 设置单元格上提示
      *
-     * @param sheet
-     *            要设置的sheet.
-     * @param promptTitle
-     *            标题
-     * @param promptContent
-     *            内容
-     * @param firstRow
-     *            开始行
-     * @param endRow
-     *            结束行
-     * @param firstCol
-     *            开始列
-     * @param endCol
-     *            结束列
+     * @param sheet         要设置的sheet.
+     * @param promptTitle   标题
+     * @param promptContent 内容
+     * @param firstRow      开始行
+     * @param endRow        结束行
+     * @param firstCol      开始列
+     * @param endCol        结束列
      * @return 设置好的sheet.
      */
     public static HSSFSheet setHSSFPrompt(HSSFSheet sheet, String promptTitle,
@@ -286,21 +281,16 @@ public class ExcelUtil<T> {
         sheet.addValidationData(data_validation_view);
         return sheet;
     }
+
     /**
      * 设置某些列的值只能输入预制的数据,显示下拉框.
      *
-     * @param sheet
-     *            要设置的sheet.
-     * @param textlist
-     *            下拉框显示的内容
-     * @param firstRow
-     *            开始行
-     * @param endRow
-     *            结束行
-     * @param firstCol
-     *            开始列
-     * @param endCol
-     *            结束列
+     * @param sheet    要设置的sheet.
+     * @param textlist 下拉框显示的内容
+     * @param firstRow 开始行
+     * @param endRow   结束行
+     * @param firstCol 开始列
+     * @param endCol   结束列
      * @return 设置好的sheet.
      */
     public static HSSFSheet setHSSFValidation(HSSFSheet sheet,

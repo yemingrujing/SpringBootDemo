@@ -13,18 +13,18 @@ import java.security.NoSuchAlgorithmException;
  **/
 public class MD5Utils {
 
-    private MD5Utils(){}
+    private MD5Utils() {
+    }
 
     /**
      * 16进制的字符数组
      */
     private static final String[] hexDigits = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b",
-            "c", "d", "e", "f" };
+            "c", "d", "e", "f"};
 
     /**
-     *
-     * @param source 需要加密的原字符串
-     * @param encoding 指定编码类型
+     * @param source    需要加密的原字符串
+     * @param encoding  指定编码类型
      * @param uppercase 是否转为大写字符串
      * @return
      */
@@ -46,10 +46,11 @@ public class MD5Utils {
 
     /**
      * 转换字节数组为16进制字符出
+     *
      * @param bytes 字节数组
      * @return
      */
-    private static String byteArrayToHexString(byte[] bytes){
+    private static String byteArrayToHexString(byte[] bytes) {
         StringBuilder stringBuilder = new StringBuilder();
         for (byte tem : bytes) {
             stringBuilder.append(byteToHexString(tem));
@@ -59,12 +60,13 @@ public class MD5Utils {
 
     /**
      * 转换byte到16进制
+     *
      * @param b 要转换的byte
      * @return 16进制对应的字符串
      */
-    private static String byteToHexString(byte b){
+    private static String byteToHexString(byte b) {
         int n = b;
-        if(n < 0){
+        if (n < 0) {
             n = 256 + n;
         }
         int d1 = n / 16;
@@ -101,7 +103,7 @@ public class MD5Utils {
         }
         return reMd5.toUpperCase();
     }
-    
+
 //    public static void main(String[] args){
 //        System.out.println(encryption("haha"));
 //    }

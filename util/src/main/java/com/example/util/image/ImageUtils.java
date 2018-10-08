@@ -61,8 +61,7 @@ public class ImageUtils {
     /**
      * 指定一个水印文件
      *
-     * @param watermark
-     *            {@link Watermark}
+     * @param watermark {@link Watermark}
      * @return {@link ImageUtils}
      */
     public ImageUtils watermark(Watermark watermark) {
@@ -73,8 +72,7 @@ public class ImageUtils {
     /**
      * 指定多个水印文件
      *
-     * @param watermarkArr
-     *            {@link ArrayList}
+     * @param watermarkArr {@link ArrayList}
      * @return {@link ImageUtils}
      */
     public ImageUtils watermarkArray(ArrayList<Watermark> watermarkArr) {
@@ -85,8 +83,7 @@ public class ImageUtils {
     /**
      * 指定源文件图片
      *
-     * @param srcImage
-     *            {@link File}
+     * @param srcImage {@link File}
      * @return {@link ImageUtils}
      */
     public static ImageUtils fromFile(File srcImage) {
@@ -98,8 +95,7 @@ public class ImageUtils {
     /**
      * 定义伸缩比例
      *
-     * @param scale
-     *            伸缩比例
+     * @param scale 伸缩比例
      * @return {@link ImageUtils}
      */
     public ImageUtils scale(double scale) {
@@ -113,8 +109,7 @@ public class ImageUtils {
     /**
      * 生成的图片是否以给定的大小不变
      *
-     * @param fixedGivenSize
-     *            {@link Boolean}
+     * @param fixedGivenSize {@link Boolean}
      * @return {@link ImageUtils}
      */
     public ImageUtils fixedGivenSize(boolean fixedGivenSize) {
@@ -125,8 +120,7 @@ public class ImageUtils {
     /**
      * 指定生成图片的宽度
      *
-     * @param width
-     *            {@link Integer} 宽度
+     * @param width {@link Integer} 宽度
      * @return {@link ImageUtils}
      */
     public ImageUtils width(int width) {
@@ -140,8 +134,7 @@ public class ImageUtils {
     /**
      * 指定生成图片的高度
      *
-     * @param height
-     *            {@link Integer} 高度
+     * @param height {@link Integer} 高度
      * @return {@link ImageUtils}
      */
     public ImageUtils height(int height) {
@@ -155,10 +148,8 @@ public class ImageUtils {
     /**
      * 指定生成图片的宽度和高度
      *
-     * @param width
-     *            {@link Integer} 宽度
-     * @param height
-     *            {@link Integer} 高度
+     * @param width  {@link Integer} 宽度
+     * @param height {@link Integer} 高度
      * @return {@link ImageUtils}
      */
     public ImageUtils size(int width, int height) {
@@ -173,8 +164,7 @@ public class ImageUtils {
     /**
      * 指定旋转图片角度
      *
-     * @param angle
-     *            {@link Double} 旋转图片的角度
+     * @param angle {@link Double} 旋转图片的角度
      * @return {@link ImageUtils}
      */
     public ImageUtils rotate(double angle) {
@@ -185,8 +175,7 @@ public class ImageUtils {
     /**
      * 压缩图片的质量
      *
-     * @param quality
-     *            {@link Float}
+     * @param quality {@link Float}
      * @return
      */
     public ImageUtils quality(float quality) {
@@ -208,8 +197,7 @@ public class ImageUtils {
     /**
      * 指定生成图片的文件
      *
-     * @param destFile
-     *            {@link File}
+     * @param destFile {@link File}
      */
     public void toFile(File destFile) {
         this.destFile = destFile;
@@ -254,12 +242,9 @@ public class ImageUtils {
     /**
      * 保存图片的原比例，并计算原图片
      *
-     * @param img
-     *            {@link BufferedImage} 原图片
-     * @param targetWidth
-     *            {@link Integer} 目标宽度
-     * @param targetHeight
-     *            {@link Integer} 目标高度
+     * @param img          {@link BufferedImage} 原图片
+     * @param targetWidth  {@link Integer} 目标宽度
+     * @param targetHeight {@link Integer} 目标高度
      * @return 返回计算结果数组
      */
     private BufferedImage keepImageRatio(BufferedImage img, int targetWidth, int targetHeight) {
@@ -370,10 +355,8 @@ public class ImageUtils {
      * Returns a {@link BufferedImage} with the specified image type, where the
      * graphical content is a copy of the specified image.
      *
-     * @param img
-     *            The image to copy.
-     * @param imageType
-     *            The image type for the image to return.
+     * @param img       The image to copy.
+     * @param imageType The image type for the image to return.
      * @return A copy of the specified image.
      */
     public BufferedImage copy(BufferedImage img, int imageType) {
@@ -470,14 +453,13 @@ public class ImageUtils {
         double nx = (Math.cos(angle) * x) - (Math.sin(angle) * y);
         double ny = (Math.sin(angle) * x) + (Math.cos(angle) * y);
 
-        return new double[] { nx, ny };
+        return new double[]{nx, ny};
     }
 
     /**
      * 返回文件格式
      *
-     * @param f
-     *            {@link File} 文件
+     * @param f {@link File} 文件
      * @return 返回文件格式
      */
     private static String getExtension(File f) {

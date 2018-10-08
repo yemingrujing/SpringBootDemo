@@ -12,12 +12,14 @@ public interface AlipayService {
 
     /**
      * 获取签名
+     *
      * @return
      */
     String getSign();
 
     /**
      * 支付回调函数
+     *
      * @param requestParams
      * @return
      */

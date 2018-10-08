@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.login.OUserInfoMapper">
-  <resultMap id="BaseResultMap" type="com.example.base.login.OUserInfo">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="nicname" jdbcType="VARCHAR" property="nicname" />
-    <result column="sex" jdbcType="INTEGER" property="sex" />
-    <result column="age" jdbcType="INTEGER" property="age" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="mobile" jdbcType="INTEGER" property="mobile" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.example.base.login.OUserInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="nicname" jdbcType="VARCHAR" property="nicname"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="age" jdbcType="INTEGER" property="age"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="mobile" jdbcType="INTEGER" property="mobile"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+    </resultMap>
 
-  <insert id="saveUserInfo" useGeneratedKeys="true" keyProperty="userInfo.id" parameterType="OUserInfo">
-    insert into t_user_info(nicname,sex,avatar)
-    values(#{userInfo.nicname},#{userInfo.sex},#{userInfo.avatar})
-  </insert>
+    <insert id="saveUserInfo" useGeneratedKeys="true" keyProperty="userInfo.id" parameterType="OUserInfo">
+        insert into t_user_info(nicname,sex,avatar)
+        values(#{userInfo.nicname},#{userInfo.sex},#{userInfo.avatar})
+    </insert>
 
-  <select id="getUserInfoById" resultType="com.example.base.login.OUserInfo">
-    select t.id,
-           t.nicname,
-           t.sex,
-           t.age,
-           t.email,
-           t.mobile,
-           t.status,
-           t.avatar
-    from t_user_info t
-    where t.id = #{userId}
-  </select>
+    <select id="getUserInfoById" resultType="com.example.base.login.OUserInfo">
+        select t.id,
+        t.nicname,
+        t.sex,
+        t.age,
+        t.email,
+        t.mobile,
+        t.status,
+        t.avatar
+        from t_user_info t
+        where t.id = #{userId}
+    </select>
 </mapper>

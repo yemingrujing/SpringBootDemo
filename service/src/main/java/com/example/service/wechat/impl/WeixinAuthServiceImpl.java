@@ -37,7 +37,7 @@ public class WeixinAuthServiceImpl implements WeixinAuthService {
         String url = ChatParam.TOKENUTL.replace("APPID", ChatParam.APPID).
                 replace("SECRET", ChatParam.SECRET).
                 replace("CODE", code);
-        return  restClient.get(url);
+        return restClient.get(url);
     }
 
     @Override

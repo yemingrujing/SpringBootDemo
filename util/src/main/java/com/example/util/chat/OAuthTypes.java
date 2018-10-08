@@ -8,7 +8,8 @@ package com.example.util.chat;
  **/
 public class OAuthTypes {
 
-    private OAuthTypes() {}
+    private OAuthTypes() {
+    }
 
     /**
      * 微信登录

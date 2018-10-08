@@ -12,6 +12,7 @@ public interface LoginService {
 
     /**
      * 查询登录用户信息()
+     *
      * @param userName 用户名
      * @param password 密码
      * @return
@@ -20,14 +21,16 @@ public interface LoginService {
 
     /**
      * 查询登录用户信息
+     *
      * @param userName 用户名
-     * @param token token
+     * @param token    token
      * @return
      */
     User loginByToken(String userName, String token);
 
     /**
      * 根据userId查询token
+     *
      * @param userId 用户Id
      * @return
      */
@@ -35,6 +38,7 @@ public interface LoginService {
 
     /**
      * 保存token
+     *
      * @param userId
      * @param token
      */
@@ -42,6 +46,7 @@ public interface LoginService {
 
     /**
      * 注册
+     *
      * @param user
      * @return
      */
@@ -49,15 +54,17 @@ public interface LoginService {
 
     /**
      * 根据用户名查询用户信息
+     *
      * @param userName
      * @return
      */
-     User loginByUsername(String userName);
+    User loginByUsername(String userName);
 
     /**
      * 根据手机号查询用户信息
+     *
      * @param phone
      * @return
      */
-     User loginByPhone(String phone);
+    User loginByPhone(String phone);
 }

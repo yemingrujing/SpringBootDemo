@@ -22,7 +22,9 @@ import java.util.Map;
  **/
 public class TokenUtils {
 
-    private TokenUtils(){}
+    private TokenUtils() {
+    }
+
     /**
      * 创建一个32-byte的密匙
      */
@@ -30,6 +32,7 @@ public class TokenUtils {
 
     /**
      * 生成一个token
+     *
      * @param payLoad
      * @return
      * @throws JOSEException
@@ -51,6 +54,7 @@ public class TokenUtils {
 
     /**
      * 验证token
+     *
      * @param token
      * @return
      * @throws ParseException
@@ -73,7 +77,7 @@ public class TokenUtils {
             resultMap.put("data", jsonObject);
 
             //判断token是否过期
-            if (jsonObject.containsKey("exp")){
+            if (jsonObject.containsKey("exp")) {
                 Long expTime = Long.valueOf(jsonObject.get("exp").toString());
                 Long nowTime = System.currentTimeMillis();
 
@@ -93,7 +97,8 @@ public class TokenUtils {
 
     /**
      * 获取token
-     * @param uid 用户ID
+     *
+     * @param uid      用户ID
      * @param overTime 超时时间
      * @return
      */
@@ -112,6 +117,7 @@ public class TokenUtils {
 
     /**
      * 生成token
+     *
      * @param username
      * @return
      */

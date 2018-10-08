@@ -40,7 +40,7 @@ public class PoiPublicUtil {
 
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     public static <K, V> Map<K, V> mapFor(Object... mapping) {
         Map<K, V> map = new HashMap<K, V>();
         for (int i = 0; i < mapping.length; i += 2) {
@@ -59,7 +59,7 @@ public class PoiPublicUtil {
         Object obj = null;
         try {
             if (clazz.equals(Map.class)) {
-                return new LinkedHashMap<String,Object>();
+                return new LinkedHashMap<String, Object>();
             }
             obj = clazz.newInstance();
             Field[] fields = getClassFields(clazz);
@@ -128,10 +128,8 @@ public class PoiPublicUtil {
     /**
      * 获取Excel2003图片
      *
-     * @param sheet
-     *            当前sheet对象
-     * @param workbook
-     *            工作簿对象
+     * @param sheet    当前sheet对象
+     * @param workbook 工作簿对象
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
     public static Map<String, PictureData> getSheetPictrues03(HSSFSheet sheet,
@@ -159,10 +157,8 @@ public class PoiPublicUtil {
     /**
      * 获取Excel2007图片
      *
-     * @param sheet
-     *            当前sheet对象
-     * @param workbook
-     *            工作簿对象
+     * @param sheet    当前sheet对象
+     * @param workbook 工作簿对象
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
     public static Map<String, PictureData> getSheetPictrues07(XSSFSheet sheet,
@@ -299,11 +295,12 @@ public class PoiPublicUtil {
 
     /**
      * 返回流和图片类型
-     *@author JueYue
-     *   2013-11-20
-     *@param entity
-     *@return  (byte[]) isAndType[0],(Integer)isAndType[1]
+     *
+     * @param entity
+     * @return (byte[]) isAndType[0],(Integer)isAndType[1]
      * @throws Exception
+     * @author JueYue
+     * 2013-11-20
      */
     public static Object[] getIsAndType(ImageEntity entity) throws Exception {
         Object[] result = new Object[2];
@@ -341,9 +338,9 @@ public class PoiPublicUtil {
     /**
      * 解析数据
      *
-     * @author JueYue
-     *  2013-11-16
      * @return
+     * @author JueYue
+     * 2013-11-16
      */
     public static Object getRealValue(String currentText,
                                       Map<String, Object> map) throws Exception {
@@ -393,6 +390,7 @@ public class PoiPublicUtil {
 
     /**
      * double to String 防止科学计数法
+     *
      * @param value
      * @return
      */
@@ -407,6 +405,7 @@ public class PoiPublicUtil {
 
     /**
      * 统一 key的获取规则
+     *
      * @param key
      * @param targetId
      * @return
@@ -431,6 +430,7 @@ public class PoiPublicUtil {
 
     /**
      * 支持换行操作
+     *
      * @param currentRun
      * @param currentText
      */

@@ -15,6 +15,7 @@ public interface WeChatService {
 
     /**
      * 保存用户第三方登录信息
+     *
      * @param map
      * @return
      */
@@ -22,8 +23,9 @@ public interface WeChatService {
 
     /**
      * 数据库中查询微信号是否绑定平台账号
+     *
      * @param openId 一个微信号与一个公众号对应一个固定不变的openid
      * @return
      */
-     OUserInfo getUserByWeiXinID(String openId);
+    OUserInfo getUserByWeiXinID(String openId);
 }

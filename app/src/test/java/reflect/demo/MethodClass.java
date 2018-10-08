@@ -9,7 +9,7 @@ import java.lang.reflect.Method;
  * @create 2018-08-10 10:33
  **/
 public class MethodClass {
-    
+
     public static void main(String[] args) throws Exception {
         Class stuClass = Class.forName("reflect.demo.Student");
         System.out.println("*******************获取所有的”公有“方法*******************");

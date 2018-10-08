@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.order.OrderRegionMapper">
-  <resultMap id="BaseResultMap" type="com.example.base.order.OrderRegion">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="province_id" jdbcType="INTEGER" property="provinceId" />
-    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="merger_name" jdbcType="VARCHAR" property="mergerName" />
-    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
-    <result column="merger_short_name" jdbcType="VARCHAR" property="mergerShortName" />
-    <result column="level_type" jdbcType="SMALLINT" property="levelType" />
-    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
-    <result column="zip_code" jdbcType="VARCHAR" property="zipCode" />
-    <result column="pinyin" jdbcType="VARCHAR" property="pinyin" />
-    <result column="jianpin" jdbcType="VARCHAR" property="jianpin" />
-    <result column="firstchar" jdbcType="VARCHAR" property="firstchar" />
-    <result column="lng" jdbcType="REAL" property="lng" />
-    <result column="lat" jdbcType="REAL" property="lat" />
-    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.example.base.order.OrderRegion">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="province_id" jdbcType="INTEGER" property="provinceId"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="merger_name" jdbcType="VARCHAR" property="mergerName"/>
+        <result column="short_name" jdbcType="VARCHAR" property="shortName"/>
+        <result column="merger_short_name" jdbcType="VARCHAR" property="mergerShortName"/>
+        <result column="level_type" jdbcType="SMALLINT" property="levelType"/>
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode"/>
+        <result column="zip_code" jdbcType="VARCHAR" property="zipCode"/>
+        <result column="pinyin" jdbcType="VARCHAR" property="pinyin"/>
+        <result column="jianpin" jdbcType="VARCHAR" property="jianpin"/>
+        <result column="firstchar" jdbcType="VARCHAR" property="firstchar"/>
+        <result column="lng" jdbcType="REAL" property="lng"/>
+        <result column="lat" jdbcType="REAL" property="lat"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+    </resultMap>
 </mapper>

@@ -29,16 +29,16 @@ public class Utils {
         return newImage;
     }
 
-    public static void setRenderingHint(Graphics2D g){
+    public static void setRenderingHint(Graphics2D g) {
         Map<RenderingHints.Key, Object> m = new HashMap<RenderingHints.Key, Object>();
         m.put(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        m.put(RenderingHints.KEY_ALPHA_INTERPOLATION ,
+        m.put(RenderingHints.KEY_ALPHA_INTERPOLATION,
                 RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-        m.put(RenderingHints.KEY_COLOR_RENDERING , RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        m.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         m.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         m.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        m.put(RenderingHints.KEY_DITHERING , RenderingHints.VALUE_DITHER_ENABLE);
+        m.put(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
 		/*
 		m.put(RenderingHints. , RenderingHints.);
 		*/

@@ -18,14 +18,14 @@ public class Constructors {
         for (Constructor c : conArry) {
             System.out.println(c);
         }
-        
+
         System.out.println("************所有的构造方法(包括：私有、受保护、默认、公有)***************");
         Constructor con = clazz.getConstructor(null);
         System.out.println("con = " + con);
         // 调用构造方法
         Object obj = con.newInstance();
         System.out.println(obj);
-        
+
         System.out.println("******************获取私有构造方法，并调用*******************************");
         con = clazz.getDeclaredConstructor(char.class);
         System.out.println(con);

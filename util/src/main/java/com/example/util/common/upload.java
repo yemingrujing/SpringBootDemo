@@ -15,6 +15,7 @@ import java.net.URLConnection;
 public class upload {
     /**
      * 根据url上传图片
+     *
      * @param url
      * @param path
      * @return
@@ -51,6 +52,7 @@ public class upload {
 
     /**
      * 保存图片到服务器
+     *
      * @param is
      * @param tarpath
      */

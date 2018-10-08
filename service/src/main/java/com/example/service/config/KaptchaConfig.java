@@ -17,7 +17,6 @@ import java.util.Properties;
 public class KaptchaConfig {
 
     /**
-     *
      * @return
      */
     @Bean

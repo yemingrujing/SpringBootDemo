@@ -8,7 +8,8 @@ package com.example.util.login;
  **/
 public class AuthTypes {
 
-    private AuthTypes(){}
+    private AuthTypes() {
+    }
 
     /**
      * 微信登录

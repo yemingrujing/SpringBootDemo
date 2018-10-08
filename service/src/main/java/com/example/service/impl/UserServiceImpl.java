@@ -27,9 +27,9 @@ public class UserServiceImpl extends BaseServiceImpl<User> implements UserServic
 
     @Override
     public void export(HttpServletResponse response) {
-       List<User> list = userMapper.findAll();
-       List<UserDTO> userDTOS = JSON.parseArray(JSON.toJSONString(list), UserDTO.class);
-       FileUtil.exportExcels(userDTOS, "用户列表", "sheet1", UserDTO.class, "用户.xlsx", response);
+        List<User> list = userMapper.findAll();
+        List<UserDTO> userDTOS = JSON.parseArray(JSON.toJSONString(list), UserDTO.class);
+        FileUtil.exportExcels(userDTOS, "用户列表", "sheet1", UserDTO.class, "用户.xlsx", response);
     }
 
 

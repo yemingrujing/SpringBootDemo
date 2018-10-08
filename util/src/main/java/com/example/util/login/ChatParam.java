@@ -8,7 +8,8 @@ package com.example.util.login;
  **/
 public class ChatParam {
 
-    private ChatParam(){}
+    private ChatParam() {
+    }
 
     /**
      * 微信开发者测试账号

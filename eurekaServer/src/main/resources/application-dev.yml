@@ -1,0 +1,75 @@
+# appname默认
+spring:
+  application:
+    name: Eureka-H.A.
+  #boot:
+  #  admin:
+  #    client:
+  #      url: http://localhost:8080
+  security:
+    user:
+      name: root
+      password: 123456
+
+# 注册端口号
+server:
+  port: 8761
+
+#-----------------------编写者相关信息----------------------
+#-----------------------编写者相关信息----------------------
+info:
+  owner: guangwei
+  version: "@project.verion@"
+  app:
+    name: "@project.name@"
+    version: "@project.verion@"
+    description: "@project.description@"
+    springboot-boot-version: "@project.parent.version@"
+
+
+#------------------------服务与发现相关信息---------------------
+#------------------------服务与发现相关信息---------------------
+#不使用主机名来定义注册中心的地址，而使用IP地址的形式，如果设置了属性，则使用该属性配置的IP，否则自动获取除环路IP外的第一个IP地址
+# 注册时显示ip
+eureka:
+  instance:
+    # 注册时显示ip
+    prefer-ip-address: true
+    # IP地址
+    #ip-address: localhost
+    # 设置当前实例的主机名称
+    hostname: 127.0.0.1
+    # 定义服务续约任务（心跳）的调用间隔，单位：秒
+    lease-renewal-interval-in-seconds: 30
+    # 定义服务失效的时间，单位：秒
+    lease-expiration-duration-in-seconds: 90
+    # 状态页面的URL，相对路径，默认使用 HTTP 访问，如果需要使用 HTTPS则需要使用绝对路径配置
+    status-page-url: /actuator/info
+    # 健康检查页面的URL，相对路径，默认使用 HTTP 访问，如果需要使用 HTTPS则需要使用绝对路径配置
+    health-check-url: /actuator/health
+    # 健康检查页面的URL，绝对路径
+    health-check-url-path: /actuator
+  client:
+    # 是否注册为服务
+    register-with-eureka: false
+    # 是否检索服务
+    fetch-registry: false
+    # 定义服务续约任务（心跳）的调用间隔，单位：秒
+    service-url:
+      # eureka默认空间的地址
+      defaultZone: http://root:123456@localhost:${server.port}/eureka/
+  server:
+    # 关闭注册中心的保护机制，Eureka 会统计15分钟之内心跳失败的比例低于85%将会触发保护机制，不剔除服务提供者，如果关闭服务注册中心将不可用的实例正确剔除
+    # 关闭自我保护(生产时打开该选项)
+    enable-self-preservation: true
+    # 扫描失效服务的间隔时间（缺省为60*1000ms
+    eviction-interval-timer-in-ms: 5000
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -29,16 +29,13 @@ public class Watermark {
     /**
      * Instantiates a filter which applies a watermark to an image.
      *
-     * @param position
-     *            The position of the watermark.
-     * @param watermarkImg
-     *            The watermark image.
-     * @param opacity
-     *            The opacity of the watermark.
-     *            <p>
-     *            The value should be between {@code 0.0f} and {@code 1.0f},
-     *            where {@code 0.0f} is completely transparent, and {@code 1.0f}
-     *            is completely opaque.
+     * @param position     The position of the watermark.
+     * @param watermarkImg The watermark image.
+     * @param opacity      The opacity of the watermark.
+     *                     <p>
+     *                     The value should be between {@code 0.0f} and {@code 1.0f},
+     *                     where {@code 0.0f} is completely transparent, and {@code 1.0f}
+     *                     is completely opaque.
      */
     public Watermark(Position position, BufferedImage watermarkImg, float opacity) {
         if (position == null) {
@@ -106,7 +103,7 @@ public class Watermark {
             }
         }
         this.watermarkImg = Utils.createImage(this.watermarkImg, drawWidth, drawHeight, null);
-        int[] size = { drawWidth, drawHeight };
+        int[] size = {drawWidth, drawHeight};
         return size;
     }
 }

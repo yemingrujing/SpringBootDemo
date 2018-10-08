@@ -29,6 +29,7 @@ public class WxPayController {
 
     /**
      * 微信统一下单接口
+     *
      * @param request
      * @param response
      * @return
@@ -83,7 +84,7 @@ public class WxPayController {
             parameterMap2.put("package", "Sign=WXPay");
             parameterMap2.put("package", PayCommonUtil.CreateNoncestr());
             //本来生成的时间戳是13位，但是ios必须是10位，所以截取了一下
-            parameterMap2.put("timestamp", Long.parseLong(String.valueOf(System.currentTimeMillis()).toString().substring(0,10)));
+            parameterMap2.put("timestamp", Long.parseLong(String.valueOf(System.currentTimeMillis()).toString().substring(0, 10)));
             String sign2 = PayCommonUtil.createSign("UTF-8", parameterMap2);
             parameterMap2.put("sign", sign2);
             resultMap.put("code", 200);
@@ -110,8 +111,8 @@ public class WxPayController {
         StringBuffer sb = new StringBuffer();
         inputStream = request.getInputStream();
         String s;
-        BufferedReader in =  new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        while((s = in.readLine()) != null) {
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        while ((s = in.readLine()) != null) {
             sb.append(s);
         }
         in.close();
@@ -119,7 +120,7 @@ public class WxPayController {
         //解析xml成map
         Map<String, String> m = new HashMap<String, String>();
         m = XMLUtil.doXMLParse((sb.toString()));
-        for(Object keyValue : m.keySet()) {
+        for (Object keyValue : m.keySet()) {
             System.out.println(keyValue + "=" + m.get(keyValue));
         }
         //过滤空，设置TreeMap
@@ -127,10 +128,10 @@ public class WxPayController {
         Iterator it = m.keySet().iterator();
         while (it.hasNext()) {
             String parameter = (String) it.next();
-            String  parameterValue = m.get(parameter);
+            String parameterValue = m.get(parameter);
 
-            String  v = "";
-            if(null != parameterValue) {
+            String v = "";
+            if (null != parameterValue) {
                 v = parameterValue.trim();
             }
             packageParams.put(parameter, v);
@@ -138,7 +139,7 @@ public class WxPayController {
         //判断签名是否正确
         String resXml = "";
         if (PayCommonUtil.isTenpaySign("UTF-8", packageParams)) {
-            if("SUCCESS".equals(packageParams.get("result_code"))) {
+            if ("SUCCESS".equals(packageParams.get("result_code"))) {
 //                //支付成功
 //                //执行自己的业务逻辑
 //                String mch_id = (String) packageParams.get("mch_id"); //商户号
@@ -190,10 +191,11 @@ public class WxPayController {
 
     /**
      * 查询支付结果
+     *
      * @param request
      * @param response
-     * @param tradeno 微信交易订单号
-     * @param orderno 商品订单号
+     * @param tradeno  微信交易订单号
+     * @param orderno  商品订单号
      * @param callback
      */
     @RequestMapping(value = {"/wxPayQuery"}, method = RequestMethod.POST)
@@ -236,10 +238,11 @@ public class WxPayController {
 
     /**
      * 订单退款 需要双向证书验证
+     *
      * @param request
      * @param response
-     * @param tradeno 微信订单号
-     * @param orderno 商家订单号
+     * @param tradeno  微信订单号
+     * @param orderno  商家订单号
      */
     @RequestMapping(value = {"/wxPayRefund"}, method = RequestMethod.POST)
     public Map<String, Object> wxPayRefund(HttpServletRequest request, HttpServletResponse response, String tradeno, String orderno) {
@@ -272,7 +275,7 @@ public class WxPayController {
         try {
             restmap = XMLUtil.doXMLParse(restXML);
             Map<String, String> refundMap = new HashMap<String, String>();
-            if(!restmap.isEmpty() && "SUCCESS".equals(restmap.get("result_code"))) {
+            if (!restmap.isEmpty() && "SUCCESS".equals(restmap.get("result_code"))) {
                 refundMap.put("transaction_id", restmap.get("transaction_id"));
                 refundMap.put("out_trade_no", restmap.get("out_trade_no"));
                 refundMap.put("refund_id", restmap.get("refund_id"));
@@ -297,12 +300,13 @@ public class WxPayController {
 
     /**
      * 订单退款查询
+     *
      * @param request
      * @param response
      * @param refundid 微信退款号
      * @param refundno 商家退款号
-     * @param tradeno 微信订单号
-     * @param orderno 商户订单号
+     * @param tradeno  微信订单号
+     * @param orderno  商户订单号
      * @return
      */
     @RequestMapping(value = {"/wxPayReFundQuery"}, method = RequestMethod.POST)
@@ -327,7 +331,7 @@ public class WxPayController {
         try {
             restMap = XMLUtil.doXMLParse(restXML);
             Map<String, String> refundMap = new HashMap<>();
-            if(!restMap.isEmpty() && "SUCCESS".equals(restMap.get("result_code"))) {
+            if (!restMap.isEmpty() && "SUCCESS".equals(restMap.get("result_code"))) {
                 // 订单退款查询成功 处理业务逻辑
                 log.info("退款订单查询：订单" + restMap.get("out_trade_no") + "退款成功，退款状态" + restMap.get("refund_status_0"));
                 refundMap.put("transaction_id", restMap.get("transaction_id"));

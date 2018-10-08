@@ -45,6 +45,7 @@ public class PayCommonUtil {
 
     /**
      * 是否签名正确,规则是:按参数名称a-z排序,遇到空值的参数不参加签名。
+     *
      * @return boolean
      */
     public static boolean isTenpaySign(String characterEncoding, SortedMap<Object, Object> packageParams) {
@@ -55,7 +56,7 @@ public class PayCommonUtil {
             Map.Entry entry = (Map.Entry) it.next();
             String k = (String) entry.getKey();
             String v = (String) entry.getValue();
-            if(!"sign".equals(k) && null != v && !"".equals(v)) {
+            if (!"sign".equals(k) && null != v && !"".equals(v)) {
                 sb.append(k + "=" + v + "&");
             }
         }
@@ -72,17 +73,17 @@ public class PayCommonUtil {
 
 
     /**
-     * @Description：sign签名
      * @param characterEncoding 编码格式
-     * @param parameters 请求参数
+     * @param parameters        请求参数
      * @return
+     * @Description：sign签名
      */
-    public static String createSign(String characterEncoding,SortedMap<Object,Object> parameters){
+    public static String createSign(String characterEncoding, SortedMap<Object, Object> parameters) {
         StringBuffer sb = new StringBuffer();
         Set es = parameters.entrySet();
         Iterator it = es.iterator();
         while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry)it.next();
+            Map.Entry entry = (Map.Entry) it.next();
             String k = (String) entry.getKey();
             Object v = entry.getValue();
             if (null != v && !"".equals(v)
@@ -94,18 +95,19 @@ public class PayCommonUtil {
         String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toUpperCase();
         return sign;
     }
+
     /**
-     * @Description：将请求参数转换为xml格式的string
-     * @param parameters  请求参数
+     * @param parameters 请求参数
      * @return
+     * @Description：将请求参数转换为xml格式的string
      */
     public static String getRequestXml(SortedMap<Object, Object> parameters) {
         StringBuffer sb = new StringBuffer();
         sb.append("<xml>");
         Set es = parameters.entrySet();
         Iterator it = es.iterator();
-        while(it.hasNext()) {
-            Map.Entry entry = (Map.Entry)it.next();
+        while (it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
             String k = (String) entry.getKey();
             String v = (String) entry.getValue();
             if ("attach".equalsIgnoreCase(k) || "body".equalsIgnoreCase(k)) {
@@ -117,11 +119,12 @@ public class PayCommonUtil {
         sb.append("</xml>");
         return sb.toString();
     }
+
     /**
-     * @Description：返回给微信的参数
      * @param return_code 返回编码
      * @param return_msg  返回信息
      * @return
+     * @Description：返回给微信的参数
      */
     public static String setXML(String return_code, String return_msg) {
         return "<xml><return_code><![CDATA[" + return_code
@@ -132,15 +135,16 @@ public class PayCommonUtil {
 
     /**
      * 发送https请求
-     * @param requestUrl 请求地址
+     *
+     * @param requestUrl    请求地址
      * @param requestMethod 请求方式（GET、POST）
-     * @param outputStr 提交的数据
+     * @param outputStr     提交的数据
      * @return 返回微信服务器响应的信息
      */
     public static String httpsRequest(String requestUrl, String requestMethod, String outputStr) {
         try {
             // 创建SSLContext对象，并使用我们指定的信任管理器初始化
-            TrustManager[] tm = {new MyX509TrustManager() };
+            TrustManager[] tm = {new MyX509TrustManager()};
             SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
             sslContext.init(null, tm, new java.security.SecureRandom());
             // 从上述SSLContext对象中得到SSLSocketFactory对象
@@ -188,9 +192,9 @@ public class PayCommonUtil {
     /**
      * 发送https请求
      *
-     * @param requestUrl 请求地址
+     * @param requestUrl    请求地址
      * @param requestMethod 请求方式（GET、POST）
-     * @return JSONObject(通过JSONObject.get(key)的方式获取json对象的属性值)
+     * @return JSONObject(通过JSONObject.get ( key)的方式获取json对象的属性值)
      */
     public static JSONObject httpsRequest(String requestUrl, String requestMethod) {
         JSONObject jsonObject = null;
@@ -237,10 +241,10 @@ public class PayCommonUtil {
         return jsonObject;
     }
 
-    public static String urlEncodeUTF8(String source){
+    public static String urlEncodeUTF8(String source) {
         String result = source;
         try {
-            result = java.net.URLEncoder.encode(source,"utf-8");
+            result = java.net.URLEncoder.encode(source, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

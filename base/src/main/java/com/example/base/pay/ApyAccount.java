@@ -208,18 +208,18 @@ public class ApyAccount {
     @Override
     public String toString() {
         return "ApyAccount{" +
-            "payId=" + payId +
-            ", partner='" + partner + '\'' +
-            ", appid='" + appid + '\'' +
-            ", publicKey='" + publicKey + '\'' +
-            ", privateKey='" + privateKey + '\'' +
-            ", notifyUrl='" + notifyUrl + '\'' +
-            ", returnUrl='" + returnUrl + '\'' +
-            ", seller='" + seller + '\'' +
-            ", signType='" + signType + '\'' +
-            ", inputCharset='" + inputCharset + '\'' +
-            ", payType=" + payType +
-            ", msgType=" + msgType +
-            '}';
+                "payId=" + payId +
+                ", partner='" + partner + '\'' +
+                ", appid='" + appid + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", privateKey='" + privateKey + '\'' +
+                ", notifyUrl='" + notifyUrl + '\'' +
+                ", returnUrl='" + returnUrl + '\'' +
+                ", seller='" + seller + '\'' +
+                ", signType='" + signType + '\'' +
+                ", inputCharset='" + inputCharset + '\'' +
+                ", payType=" + payType +
+                ", msgType=" + msgType +
+                '}';
     }
 }

@@ -43,6 +43,7 @@ public class WeChatController {
 
     /**
      * 微信消息接收和token验证
+     *
      * @param model
      * @param request
      * @param response
@@ -77,12 +78,13 @@ public class WeChatController {
 
     /**
      * 微信引导页进入的方法
+     *
      * @param request
      * @param map
      * @return
      */
     @RequestMapping("/loginByWeiXin")
-    public String loginByWeiXin(HttpServletRequest request){
+    public String loginByWeiXin(HttpServletRequest request) {
         //// 微信接口自带 2 个参数
         String code = request.getParameter("code");
         String state = request.getParameter("state");

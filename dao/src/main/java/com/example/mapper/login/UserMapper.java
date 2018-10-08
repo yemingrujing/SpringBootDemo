@@ -10,6 +10,7 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 登录根据用户名和密码查询用户信息
+     *
      * @param userName
      * @param password
      * @return
@@ -18,6 +19,7 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 注册
+     *
      * @param user
      * @return
      */
@@ -25,6 +27,7 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 用户是否注册
+     *
      * @param userName
      * @return
      */
@@ -32,6 +35,7 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 根据用户名和token查询用户信息
+     *
      * @param userName
      * @param token
      * @return
@@ -40,6 +44,7 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 根据手机号查询用户信息
+     *
      * @param phone
      * @return
      */
@@ -47,6 +52,7 @@ public interface UserMapper extends Mapper<User> {
 
     /**
      * 查询所有用户
+     *
      * @return
      */
     List<User> findAll();

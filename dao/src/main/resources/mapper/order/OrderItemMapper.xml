@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mapper.order.OrderItemMapper">
-  <resultMap id="BaseResultMap" type="com.example.base.order.OrderItem">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
-    <result column="brand_id" jdbcType="INTEGER" property="brandId" />
-    <result column="spu_id" jdbcType="BIGINT" property="spuId" />
-    <result column="sku_id" jdbcType="BIGINT" property="skuId" />
-    <result column="sku_name" jdbcType="VARCHAR" property="skuName" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="act_price" jdbcType="DECIMAL" property="actPrice" />
-    <result column="num" jdbcType="INTEGER" property="num" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.example.base.order.OrderItem">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="order_code" jdbcType="VARCHAR" property="orderCode"/>
+        <result column="brand_id" jdbcType="INTEGER" property="brandId"/>
+        <result column="spu_id" jdbcType="BIGINT" property="spuId"/>
+        <result column="sku_id" jdbcType="BIGINT" property="skuId"/>
+        <result column="sku_name" jdbcType="VARCHAR" property="skuName"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="act_price" jdbcType="DECIMAL" property="actPrice"/>
+        <result column="num" jdbcType="INTEGER" property="num"/>
+    </resultMap>
 
-  <insert id="addOrderItemList" parameterType="java.util.List">
-    insert into t_order_item(order_code,brand_id,spu_id,sku_id,price,act_price,num)
-    values
-      <foreach collection="orderItemList" item="item" index="index" separator=",">
-        (
-          #{item.orderId,
-          #{item.brandCode},
-          #{item.spuId},
-          #{item.skuId},
-          #{item.price},
-          #{item.actPrice}),
-          #{item.num}
-        )
-      </foreach>
-  </insert>
+    <insert id="addOrderItemList" parameterType="java.util.List">
+        insert into t_order_item(order_code,brand_id,spu_id,sku_id,price,act_price,num)
+        values
+        <foreach collection="orderItemList" item="item" index="index" separator=",">
+            (
+            #{item.orderId,
+            #{item.brandCode},
+            #{item.spuId},
+            #{item.skuId},
+            #{item.price},
+            #{item.actPrice}),
+            #{item.num}
+            )
+        </foreach>
+    </insert>
 </mapper>

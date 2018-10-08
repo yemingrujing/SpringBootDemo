@@ -40,6 +40,7 @@ public class AnnoManageUtils {
 
     /**
      * 通过eventTypeId，也就是注解的值获取相应处理Handler的类名
+     *
      * @param eventTypeId
      * @return
      */

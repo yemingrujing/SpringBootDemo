@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.Set;
+
 import com.google.common.base.Predicate;
 
 /**
@@ -43,6 +44,7 @@ public class ScanUtils {
 
     /**
      * 初始化
+     *
      * @return
      */
     public static Reflections init() {
@@ -64,7 +66,8 @@ public class ScanUtils {
     }
 
     /**
-     *  初始化配置文件的包 reflection.properties
+     * 初始化配置文件的包 reflection.properties
+     *
      * @param filterBuilder
      * @param urlTotals
      */
@@ -93,7 +96,7 @@ public class ScanUtils {
         }
 
         String excludePackage = pro.getProperty("excludePackage");
-        if (StringUtils.isNotEmpty(excludePackage)){
+        if (StringUtils.isNotEmpty(excludePackage)) {
             for (String packName : excludePackage.split(SPLIT_STR)) {
                 filterBuilder = filterBuilder.excludePackage(packName);
 
@@ -103,7 +106,7 @@ public class ScanUtils {
         }
 
         String excludeRegex = pro.getProperty("excludeRegex");
-        if (StringUtils.isNotEmpty(excludeRegex)){
+        if (StringUtils.isNotEmpty(excludeRegex)) {
             for (String packName : excludeRegex.split(SPLIT_STR)) {
                 filterBuilder = filterBuilder.includePackage(packName);
 
