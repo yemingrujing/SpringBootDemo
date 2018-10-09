@@ -5,7 +5,7 @@ spring:
     name: admin-server
   security:
     user:
-      name: root
+      name: admin
       password: 123456
 
 # tag::configuration-eureka[]
@@ -31,3 +31,12 @@ management:
     health:
       show-details: ALWAYS
 # end::configuration-eureka[]
+
+#-----------------------编写者相关信息----------------------
+info:
+  owner: guangwei
+  version: '@project.version@'
+  app:
+    name: "@project.name@"
+    version: "@project.version@"
+    description: "@project.description@"

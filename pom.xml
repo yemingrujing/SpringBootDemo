@@ -15,6 +15,7 @@
         <module>service</module>
         <module>eurekaServer</module>
         <module>bootAdminServer</module>
+        <module>eurekaClient</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eurekaServer</artifactId>
+    <name>eurekaServer</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,6 +40,7 @@
             <artifactId>guava</artifactId>
             <version>26.0-jre</version>
         </dependency>
+
         <!-- 引用devtools依赖为实现热部署 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -46,6 +48,7 @@
             <version>${springboot.version}</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -58,6 +61,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>${springboot.version}</version>
         </dependency>
     </dependencies>
 

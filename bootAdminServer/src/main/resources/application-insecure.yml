@@ -24,3 +24,12 @@ management:
     health:
       show-details: ALWAYS
 # end::configuration-eureka[]
+
+#-----------------------编写者相关信息----------------------
+info:
+  owner: guangwei
+  version: '@project.version@'
+  app:
+    name: "@project.name@"
+    version: "@project.version@"
+    description: "@project.description@"

@@ -46,3 +46,13 @@ eureka:
     metadata-map:
       "user.name": ${spring.security.user.name}         #These two are needed so that the server
       "user.password": ${spring.security.user.password} #can access the protected client endpoints
+
+#-----------------------编写者相关信息----------------------
+info:
+  owner: guangwei
+  version: "@project.verion@"
+  app:
+    name: "@project.name@"
+    version: "@project.verion@"
+    description: "@project.description@"
+    springboot-boot-version: "@project.parent.version@"
