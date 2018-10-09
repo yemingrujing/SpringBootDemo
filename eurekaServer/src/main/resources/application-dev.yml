@@ -12,7 +12,7 @@ spring:
       password: 123456
   mail:
     host: smtp.qq.com #发送邮件服务器
-    username: 2477304354@qq.com #QQ邮箱
+    username: xxxx@qq.com #QQ邮箱
     password: opvjwamgyknkebce #客户端授权码
     protocol: smtp #发送邮件协议
     properties.mail.smtp.auth: true
