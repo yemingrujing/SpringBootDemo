@@ -23,7 +23,7 @@ public class JDBCUtils {
     /**
      * 数据库密码
      */
-    private static final String PASSWORD = "q123456789";
+    private static final String PASSWORD = "MyNewPass4!";
 
     /**
      * 驱动信息
@@ -33,7 +33,7 @@ public class JDBCUtils {
     /**
      * 数据库地址
      */
-    private static final String URL = "jdbc:mysql://39.105.75.88:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull";
+    private static final String URL = "jdbc:mysql://192.168.168.5:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull";
 
     //数据库连接
     private static Connection connection;
