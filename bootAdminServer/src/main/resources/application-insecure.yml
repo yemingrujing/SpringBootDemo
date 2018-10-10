@@ -3,6 +3,33 @@ server:
 spring:
   application:
     name: admin-server
+  mail:
+    host: smtp.qq.com # 发送邮件服务器
+    username: xxxxxx@qq.com # QQ邮箱
+    password: opvjwamgyknkebce # 客户端授权码
+    protocol: smtp # 发送邮件协议
+    properties:
+      mail:
+        smtp:
+          auth: true # 安全认证(默认是true)
+          port: 465 # 端口号465或587
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true # 开启ssl加密 否则项目启动时报530error
+        display:
+          sendmail: Javen # 可以任意
+          sendname: Spring Boot Guide Email # 可以任意
+    default-encoding: utf-8
+    from: xxxxxx@qq.com # 与上面的username保持一致
+  boot:
+    admin:
+      notify:
+        mail:
+          from: yemingrujing@163.com
+          to: xxxxxx@qq.com
+
 
 # tag::configuration-eureka[]
 eureka:   #<1>
