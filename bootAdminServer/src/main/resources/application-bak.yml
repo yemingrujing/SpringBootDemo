@@ -5,6 +5,37 @@ spring:
     name: admin-server
   profiles:
     active: secure
+  mail:
+    # 发送邮件服务器
+    host: smtp.qq.com
+    # QQ邮箱
+    username: 2477304354@qq.com
+    # 客户端授权码 opvjwamgyknkebce
+    password: ifedyxsnjtmgechf
+    # 发送邮件协议
+    protocol: smtp
+    properties:
+      mail.debug: false
+      # 安全认证(默认是true)
+      mail.smtp.auth: true
+      # 端口号465或587
+      mail.smtp.port: 465
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      # 开启ssl加密 否则项目启动时报530error
+      mail.smtp.ssl.enable: true
+      # mail.smtp.ssl.socketFactory: sf
+      # 可以任意
+      mail.display.sendmail: Javen
+      # 可以任意
+      mail.display.sendname: Spring Boot Guide Email
+    default-encoding: UTF-8
+  boot:
+    admin:
+      notify:
+        mail:
+          from: 2477304354@qq.com
+          to: yemingrujing@163.com
 
 # tag::configuration-eureka[]
 eureka:   #<1>
@@ -27,6 +58,16 @@ management:
       show-details: ALWAYS
 # end::configuration-eureka[]
 
+#-----------------------编写者相关信息----------------------
+info:
+  owner: guangwei
+  version: "@project.verion@"
+  app:
+    name: "@project.name@"
+    version: "@project.verion@"
+    description: "@project.description@"
+    springboot-boot-version: "@project.parent.version@"
+
 ---
 spring:
   profiles: insecure
@@ -46,13 +87,3 @@ eureka:
     metadata-map:
       "user.name": ${spring.security.user.name}         #These two are needed so that the server
       "user.password": ${spring.security.user.password} #can access the protected client endpoints
-
-#-----------------------编写者相关信息----------------------
-info:
-  owner: guangwei
-  version: "@project.verion@"
-  app:
-    name: "@project.name@"
-    version: "@project.verion@"
-    description: "@project.description@"
-    springboot-boot-version: "@project.parent.version@"
