@@ -8,20 +8,36 @@ spring:
       name: admin
       password: 123456
   mail:
-      host: smtp.qq.com #发送邮件服务器
-      username: xxxx@qq.com #QQ邮箱
-      password: opvjwamgyknkebce #客户端授权码
-      protocol: smtp #发送邮件协议
-      properties.mail.smtp.auth: true
-      properties.mail.smtp.port: 465 #端口号465或587
-      properties.mail.display.sendmail: Javen #可以任意
-      properties.mail.display.sendname: Spring Boot Guide Email #可以任意
-      properties.mail.smtp.starttls.enable: true
-      properties.mail.smtp.starttls.required: true
-      properties.mail.smtp.ssl.enable: true
-      default-encoding: utf-8
-      from: 2477304354@qq.com #与上面的username保持一致
-      to: yemingrujing@163.com
+    # 发送邮件服务器
+    host: smtp.qq.com
+    # QQ邮箱
+    username: 2477304354@qq.com
+    # 客户端授权码 opvjwamgyknkebce
+    password: ifedyxsnjtmgechf
+    # 发送邮件协议
+    protocol: smtp
+    properties:
+      mail.debug: false
+      # 安全认证(默认是true)
+      mail.smtp.auth: true
+      # 端口号465或587
+      mail.smtp.port: 465
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      # 开启ssl加密 否则项目启动时报530error
+      mail.smtp.ssl.enable: true
+      # mail.smtp.ssl.socketFactory: sf
+      # 可以任意
+      mail.display.sendmail: Javen
+      # 可以任意
+      mail.display.sendname: Spring Boot Guide Email
+    default-encoding: UTF-8
+  boot:
+    admin:
+      notify:
+        mail:
+          from: 2477304354@qq.com
+          to: yemingrujing@163.com
 
 # tag::configuration-eureka[]
 eureka:   #<1>
