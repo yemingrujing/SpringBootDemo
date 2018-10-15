@@ -1,7 +1,7 @@
 # appname默认
 spring:
   application:
-    name: Eureka_1-H.A.
+    name: Eureka_2-H.A.
   security:
     user:
       name: root
@@ -9,7 +9,7 @@ spring:
 
 # 注册端口号
 server:
-  port: 8761
+  port: 8762
 
 #-----------------------编写者相关信息----------------------
 info:
@@ -44,14 +44,14 @@ eureka:
     # 健康检查页面的URL，绝对路径
     health-check-url-path: /actuator
   client:
-    # 是否注册为服务(高可用的Eureka注册中心关键配置)
+    # 是否注册为服务
     register-with-eureka: true
-    # 是否检索服务(高可用的Eureka注册中心关键配置)
+    # 是否检索服务
     fetch-registry: true
     # 定义服务续约任务（心跳）的调用间隔，单位：秒
     service-url:
       # eureka默认空间的地址
-      defaultZone: http://root:123456@localhost:8762/eureka/
+      defaultZone: http://root:123456@localhost:8761/eureka/
   server:
     # 关闭注册中心的保护机制，Eureka 会统计15分钟之内心跳失败的比例低于85%将会触发保护机制，不剔除服务提供者，如果关闭服务注册中心将不可用的实例正确剔除
     # 关闭自我保护(生产时打开该选项)
