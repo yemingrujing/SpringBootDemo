@@ -1,8 +1,6 @@
 package com.example.util.common;
 
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Base64 编码和解码
@@ -17,11 +15,8 @@ public class Base64Utils {
 
     /**
      * 功能：编码字符串
-     *
      * @param data 源字符串
-     * @return String
-     * @author jiangshuai
-     * @date 2016年10月03日
+     * @return
      */
     public static String encode(String data) {
         return new String(encode(data.getBytes()));
@@ -29,11 +24,8 @@ public class Base64Utils {
 
     /**
      * 功能：解码字符串
-     *
      * @param data 源字符串
-     * @return String
-     * @author jiangshuai
-     * @date 2016年10月03日
+     * @return
      */
     public static String decode(String data) {
         return new String(decode(data.toCharArray()));
@@ -41,11 +33,8 @@ public class Base64Utils {
 
     /**
      * 功能：编码byte[]
-     *
-     * @param data 源
-     * @return char[]
-     * @author jiangshuai
-     * @date 2016年10月03日
+     * @param data 源字节
+     * @return
      */
     public static char[] encode(byte[] data) {
         char[] out = new char[((data.length + 2) / 3) * 4];
@@ -77,11 +66,8 @@ public class Base64Utils {
 
     /**
      * 功能：解码
-     *
      * @param data 编码后的字符数组
-     * @return byte[]
-     * @author jiangshuai
-     * @date 2016年10月03日
+     * @return
      */
     public static byte[] decode(char[] data) {
 
@@ -106,22 +92,30 @@ public class Base64Utils {
         }
         byte[] out = new byte[len];
 
-        int shift = 0; // # of excess bits stored in accum
-        int accum = 0; // excess bits
+        // # of excess bits stored in accum
+        int shift = 0;
+        // excess bits
+        int accum = 0;
         int index = 0;
 
         // we now go through the entire array (NOT using the 'tempLen' value)
         for (int ix = 0; ix < data.length; ix++) {
             int value = (data[ix] > 255) ? -1 : codes[data[ix]];
 
-            if (value >= 0) { // skip over non-code
-                accum <<= 6; // bits shift up by 6 each time thru
-                shift += 6; // loop, with new bits being put in
-                accum |= value; // at the bottom.
-                if (shift >= 8) { // whenever there are 8 or more shifted in,
-                    shift -= 8; // write them out (from the top, leaving any
-                    out[index++] = // excess at the bottom for next iteration.
-                            (byte) ((accum >> shift) & 0xff);
+            // skip over non-code
+            if (value >= 0) {
+                // bits shift up by 6 each time thru
+                accum <<= 6;
+                // loop, with new bits being put in
+                shift += 6;
+                // at the bottom.
+                accum |= value;
+                // whenever there are 8 or more shifted in,
+                if (shift >= 8) {
+                    // write them out (from the top, leaving any
+                    shift -= 8;
+                    // excess at the bottom for next iteration.
+                    out[index++] = (byte) ((accum >> shift) & 0xff);
                 }
             }
         }
@@ -137,10 +131,8 @@ public class Base64Utils {
 
     /**
      * 功能：编码文件
-     *
      * @param file 源文件
-     * @author jiangshuai
-     * @date 2016年10月03日
+     * @throws IOException
      */
     public static void encode(File file) throws IOException {
         if (!file.exists()) {
@@ -155,11 +147,8 @@ public class Base64Utils {
 
     /**
      * 功能：解码文件。
-     *
      * @param file 源文件
      * @throws IOException
-     * @author jiangshuai
-     * @date 2016年10月03日
      */
     public static void decode(File file) throws IOException {
         if (!file.exists()) {
@@ -172,34 +161,30 @@ public class Base64Utils {
         file = null;
     }
 
-    //
-    // code characters for values 0..63
-    //
+    /**
+     * code characters for values 0..63
+     */
     private static char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
             .toCharArray();
 
-    //
-    // lookup table for converting base64 characters to value in range 0..63
-    //
+    /**
+     * lookup table for converting base64 characters to value in range 0..63
+     */
     private static byte[] codes = new byte[256];
 
     static {
         for (int i = 0; i < 256; i++) {
             codes[i] = -1;
-            // LoggerUtil.debug(i + "&" + codes[i] + " ");
         }
         for (int i = 'A'; i <= 'Z'; i++) {
             codes[i] = (byte) (i - 'A');
-            // LoggerUtil.debug(i + "&" + codes[i] + " ");
         }
 
         for (int i = 'a'; i <= 'z'; i++) {
             codes[i] = (byte) (26 + i - 'a');
-            // LoggerUtil.debug(i + "&" + codes[i] + " ");
         }
         for (int i = '0'; i <= '9'; i++) {
             codes[i] = (byte) (52 + i - '0');
-            // LoggerUtil.debug(i + "&" + codes[i] + " ");
         }
         codes['+'] = 62;
         codes['/'] = 63;
@@ -279,12 +264,10 @@ public class Base64Utils {
 
         } finally {
             try {
-                if (os != null) {
+                if (os != null)
                     os.close();
-                }
-                if (fos != null) {
+                if (fos != null)
                     fos.close();
-                }
             } catch (Exception e) {
                 System.out.println(e);
             }
@@ -301,12 +284,10 @@ public class Base64Utils {
 
         } finally {
             try {
-                if (os != null) {
+                if (os != null)
                     os.close();
-                }
-                if (fos != null) {
+                if (fos != null)
                     fos.close();
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
