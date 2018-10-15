@@ -6,6 +6,15 @@ spring:
     user:
       name: root
       password: 123456
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+        password: admin
+        username: 123456
+        instance:
+          # 将IP注册到Eureka Server上，而如果不配置就是机器的主机名
+          prefer-ip: true
 
 # 注册端口号
 server:
@@ -40,9 +49,12 @@ eureka:
     # 状态页面的URL，相对路径，默认使用 HTTP 访问，如果需要使用 HTTPS则需要使用绝对路径配置
     status-page-url: /actuator/info
     # 健康检查页面的URL，相对路径，默认使用 HTTP 访问，如果需要使用 HTTPS则需要使用绝对路径配置
-    health-check-url: /actuator/health
+    secure-health-check-url: http://localhost:${server.port}/actuator/health
     # 健康检查页面的URL，绝对路径
     health-check-url-path: /actuator
+    metadata-map:
+      "user.name": ${spring.security.user.name}         #These two are needed so that the server
+      "user.password": ${spring.security.user.password} #can access the protected client endpoints
   client:
     # 是否注册为服务
     register-with-eureka: true
