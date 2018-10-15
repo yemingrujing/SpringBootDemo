@@ -72,6 +72,12 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <!-- 没有该配置，devtools 不生效 -->
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                    <mainClass>com.example.bootAdminServer.AdminServerApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

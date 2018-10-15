@@ -1,4 +1,4 @@
-package com.eurekaClient;
+package com.example.eurekaClient;
 
 import io.swagger.annotations.Api;
 import org.springframework.context.annotation.Configuration;

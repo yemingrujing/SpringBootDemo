@@ -84,7 +84,7 @@
                     <!-- 没有该配置，devtools 不生效 -->
                     <fork>true</fork>
                     <addResources>true</addResources>
-                    <mainClass>com.eurekaServer.EurekaServerApplication</mainClass>
+                    <mainClass>com.example.eurekaServer.EurekaServerApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

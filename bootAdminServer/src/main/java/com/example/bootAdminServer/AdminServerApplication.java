@@ -1,4 +1,4 @@
-package com.bootAdminServer;
+package com.example.bootAdminServer;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import de.codecentric.boot.admin.server.config.EnableAdminServer;
@@ -26,7 +26,7 @@ public class AdminServerApplication {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.authorizeRequests().anyRequest().permitAll()//
+            http.authorizeRequests().anyRequest().permitAll()
                     .and().csrf().disable();
         }
     }

@@ -1,4 +1,4 @@
-package com.eurekaServer;
+package com.example.eurekaServer;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
