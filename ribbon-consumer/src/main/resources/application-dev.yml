@@ -1,0 +1,60 @@
+server:
+  port: 1111
+
+
+eureka:
+  instance:
+    hostname: localhost
+    server-hostname: localhost
+    # 定义服务续约任务（心跳）的调用间隔，单位：秒
+    lease-renewal-interval-in-seconds: 10
+    # 获取此实例的绝对安全健康检查网页的URL路径，默认为null
+    secure-health-check-url: http://localhost:${server.port}/actuator/health
+    metadata-map:
+      "user.name": ${spring.security.user.name}         #These two are needed so that the server
+      "user.password": ${spring.security.user.password} #can access the protected client endpoints
+  client:
+    # 从eureka服务器注册表中获取注册信息的时间间隔（s），默认为30秒
+    registry-fetch-interval-seconds: 5
+    service-url:
+      # 服务注册中心的配置内容，指定服务注册中心的位置
+      defaultZone: ${EUREKA_SERVICE_URL:http://root:123456@localhost:8761}/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+  info:
+    git:
+      mode: simple
+      enabled: true
+
+spring:
+  application:
+    name: EUREKA.CONSUMER
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
+        password: admin
+        username: 123456
+        instance:
+          # 将IP注册到Eureka Server上，而如果不配置就是机器的主机名
+          prefer-ip: true
+  security:
+    user:
+      name: admin
+      password: 123456
+
+#-----------------------编写者相关信息----------------------
+info:
+  owner: guangwei
+  version: '@project.version@'
+  app:
+    name: "@project.name@"
+    version: "@project.version@"
+    description: "@project.description@"
+    git: "@git-commit-id-plugin.version@"
