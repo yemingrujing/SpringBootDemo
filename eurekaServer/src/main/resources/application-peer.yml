@@ -39,9 +39,9 @@ eureka:
     # 注册时显示ip
     prefer-ip-address: true
     # IP地址
-    #ip-address: localhost
+    ip-address: 127.0.0.1
     # 设置当前实例的主机名称
-    hostname: 127.0.0.1
+    hostname: localhost
     # 定义服务续约任务（心跳）的调用间隔，单位：秒
     lease-renewal-interval-in-seconds: 30
     # 定义服务失效的时间，单位：秒
@@ -60,6 +60,8 @@ eureka:
     register-with-eureka: true
     # 是否检索服务
     fetch-registry: true
+    # 启用Eureka客户端(默认为true)
+    enabled: true
     # 定义服务续约任务（心跳）的调用间隔，单位：秒
     service-url:
       # eureka默认空间的地址

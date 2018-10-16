@@ -42,11 +42,15 @@ spring:
 # tag::configuration-eureka[]
 eureka:   #<1>
   instance:
-    leaseRenewalIntervalInSeconds: 10 #2.0后actuator的地址发生了变化
+    #2.0后actuator的地址发生了变化
+    leaseRenewalIntervalInSeconds: 10
     secure-health-check-url: http://localhost:${server.port}/actuator/health
     metadata-map:
-      "user.name": ${spring.security.user.name}         #These two are needed so that the server
-      "user.password": ${spring.security.user.password} #can access the protected client endpoints
+      #These two are needed so that the server
+      "user.name": ${spring.security.user.name}
+      #can access the protected client endpoints
+      "user.password": ${spring.security.user.password}
+    hostname: localhost
   client:
     registryFetchIntervalSeconds: 5
     serviceUrl:

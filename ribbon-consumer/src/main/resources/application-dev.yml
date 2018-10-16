@@ -5,7 +5,6 @@ server:
 eureka:
   instance:
     hostname: localhost
-    server-hostname: localhost
     # 定义服务续约任务（心跳）的调用间隔，单位：秒
     lease-renewal-interval-in-seconds: 10
     # 获取此实例的绝对安全健康检查网页的URL路径，默认为null

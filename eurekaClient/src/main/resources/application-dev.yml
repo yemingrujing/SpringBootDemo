@@ -5,7 +5,6 @@ server:
 eureka:
   instance:
     hostname: localhost
-    server-hostname: localhost
     # 定义服务续约任务（心跳）的调用间隔，单位：秒
     lease-renewal-interval-in-seconds: 10
     # 获取此实例的绝对安全健康检查网页的URL路径，默认为null
@@ -19,6 +18,8 @@ eureka:
     service-url:
       # 服务注册中心的配置内容，指定服务注册中心的位置
       defaultZone: ${EUREKA_SERVICE_URL:http://root:123456@localhost:8761}/eureka/
+    # 启用Eureka客户端(默认为true)
+    enabled: true
 management:
   endpoints:
     web:
