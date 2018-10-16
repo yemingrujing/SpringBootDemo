@@ -1,7 +1,7 @@
 # appname默认
 spring:
   application:
-    name: Eureka_2-H.A.
+    name: EurekaServer-H.A.
   security:
     user:
       name: root

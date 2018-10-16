@@ -16,6 +16,7 @@
         <module>eurekaServer</module>
         <module>bootAdminServer</module>
         <module>eurekaClient</module>
+        <module>ribbon-consumer</module>
     </modules>
     <packaging>pom</packaging>
 

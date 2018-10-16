@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8083
 
 
 eureka:
@@ -18,7 +18,7 @@ eureka:
     registry-fetch-interval-seconds: 5
     service-url:
       # 服务注册中心的配置内容，指定服务注册中心的位置
-      defaultZone: ${EUREKA_SERVICE_URL:http://root:123456@localhost:8761}/eureka/
+      defaultZone: ${EUREKA_SERVICE_URL:http://root:123456@localhost:8762}/eureka/
 management:
   endpoints:
     web:
