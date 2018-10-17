@@ -1,10 +1,13 @@
 package com.example.util.common;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 /**
@@ -18,6 +21,7 @@ public class StringUtil {
     public static final String allChar = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static final String letterChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static final String numberChar = "0123456789";
+    private static final AtomicInteger atomicInteger = new AtomicInteger(10000);
 
     /**
      * 首字母变小写
@@ -662,6 +666,17 @@ public class StringUtil {
             }
         }
         return reault;
+    }
+
+    /**
+     * 生成订单号
+     * @return
+     */
+    public static String generateOrderNo(String type) {
+        String temp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        atomicInteger.getAndIncrement();
+        int num = atomicInteger.get();
+        return type + temp + num;
     }
 
 //    public static void main(String[] a){
