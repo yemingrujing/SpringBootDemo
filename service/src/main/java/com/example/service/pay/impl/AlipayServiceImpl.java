@@ -13,6 +13,7 @@ import com.alipay.api.internal.util.StringUtils;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.example.service.pay.AlipayService;
 import com.example.util.common.StringUtil;
 import com.example.util.pay.AlipayParam;
@@ -318,6 +319,7 @@ public class AlipayServiceImpl implements AlipayService {
                 AlipayParam.SIGN_TYPE);
         AlipayTradeWapPayModel wapPayModel = new AlipayTradeWapPayModel();
         AlipayTradeWapPayRequest wapPayRequest = new AlipayTradeWapPayRequest();
+        AlipayTradeWapPayResponse wapPayResponse;
         // 商户订单号，商户网站订单系统中唯一订单号，必填
         String outradeNo = StringUtil.generateOrderNo("1");
         // 订单名称，必填
@@ -341,16 +343,22 @@ public class AlipayServiceImpl implements AlipayService {
         wapPayRequest.setNotifyUrl(AlipayParam.SIGN_PAY_NOTIFY_URL);
         // 设置同步地址
         wapPayRequest.setReturnUrl(AlipayParam.RETURN_URL);
-        // form表单生产
-        String form;
         try {
             // 调用SDK生成表单
-            form = alipayClient.pageExecute(wapPayRequest).getBody();
-            response.setContentType("text/html;charset=" + AlipayParam.CHARSET);
-            //直接将完整的表单html输出到页面
-            response.getWriter().write(form);
-            response.getWriter().flush();
-            response.getWriter().close();
+            wapPayResponse = alipayClient.pageExecute(wapPayRequest);
+            if (wapPayResponse.isSuccess()) {
+                String form = wapPayResponse.getBody();
+                response.setContentType("text/html;charset=" + AlipayParam.CHARSET);
+                //直接将完整的表单html输出到页面
+                response.getWriter().write(form);
+                response.getWriter().flush();
+                response.getWriter().close();
+            } else {
+                response.getWriter().write("支付失败，请联系管理员");
+                response.getWriter().flush();
+                response.getWriter().close();
+                log.error("支付失败：{form表单生产生成失败}");
+            }
         } catch (AlipayApiException e) {
             e.printStackTrace();
             log.error("支付失败", ExceptionUtils.getStackTrace(e));
