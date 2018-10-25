@@ -166,6 +166,19 @@
             <version>0.9.11</version>
         </dependency>
 
+        <!-- 视频截图 -->
+        <dependency>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>javacv-platform</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        <!-- gif -->
+        <dependency>
+            <groupId>com.madgag</groupId>
+            <artifactId>animated-gif-lib</artifactId>
+            <version>1.4</version>
+        </dependency>
+
         <!--<dependency>
             <groupId>com.chinapay</groupId>
             <artifactId>secure</artifactId>
