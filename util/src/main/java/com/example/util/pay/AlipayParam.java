@@ -76,5 +76,5 @@ public class AlipayParam {
     /**
      * wap网页支付同步地址
      */
-    public static final String RETURN_URL = "http://www.baidu.com";
+    public static final String RETURN_URL = "http://180.175.3.26:9901/app/paysuccess";
 }
