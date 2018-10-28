@@ -3,7 +3,6 @@ package com.example.controller.pay;
 import com.example.service.pay.AlipayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,7 @@ public class AlipayController {
      * 手机网页支付
      * @param response
      */
-    @PostMapping(value = "/pay/alibaba/wapPay")
+    @GetMapping(value = "/pay/alibaba/wapPay")
     public void wapPay(HttpServletResponse response) {
         alipayService.wapPay(response);
     }
