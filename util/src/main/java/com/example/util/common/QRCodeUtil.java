@@ -569,15 +569,15 @@ public class QRCodeUtil {
         //不含LOGO
         QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
         //含LOGO，不指定二维码图片
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆");
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆商友会");
         //含LOGO，指定二维码图片名
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆");
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆商友会");
 
         //含LOGO，背景图
         QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg", true);
         //背景图
         QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
         //含LOGO，背景图，文本
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆");
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆商友会");
     }
 }
