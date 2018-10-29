@@ -56,7 +56,7 @@ public class QRCodeUtil {
     /**
      * 左上角颜色
      */
-    private static final int RADIUS = 65;
+    private static final int RADIUS = 60;
 
     /**
      * 边框边距
@@ -117,7 +117,11 @@ public class QRCodeUtil {
                 MatrixToImageConfig config = new MatrixToImageConfig(QRCOLOR, BGWHITE);
                 if (x > 0 && x < RADIUS && y > 0 && y < RADIUS) {
                     image.setRGB(x, y, bitMatrix.get(x, y) ? Color.RED.getRGB() : config.getPixelOffColor());
-                } else {
+                } else if(x > QRCODE_SIZE - RADIUS && x < QRCODE_SIZE && y > 0 && y < RADIUS) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? Color.RED.getRGB() : config.getPixelOffColor());
+                } else if(x > 0 && x < RADIUS && y > QRCODE_SIZE - RADIUS && y < QRCODE_SIZE) {
+                    image.setRGB(x, y, bitMatrix.get(x, y) ? Color.RED.getRGB() : config.getPixelOffColor());
+                }  else {
                     // 开始利用二维码数据创建Bitmap图片
                     image.setRGB(x, y, bitMatrix.get(x, y) ? config.getPixelOnColor() : config.getPixelOffColor());
                 }
@@ -560,20 +564,20 @@ public class QRCodeUtil {
         return QRCodeUtil.decode(new File(path));
     }
 
-//    public static void main(String[] args) throws Exception {
-//        String text = "http://180.175.3.246:9000/bank/queryBankList";
-//        //不含LOGO
-//        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
-//        //含LOGO，不指定二维码图片
-//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆");
-//        //含LOGO，指定二维码图片名
-//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆");
-//
-//        //含LOGO，背景图
-//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg", true);
-//        //背景图
-//        QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
-//        //含LOGO，背景图，文本
-//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆");
-//    }
+    public static void main(String[] args) throws Exception {
+        String text = "http://192.168.168.5:9901/app/listensignin/?activityId=68";
+        //不含LOGO
+        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
+        //含LOGO，不指定二维码图片
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆");
+        //含LOGO，指定二维码图片名
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆");
+
+        //含LOGO，背景图
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg", true);
+        //背景图
+        QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
+        //含LOGO，背景图，文本
+        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆");
+    }
 }
