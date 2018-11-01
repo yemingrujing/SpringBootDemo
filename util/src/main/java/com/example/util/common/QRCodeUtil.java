@@ -579,5 +579,7 @@ public class QRCodeUtil {
         QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
         //含LOGO，背景图，文本
         QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆商友会");
+        //含LOGO，文本
+        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null, "淘美妆商友会");
     }
 }
