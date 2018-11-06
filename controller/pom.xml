@@ -132,7 +132,6 @@
                     <!-- 没有该配置，devtools 不生效 -->
                     <fork>true</fork>
                     <addResources>true</addResources>
-                    <mainClass>com.example.ControllerApplication</mainClass>
                 </configuration>
             </plugin>
         </plugins>

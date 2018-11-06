@@ -89,19 +89,4 @@
             <version>3.3.4.ALL</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <classifier>exec</classifier>
-                    <mainClass>com.example.ControllerApplication</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-
 </project>
