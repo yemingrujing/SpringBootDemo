@@ -1,4 +1,4 @@
-package com.example.util.common;
+package com.example.util.common.dbTOdoc;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -33,7 +33,7 @@ public class JDBCUtils {
     /**
      * 数据库地址
      */
-    private static final String URL = "jdbc:mysql://192.168.168.5:3306/commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull";
+    private static final String URL = "jdbc:mysql://192.168.168.5:3306/test-commerce?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&autoReconnectForPools=true&zeroDateTimeBehavior=convertToNull";
 
     //数据库连接
     private static Connection connection;

@@ -1,4 +1,4 @@
-package com.example.util.chinapay;
+package com.example.util.login;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
@@ -71,7 +71,8 @@ public class EncrypDES {
      * Description 根据键值进行解密
      *
      * @param data
-     * @param key  加密键byte数组
+     * @param key
+     *            加密键byte数组
      * @return
      * @throws IOException
      * @throws Exception
@@ -90,7 +91,8 @@ public class EncrypDES {
      * Description 根据键值进行加密
      *
      * @param data
-     * @param key  加密键byte数组
+     * @param key
+     *            加密键byte数组
      * @return
      * @throws Exception
      */
@@ -119,7 +121,8 @@ public class EncrypDES {
      * Description 根据键值进行解密
      *
      * @param data
-     * @param key  加密键byte数组
+     * @param key
+     *            加密键byte数组
      * @return
      * @throws Exception
      */
@@ -167,39 +170,5 @@ public class EncrypDES {
             }
         }
         return hs.toUpperCase();
-    }
-
-    /**
-     * token加密
-     *
-     * @param phone
-     * @param token
-     * @param args
-     * @return
-     */
-    public static String encode(String phone, String token, String... args) throws Exception {
-        StringBuilder builder = new StringBuilder(phone + ":" + token);
-        for (String s : args) {
-            builder.append(":" + s);
-        }
-        return encrypt(builder.toString());
-    }
-
-    /**
-     * token解密
-     *
-     * @param data
-     * @return
-     */
-    public static String[] decode(String data) throws Exception {
-        String str = decrypt(data);
-        return str.split(":");
-    }
-
-    public static void main(String[] args) throws Exception {
-        System.out.println(encode("18356238002", "D78098E2D1BA5AC7F19CA7F476BC88E1"));
-        System.out.println(decode(encode("18356238002", "FBBA28FD0DEC35D31A97312BDC959846"))[1]);
-        System.out.println(encrypt("2324234234234", EncrypDES.unionSMS));
-        System.out.println(decrypt("WAixAuL7Ypyzh35dKpyKi70djykJDmSG", EncrypDES.unionSMS));
     }
 }

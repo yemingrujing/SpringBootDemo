@@ -1,12 +1,10 @@
 package com.example.util.chinapay;
 
-import cn.hutool.core.io.resource.ClassPathResource;
+import com.example.util.common.LoadProperties;
 import com.example.util.common.StringUtil;
 import com.example.util.constant.SDKConstants;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
 import java.util.Properties;
 
 /**
@@ -16,7 +14,7 @@ import java.util.Properties;
  * @create 2018-09-15 9:52
  **/
 @Slf4j
-public class SDKConfig {
+public class SDKConfig extends LoadProperties {
 
     /**
      * 商户号
@@ -74,18 +72,17 @@ public class SDKConfig {
     public static final String SDK_IF_VALIDATE_REMOTE_CERT = "acpsdk.ifValidateRemoteCert";
 
 
+
     /**
      * 操作对象
      */
     private static SDKConfig config = new SDKConfig();
-
     private SDKConfig() {
-        super();
+        this.setFileName(SecssConfig.FILE_NAME);
     }
 
     /**
      * 获取config对象.
-     *
      * @return
      */
     public static SDKConfig getConfig() {
@@ -93,119 +90,64 @@ public class SDKConfig {
     }
 
     /**
-     * 从properties文件加载
-     *
-     * @param rootPath 不包含文件名的目录.
-     */
-    public void loadPropertiesFromPath(String rootPath) {
-        if (StringUtils.isNotBlank(rootPath)) {
-            log.info("从路径读取配置文件: " + rootPath + File.separator + SecssConfig.FILE_NAME);
-            File file = new File(rootPath + File.separator + SecssConfig.FILE_NAME);
-            InputStream in = null;
-            if (file.exists()) {
-                try {
-                    in = new FileInputStream(file);
-                    properties = new Properties();
-                    properties.load(in);
-                    loadProperties(properties);
-                } catch (FileNotFoundException e) {
-                    log.error(e.getMessage(), e);
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                } finally {
-                    if (null != in) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            log.error(e.getMessage(), e);
-                        }
-                    }
-                }
-            } else {
-                // 由于此时可能还没有完成LOG的加载，因此采用标准输出来打印日志信息
-                log.error(rootPath + SecssConfig.FILE_NAME + "不存在,加载参数失败");
-            }
-        } else {
-            loadPropertiesFromSrc();
-        }
-    }
-
-    /**
-     * 从classpath路径下加载配置参数
-     */
-    public void loadPropertiesFromSrc() {
-        InputStream in = null;
-        try {
-            log.info("从classpath: " + SDKConfig.class.getClassLoader().getResource("").getPath() + " 获取属性文件：" + SecssConfig.FILE_NAME);
-            //in = SDKConfig.class.getClassLoader().getResourceAsStream(FILE_NAME);
-            in = new ClassPathResource(SecssConfig.FILE_NAME).getStream();
-            if (null != in) {
-                properties = new Properties();
-                try {
-                    properties.load(in);
-                } catch (IOException e) {
-                    throw e;
-                }
-            } else {
-                log.error(SecssConfig.FILE_NAME + "属性文件未能在classpath指定的目录下 " + SDKConfig.class.getClassLoader().getResource("").getPath() + " 找到!");
-                return;
-            }
-            loadProperties(properties);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        } finally {
-            if (null != in) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }
-    }
-
-    /**
      * 根据传入的 {@link #load(Properties)}对象设置配置参数
      *
      * @param pro
      */
+    @Override
     public void loadProperties(Properties pro) {
         log.info("开始从属性文件中加载配置项");
         String value = null;
 
         value = pro.getProperty(SecssConstants.SDK_FRONT_URL);
+        log.info(SecssConstants.SDK_FRONT_URL + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.frontRequestUrl = value.trim();
         }
+
         value = pro.getProperty(SecssConstants.SDK_BACK_URL);
+        log.info(SecssConstants.SDK_BACK_URL + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.backRequestUrl = value.trim();
         }
         value = pro.getProperty(SecssConstants.SDK_REFUND_URL);
+        log.info(SecssConstants.SDK_REFUND_URL + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.refundTransUrl = value.trim();
         }
+
         value = pro.getProperty(SecssConstants.MERID);
+        log.info(SecssConstants.MERID + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.merId = value.trim();
         }
+
         value = pro.getProperty(SecssConstants.VERSION);
+        log.info(SecssConstants.VERSION + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.version = value.trim();
         }
+
         value = pro.getProperty(SecssConstants.SIGNCALLBACK);
+        log.info(SecssConstants.SIGNCALLBACK + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.signBackUrl = value.trim();
         }
+
         value = pro.getProperty(SecssConstants.PAYCALLBACK);
+        log.info(SecssConstants.PAYCALLBACK + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.payBackUrl = value.trim();
         }
+
         value = pro.getProperty(SecssConstants.REFUNDBACKURL);
+        log.info(SecssConstants.REFUNDBACKURL + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             this.refundBackUrl = value.trim();
         }
+
         value = pro.getProperty(SDK_IF_VALIDATE_REMOTE_CERT);
+        log.info(SDK_IF_VALIDATE_REMOTE_CERT + ":" + value);
         if (StringUtil.isNotBlank(value)) {
             if (SDKConstants.TRUE_STRING.equals(value.trim())) {
                 this.ifValidateRemoteCert = true;

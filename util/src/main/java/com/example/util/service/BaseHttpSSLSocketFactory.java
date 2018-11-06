@@ -14,7 +14,7 @@
  */
 package com.example.util.service;
 
-import com.example.util.unionpay.LogUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.net.ssl.*;
 import java.io.IOException;
@@ -24,12 +24,12 @@ import java.net.UnknownHostException;
 import java.security.cert.X509Certificate;
 
 /**
- *
  * @ClassName BaseHttpSSLSocketFactory
  * @Description 忽略验证ssl证书
  * @date 2016-7-22 下午4:10:14
  * 声明：以下代码只是为了方便商户测试而提供的样例代码，商户可以根据自己需要，按照技术文档编写。该代码仅供参考，不提供编码，性能，规范性等方面的保障<br>
  */
+@Slf4j
 public class BaseHttpSSLSocketFactory extends SSLSocketFactory {
     private SSLContext getSSLContext() {
         return createEasySSLContext();
@@ -86,7 +86,7 @@ public class BaseHttpSSLSocketFactory extends SSLSocketFactory {
                     new TrustManager[]{MyX509TrustManager.manger}, null);
             return context;
         } catch (Exception e) {
-            LogUtil.writeErrorLog(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -98,13 +98,16 @@ public class BaseHttpSSLSocketFactory extends SSLSocketFactory {
         public MyX509TrustManager() {
         }
 
+        @Override
         public X509Certificate[] getAcceptedIssuers() {
             return null;
         }
 
+        @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) {
         }
 
+        @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) {
         }
     }
@@ -113,6 +116,7 @@ public class BaseHttpSSLSocketFactory extends SSLSocketFactory {
      * 解决由于服务器证书问题导致HTTPS无法访问的情况 PS:HTTPS hostname wrong: should be <localhost>
      */
     public static class TrustAnyHostnameVerifier implements HostnameVerifier {
+        @Override
         public boolean verify(String hostname, SSLSession session) {
             //直接返回true
             return true;

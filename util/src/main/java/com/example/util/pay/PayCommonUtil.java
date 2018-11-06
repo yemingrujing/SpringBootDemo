@@ -3,6 +3,7 @@ package com.example.util.pay;
 import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.DateUtils;
 import com.example.util.common.MD5Util;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -15,11 +16,12 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * 支付通用方法类
+ * 支付功能类(微信使用)
  *
  * @author Wei.Guang
- * @create 2018-06-19 14:36
+ * @create 2018-11-06 14:08
  **/
+@Slf4j
 public class PayCommonUtil {
 
     public static String CreateNoncestr(int length) {
@@ -61,13 +63,12 @@ public class PayCommonUtil {
             }
         }
 
-        sb.append("key=" + PayParam.APIKEY);
+        sb.append("key=" + WXpayConfig.getConfig().getApiKey());
 
         //算出摘要
         String mysign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toLowerCase();
         String tenpaySign = ((String) packageParams.get("sign")).toLowerCase();
 
-        //System.out.println(tenpaySign + "    " + mysign);
         return tenpaySign.equals(mysign);
     }
 
@@ -91,7 +92,7 @@ public class PayCommonUtil {
                 sb.append(k + "=" + v + "&");
             }
         }
-        sb.append("key=" + PayParam.APIKEY);
+        sb.append("key=" + WXpayConfig.getConfig().getApiKey());
         String sign = MD5Util.MD5Encode(sb.toString(), characterEncoding).toUpperCase();
         return sign;
     }
@@ -182,9 +183,9 @@ public class PayCommonUtil {
             conn.disconnect();
             return buffer.toString();
         } catch (ConnectException ce) {
-//          log.error("连接超时：{}", ce);
+            log.error("连接超时：{}", ce);
         } catch (Exception e) {
-//          log.error("https请求异常：{}", e);
+            log.error("https请求异常：{}", e);
         }
         return null;
     }
@@ -229,14 +230,13 @@ public class PayCommonUtil {
             bufferedReader.close();
             inputStreamReader.close();
             inputStream.close();
-            inputStream = null;
             conn.disconnect();
             jsonObject = JSONObject.parseObject(buffer.toString());
         } catch (ConnectException ce) {
-//                    log.error("连接超时：{}", ce);
+            log.error("连接超时：{}", ce);
         } catch (Exception e) {
             System.out.println(e);
-//                    log.error("https请求异常：{}", e);
+            log.error("https请求异常：{}", e);
         }
         return jsonObject;
     }

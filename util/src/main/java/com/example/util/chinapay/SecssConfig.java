@@ -25,7 +25,7 @@ public class SecssConfig {
     private List invalidFileds;
 
     public static SecssConfig defaultInit()
-            throws java.lang.SecurityException {
+            throws SecurityException {
         SecssConfig secssConfig = null;
         Properties pros = loadPropertiesFromSrc();
         if (checkPros(pros)) {
@@ -36,7 +36,7 @@ public class SecssConfig {
     }
 
     public static SecssConfig specifyInit(Properties pros)
-            throws java.lang.SecurityException {
+            throws SecurityException {
         SecssConfig secssConfig = null;
         if (checkPros(pros)) {
             secssConfig = new SecssConfig();
@@ -46,7 +46,7 @@ public class SecssConfig {
     }
 
     private static Properties loadPropertiesFromSrc()
-            throws java.lang.SecurityException {
+            throws SecurityException {
         InputStream in = null;
         Properties properties = null;
         try {
@@ -69,7 +69,7 @@ public class SecssConfig {
         } catch (IOException e) {
             log.error("加载配置文件异常！", e);
 
-            throw new java.lang.SecurityException(SecssConstants.LOAD_CONFIG_ERROR);
+            throw new SecurityException(SecssConstants.LOAD_CONFIG_ERROR);
         } finally {
             if (in != null) {
                 try {
@@ -119,21 +119,21 @@ public class SecssConfig {
     }
 
     private static boolean checkPros(Properties pro)
-            throws java.lang.SecurityException {
+            throws SecurityException {
         if (SecssUtil.isEmpty(pro.getProperty(SecssConstants.SIGN_FILE))) {
-            throw new java.lang.SecurityException(SecssConstants.CONFIG_WRONG);
+            throw new SecurityException(SecssConstants.CONFIG_WRONG);
         }
         if (SecssUtil.isEmpty(pro.getProperty(SecssConstants.SIGN_FILE_PW))) {
-            throw new java.lang.SecurityException(SecssConstants.CONFIG_WRONG);
+            throw new SecurityException(SecssConstants.CONFIG_WRONG);
         }
         if (SecssUtil.isEmpty(pro.getProperty(SecssConstants.VERIFY_FILE))) {
-            throw new java.lang.SecurityException(SecssConstants.CONFIG_WRONG);
+            throw new SecurityException(SecssConstants.CONFIG_WRONG);
         }
         if (SecssUtil.isEmpty(pro.getProperty(SecssConstants.SIGN_CERT_TYPE))) {
-            throw new java.lang.SecurityException(SecssConstants.CONFIG_WRONG);
+            throw new SecurityException(SecssConstants.CONFIG_WRONG);
         }
         if (SecssUtil.isEmpty(pro.getProperty(SecssConstants.SIGNATURE_FIELD))) {
-            throw new java.lang.SecurityException(SecssConstants.CONFIG_WRONG);
+            throw new SecurityException(SecssConstants.CONFIG_WRONG);
         }
         return true;
     }

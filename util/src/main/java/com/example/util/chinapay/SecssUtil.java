@@ -1094,6 +1094,26 @@ public class SecssUtil {
     }
 
     /**
+     * 将Map中的数据转换成key1=value1&key2=value2的形式
+     *
+     * @param date 待拼接的Map数据
+     * @return
+     */
+    public static String coverMap2String(Map<String, Object> date) {
+        StringBuffer sb = new StringBuffer();
+        if (!date.isEmpty()) {
+            for (Map.Entry<String, Object> entry : date.entrySet()) {
+                if (entry.getValue() != null) {
+                    sb.append(entry.getKey() + "=" + entry.getValue() + "&");
+                }
+            }
+            return sb.substring(0, sb.length() - 1);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * 将形如key=value&key=value的字符串转换为相应的Map对象
      *
      * @param result

@@ -2,14 +2,16 @@ package com.example.controller.pay;
 
 import com.example.util.common.StringUtil;
 import com.example.util.common.XMLUtil;
+import com.example.util.pay.AlipayConfig;
 import com.example.util.pay.PayCommonUtil;
-import com.example.util.pay.PayParam;
+import com.example.util.pay.WXpayConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.jdom2.JDOMException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -26,6 +28,15 @@ import java.util.*;
 @RequestMapping("/pay")
 @Slf4j
 public class WxPayController {
+
+    /**
+     * 初始化WXPay参数
+     */
+    @PostConstruct
+    public void init() {
+        log.info("WXPay支付基础参数初始化");
+        WXpayConfig.getConfig().loadPropertiesFromSrc();
+    }
 
     /**
      * 微信统一下单接口
@@ -56,8 +67,8 @@ public class WxPayController {
 //        String notify_url  = "http://1f504p5895.51mypc.cn/cia/app/wxNotify";
 
         SortedMap<Object, Object> parameters = new TreeMap<Object, Object>();
-        parameters.put("appid", PayParam.APPID);
-        parameters.put("mch_id", PayParam.MCHID);
+        parameters.put("appid", WXpayConfig.getConfig().getAppId());
+        parameters.put("mch_id", WXpayConfig.getConfig().getMchId());
         parameters.put("nonce_str", PayCommonUtil.CreateNoncestr());
         parameters.put("body", "购买测试");
         //订单id
@@ -65,7 +76,7 @@ public class WxPayController {
         parameters.put("fee_type", "CNY");
         parameters.put("total_fee", String.valueOf(price100));
         parameters.put("spbill_create_ip", PayCommonUtil.getLocalIp(request));
-        parameters.put("notify_url", PayParam.NOTIFYURL);
+        parameters.put("notify_url", WXpayConfig.getConfig().getNotifyUrl());
         parameters.put("trade_type", "APP");
         //设置签名
         String sign = PayCommonUtil.createSign("UTF-8", parameters);
@@ -73,13 +84,13 @@ public class WxPayController {
         //封装请求参数
         String requestXML = PayCommonUtil.getRequestXml(parameters);
         //调用统一接口
-        String result = PayCommonUtil.httpsRequest(PayParam.PREPAYURL, "POST", requestXML);
+        String result = PayCommonUtil.httpsRequest(WXpayConfig.getConfig().getPrepayUrl(), "POST", requestXML);
         System.out.println("/n" + result);
         try {
             Map<String, String> map = XMLUtil.doXMLParse(result);
             SortedMap<Object, Object> parameterMap2 = new TreeMap<Object, Object>();
-            parameterMap2.put("appid", PayParam.APPID);
-            parameterMap2.put("partnerid", PayParam.MCHID);
+            parameterMap2.put("appid", WXpayConfig.getConfig().getAppId());
+            parameterMap2.put("partnerid", WXpayConfig.getConfig().getMchId());
             parameterMap2.put("prepayid", map.get("prepay_id"));
             parameterMap2.put("package", "Sign=WXPay");
             parameterMap2.put("package", PayCommonUtil.CreateNoncestr());
@@ -140,35 +151,15 @@ public class WxPayController {
         String resXml = "";
         if (PayCommonUtil.isTenpaySign("UTF-8", packageParams)) {
             if ("SUCCESS".equals(packageParams.get("result_code"))) {
-//                //支付成功
-//                //执行自己的业务逻辑
-//                String mch_id = (String) packageParams.get("mch_id"); //商户号
-//                String openid = (String) packageParams.get("openid");  //用户标识
-//                String out_trade_no = (String) packageParams.get("out_trade_no"); //商户订单号
-//                String total_fee = (String) packageParams.get("total_fee");
-//                String transaction_id = (String) packageParams.get("transaction_id"); //微信支付订单号
-//                //根据订单号查询订单信息
-//                GoodsTrade gt = new GoodsTrade();
-//                gt.setTid(out_trade_no);
-//                GoodsTrade trade = 订单查询;
-//                if (!PayParam.MCHID.equals(mch_id) || trade == null || new BigDecimal(total_fee).compareTo(new BigDecimal(trade.getPrice()).multiply(new BigDecimal(100))) != 0) {
-//                    log.info("支付失败,错误信息：" + "参数错误");
-//                    resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-//                            + "<return_msg><![CDATA[参数错误]]></return_msg>" + "</xml> ";
-//                } else {
-//                    if ("no_pay".equals(trade.getPayStatus()) && "wait_buyer_pay".equals(trade.getStatus())) {//支付的价格
-//                        //订单状态的修改。根据实际业务逻辑执行
-//
-//
-//                        resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-//                                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-//
-//                    } else {
-//                        resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-//                                + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-//                        log.info("订单已处理");
-//                    }
-//                }
+                //支付成功
+                //执行自己的业务逻辑
+                String mchId = (String) packageParams.get("mch_id"); //商户号
+                String openid = (String) packageParams.get("openid");  //用户标识
+                String outTradeNo = (String) packageParams.get("out_trade_no"); //商户订单号
+                String totalFee = (String) packageParams.get("total_fee");
+                String transactionId = (String) packageParams.get("transaction_id"); //微信支付订单号
+                //根据订单号查询订单信息
+
             } else {
                 log.info("支付失败,错误信息：" + packageParams.get("err_code"));
                 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
@@ -208,14 +199,14 @@ public class WxPayController {
         }
         Map<String, String> restMap = null;
         SortedMap<Object, Object> param = new TreeMap<Object, Object>();
-        param.put("appid", PayParam.APPID);
-        param.put("mch_id", PayParam.MCHID);
+        param.put("appid", WXpayConfig.getConfig().getAppId());
+        param.put("mch_id", WXpayConfig.getConfig().getMchId());
         param.put("transaction_id", tradeno);
         param.put("out_trade_no", orderno);
         param.put("nonce_str", PayCommonUtil.CreateNoncestr());
         param.put("sign", PayCommonUtil.createSign("UTF-8", param));
         String requestXML = PayCommonUtil.getRequestXml(param);
-        String restXML = PayCommonUtil.httpsRequest(PayParam.ORDERPAYQUERY, "UTF-8", requestXML);
+        String restXML = PayCommonUtil.httpsRequest(WXpayConfig.getConfig().getOrderPayQuery(), "UTF-8", requestXML);
         try {
             Map<String, String> map = XMLUtil.doXMLParse(restXML);
             if (!map.isEmpty() && "success".equals(map.get("result_code"))) {
@@ -254,8 +245,8 @@ public class WxPayController {
 
         Map<String, String> restmap = null;
         SortedMap<Object, Object> param = new TreeMap<Object, Object>();
-        param.put("appid", PayParam.APPID);
-        param.put("mch_id", PayParam.MCHID);
+        param.put("appid", WXpayConfig.getConfig().getAppId());
+        param.put("mch_id", WXpayConfig.getConfig().getMchId());
         param.put("nonce_str", PayCommonUtil.CreateNoncestr());
         param.put("transaction_id", tradeno);
         //订单号
@@ -266,12 +257,12 @@ public class WxPayController {
         param.put("total_fee", "10");
         //退款金额
         param.put("refund_fee", "10");
-        param.put("op_user_id", PayParam.MCHID);
+        param.put("op_user_id", WXpayConfig.getConfig().getMchId());
         //退款方式
         param.put("refund_account", "REFUND_SOURCE_RECHARGE_FUNDS");
         param.put("sign", PayCommonUtil.createSign("UTF-8", param));
         String resultXML = PayCommonUtil.getRequestXml(param);
-        String restXML = PayCommonUtil.httpsRequest(PayParam.ORDERREFUND, "UTF-8", resultXML);
+        String restXML = PayCommonUtil.httpsRequest(WXpayConfig.getConfig().getOrderRefund(), "UTF-8", resultXML);
         try {
             restmap = XMLUtil.doXMLParse(restXML);
             Map<String, String> refundMap = new HashMap<String, String>();
@@ -319,15 +310,15 @@ public class WxPayController {
         }
         Map<String, String> restMap = null;
         SortedMap<Object, Object> param = new TreeMap<Object, Object>();
-        param.put("appid", PayParam.APPID);
-        param.put("mch_id", PayParam.MCHID);
+        param.put("appid", WXpayConfig.getConfig().getAppId());
+        param.put("mch_id", WXpayConfig.getConfig().getMchId());
         param.put("transaction_id", tradeno);
         param.put("out_trade_no", orderno);
         param.put("refund_id", refundid);
         param.put("out_refund_no", refundno);
         param.put("nonce_str", PayCommonUtil.CreateNoncestr());
         param.put("sign", PayCommonUtil.createSign("UTF-8", param));
-        String restXML = PayCommonUtil.httpsRequest(PayParam.ORDERREFUNDQUERY, "UTF-8", PayCommonUtil.getRequestXml(param));
+        String restXML = PayCommonUtil.httpsRequest(WXpayConfig.getConfig().getOrderRefundQuery(), "UTF-8", PayCommonUtil.getRequestXml(param));
         try {
             restMap = XMLUtil.doXMLParse(restXML);
             Map<String, String> refundMap = new HashMap<>();

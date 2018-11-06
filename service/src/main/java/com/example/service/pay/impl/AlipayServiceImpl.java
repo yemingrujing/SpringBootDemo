@@ -16,11 +16,12 @@ import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.alipay.api.response.AlipayTradeWapPayResponse;
 import com.example.service.pay.AlipayService;
 import com.example.util.common.StringUtil;
-import com.example.util.pay.AlipayParam;
+import com.example.util.pay.AlipayConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,6 +46,14 @@ import java.util.*;
 @Slf4j
 public class AlipayServiceImpl implements AlipayService {
 
+    /**
+     * 初始化AliPay参数
+     */
+    @PostConstruct
+    public void init() {
+        log.info("AliPay支付基础参数初始化");
+        AlipayConfig.getConfig().loadPropertiesFromSrc();
+    }
 
     @Override
     public String getSign(String orderCode, String subject, BigDecimal totalFee, String passbackParams, String method, String notifyUrl) throws UnsupportedEncodingException {
@@ -64,23 +73,23 @@ public class AlipayServiceImpl implements AlipayService {
         if (StringUtil.isNotEmpty(passbackParams)) {
             bizContent.put("passback_params", URLEncoder.encode(passbackParams, "UTF-8"));
         }
-        params.put("app_id", AlipayParam.APPID);
+        params.put("app_id", AlipayConfig.getConfig().getAppId());
         params.put("biz_content", JSON.toJSONString(bizContent));
         params.put("notify_url", notifyUrl);
-        params.put("charset", AlipayParam.CHARSET);
-        params.put("format", AlipayParam.FORMAT);
+        params.put("charset", AlipayConfig.getConfig().getCharSet());
+        params.put("format", AlipayConfig.getConfig().getCharSet());
         params.put("method", method);
-        params.put("sign_type", AlipayParam.SIGN_TYPE);
+        params.put("sign_type", AlipayConfig.getConfig().getSignType());
         params.put("timestamp", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        params.put("version", AlipayParam.VERSION);
+        params.put("version", AlipayConfig.getConfig().getVarsion());
         content = payParams(params, 0);
         try {
             sign = AlipaySignature.rsaSign(content.toString(),
-                    AlipayParam.APP_PRIVATE_KEY,
-                    AlipayParam.CHARSET,
+                    AlipayConfig.getConfig().getPrivateKey(),
+                    AlipayConfig.getConfig().getCharSet(),
                     AlipayConstants.SIGN_TYPE_RSA2);
             content = payParams(params, 1);
-            content.append("&sign=" + URLEncoder.encode(sign, AlipayParam.CHARSET));
+            content.append("&sign=" + URLEncoder.encode(sign, AlipayConfig.getConfig().getCharSet()));
         } catch (AlipayApiException e) {
             log.error("签名生成失败", ExceptionUtils.getStackTrace(e));
         }
@@ -99,9 +108,9 @@ public class AlipayServiceImpl implements AlipayService {
         try {
             PrintWriter out = response.getWriter();
             boolean flag = AlipaySignature.rsaCheckV1(params,
-                    AlipayParam.ALIPAY_PUBLIC_KEY,
-                    AlipayParam.CHARSET,
-                    AlipayParam.SIGN_TYPE);
+                    AlipayConfig.getConfig().getPublicKey(),
+                    AlipayConfig.getConfig().getCharSet(),
+                    AlipayConfig.getConfig().getSignType());
             if (flag) {
                 // 付款成功
                 if ("TRADE_SUCCESS".equals(params.get("trade_status"))) {
@@ -166,9 +175,9 @@ public class AlipayServiceImpl implements AlipayService {
         try {
             PrintWriter out = response.getWriter();
             boolean flag = AlipaySignature.rsaCheckV1(params,
-                    AlipayParam.ALIPAY_PUBLIC_KEY,
-                    AlipayParam.CHARSET,
-                    AlipayParam.SIGN_TYPE);
+                    AlipayConfig.getConfig().getPublicKey(),
+                    AlipayConfig.getConfig().getCharSet(),
+                    AlipayConfig.getConfig().getSignType());
             if (flag) {
                 // 付款成功
                 if ("TRADE_SUCCESS".equals(params.get("trade_status"))) {
@@ -219,9 +228,9 @@ public class AlipayServiceImpl implements AlipayService {
         try {
             PrintWriter out = response.getWriter();
             boolean flag = AlipaySignature.rsaCheckV1(params,
-                    AlipayParam.ALIPAY_PUBLIC_KEY,
-                    AlipayParam.CHARSET,
-                    AlipayParam.SIGN_TYPE);
+                    AlipayConfig.getConfig().getPublicKey(),
+                    AlipayConfig.getConfig().getCharSet(),
+                    AlipayConfig.getConfig().getSignType());
             if (flag) {
                 // 付款成功
                 if ("TRADE_SUCCESS".equals(params.get("trade_status"))) {
@@ -257,13 +266,13 @@ public class AlipayServiceImpl implements AlipayService {
     @Override
     public boolean refundOrder(String tradeNo, String refundReason) {
         String refundNo = "";
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayParam.GATE,
-                AlipayParam.APPID,
-                AlipayParam.APP_PRIVATE_KEY,
-                AlipayParam.FORMAT,
-                AlipayParam.CHARSET,
-                AlipayParam.ALIPAY_PUBLIC_KEY,
-                AlipayParam.SIGN_TYPE);
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.getConfig().getGate(),
+                AlipayConfig.getConfig().getAppId(),
+                AlipayConfig.getConfig().getPrivateKey(),
+                AlipayConfig.getConfig().getFormat(),
+                AlipayConfig.getConfig().getCharSet(),
+                AlipayConfig.getConfig().getPublicKey(),
+                AlipayConfig.getConfig().getSignType());
         AlipayTradeRefundApplyModel refundApplyModel = new AlipayTradeRefundApplyModel();
         AlipayTradeRefundResponse response;
         // 订单支付时传入的商户订单号
@@ -280,7 +289,7 @@ public class AlipayServiceImpl implements AlipayService {
         refundApplyModel.setRefundReason(refundReason);
         AlipayTradeRefundRequest refundRequest = new AlipayTradeRefundRequest();
         refundRequest.setBizModel(refundApplyModel);
-        refundRequest.setNotifyUrl(AlipayParam.REFUND_NOTIFY_URL);
+        refundRequest.setNotifyUrl(AlipayConfig.getConfig().getPayNotifyUrl());
         try {
             response = alipayClient.execute(refundRequest);
             if (response.isSuccess()) {
@@ -310,13 +319,13 @@ public class AlipayServiceImpl implements AlipayService {
 
     @Override
     public void wapPay(HttpServletResponse response) {
-        AlipayClient alipayClient = new DefaultAlipayClient(AlipayParam.GATE,
-                AlipayParam.APPID,
-                AlipayParam.APP_PRIVATE_KEY,
-                AlipayParam.FORMAT,
-                AlipayParam.CHARSET,
-                AlipayParam.ALIPAY_PUBLIC_KEY,
-                AlipayParam.SIGN_TYPE);
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.getConfig().getGate(),
+                AlipayConfig.getConfig().getAppId(),
+                AlipayConfig.getConfig().getPrivateKey(),
+                AlipayConfig.getConfig().getFormat(),
+                AlipayConfig.getConfig().getCharSet(),
+                AlipayConfig.getConfig().getPublicKey(),
+                AlipayConfig.getConfig().getSignType());
         AlipayTradeWapPayModel wapPayModel = new AlipayTradeWapPayModel();
         AlipayTradeWapPayRequest wapPayRequest = new AlipayTradeWapPayRequest();
         AlipayTradeWapPayResponse wapPayResponse;
@@ -340,15 +349,15 @@ public class AlipayServiceImpl implements AlipayService {
         wapPayModel.setProductCode(productCode);
         wapPayRequest.setBizModel(wapPayModel);
         // 设置异步通知地址
-        wapPayRequest.setNotifyUrl(AlipayParam.SIGN_PAY_NOTIFY_URL);
+        wapPayRequest.setNotifyUrl(AlipayConfig.getConfig().getPayNotifyUrl());
         // 设置同步地址
-        wapPayRequest.setReturnUrl(AlipayParam.RETURN_URL);
+        wapPayRequest.setReturnUrl(AlipayConfig.getConfig().getReturnUrl());
         try {
             // 调用SDK生成表单
             wapPayResponse = alipayClient.pageExecute(wapPayRequest);
             if (wapPayResponse.isSuccess()) {
                 String form = wapPayResponse.getBody();
-                response.setContentType("text/html;charset=" + AlipayParam.CHARSET);
+                response.setContentType("text/html;charset=" + AlipayConfig.getConfig().getCharSet());
                 //直接将完整的表单html输出到页面
                 response.getWriter().write(form);
                 response.getWriter().flush();
@@ -388,7 +397,7 @@ public class AlipayServiceImpl implements AlipayService {
                 if (type == 0) {
                     content.append((index == 0 ? "" : "&") + key + "=" + value);
                 } else {
-                    content.append((index == 0 ? "" : "&") + key + "=" + URLEncoder.encode(value, AlipayParam.CHARSET));
+                    content.append((index == 0 ? "" : "&") + key + "=" + URLEncoder.encode(value, AlipayConfig.getConfig().getCharSet()));
                 }
                 index++;
             }
