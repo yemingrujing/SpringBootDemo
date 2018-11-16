@@ -1,7 +1,7 @@
 package com.example.util.pay;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.util.common.DateUtils;
+import com.example.util.common.DateUtil;
 import com.example.util.common.MD5Util;
 import lombok.extern.slf4j.Slf4j;
 
@@ -268,7 +268,7 @@ public class PayCommonUtil {
      */
     public static String getRefundNo() {
         // 自增8位数 00000001
-        return "RNO" + DateUtils.formatDate(new Date(), DateUtils.TIME_STAMP_PATTERN) + "00000001";
+        return "RNO" + DateUtil.parseDateToStr(new Date(), DateUtil.DATE_TIME_FORMAT_YYYYMMDDHHMISS) + "00000001";
     }
 
     /**
@@ -278,6 +278,6 @@ public class PayCommonUtil {
      */
     public static String getTransferNo() {
         // 自增8位数 00000001
-        return "TNO" + DateUtils.formatDate(new Date(), DateUtils.TIME_STAMP_PATTERN) + "00000001";
+        return "TNO" + DateUtil.parseDateToStr(new Date(), DateUtil.DATE_TIME_FORMAT_YYYYMMDDHHMISS) + "00000001";
     }
 }
