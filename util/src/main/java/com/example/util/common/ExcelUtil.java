@@ -35,27 +35,34 @@ public class ExcelUtil<T> {
             HSSFWorkbook workbook = new HSSFWorkbook(input);
             HSSFSheet sheet = workbook.getSheet(sheetName);
             if (!sheetName.trim().equals("")) {
-                sheet = workbook.getSheet(sheetName);// 如果指定sheet名,则取指定sheet中的内容.
+                // 如果指定sheet名,则取指定sheet中的内容.
+                sheet = workbook.getSheet(sheetName);
             }
             if (sheet == null) {
-                sheet = workbook.getSheetAt(0); // 如果传入的sheet名不存在则默认指向第1个sheet.
+                // 如果传入的sheet名不存在则默认指向第1个sheet.
+                sheet = workbook.getSheetAt(0);
             }
             int rows = sheet.getPhysicalNumberOfRows();
-            if (rows > 0) {// 有数据时才处理
-                Field[] allFields = clazz.getDeclaredFields();// 得到类的所有field.
-                Map<Integer, Field> fieldsMap = new HashMap<Integer, Field>();// 定义一个map用于存放列的序号和field.
+            // 有数据时才处理
+            if (rows > 0) {
+                // 得到类的所有field.
+                Field[] allFields = clazz.getDeclaredFields();
+                // 定义一个map用于存放列的序号和field.
+                Map<Integer, Field> fieldsMap = new HashMap<>();
                 for (Field field : allFields) {
                     // 将有注解的field存放到map中.
                     if (field.isAnnotationPresent(ExcelVOAttribute.class)) {
                         ExcelVOAttribute attr = field
                                 .getAnnotation(ExcelVOAttribute.class);
-                        int col = getExcelCol(attr.column());// 获得列号
-                        // System.out.println(col + "====" + field.getName());
-                        field.setAccessible(true);// 设置类的私有字段属性可访问.
+                        // 获得列号
+                        int col = getExcelCol(attr.column());
+                        // 设置类的私有字段属性可访问.
+                        field.setAccessible(true);
                         fieldsMap.put(col, field);
                     }
                 }
-                for (int i = 1; i < rows; i++) {// 从第2行开始取数据,默认第一行是表头.
+                // 从第2行开始取数据,默认第一行是表头.
+                for (int i = 1; i < rows; i++) {
                     HSSFRow row = sheet.getRow(i);
                     int cellNum = row.getPhysicalNumberOfCells();
                     T entity = null;
@@ -66,7 +73,8 @@ public class ExcelUtil<T> {
                         }
                         String value = "";
                         switch (cell.getCellType()) {
-                            case HSSFCell.CELL_TYPE_NUMERIC: // 数字
+                            // 数字
+                            case HSSFCell.CELL_TYPE_NUMERIC:
                                 //如果为时间格式的内容
                                 if (HSSFDateUtil.isCellDateFormatted(cell)) {
                                     //注：format格式 yyyy-MM-dd hh:mm:ss 中小时为12小时制，若要24小时制，则把小h变为H即可，yyyy-MM-dd HH:mm:ss
@@ -78,19 +86,24 @@ public class ExcelUtil<T> {
                                     value = new DecimalFormat("0").format(cell.getNumericCellValue());
                                 }
                                 break;
-                            case HSSFCell.CELL_TYPE_STRING: // 字符串
+                            // 字符串
+                            case HSSFCell.CELL_TYPE_STRING:
                                 value = cell.getStringCellValue();
                                 break;
-                            case HSSFCell.CELL_TYPE_BOOLEAN: // Boolean
+                            // Boolean
+                            case HSSFCell.CELL_TYPE_BOOLEAN:
                                 value = cell.getBooleanCellValue() + "";
                                 break;
-                            case HSSFCell.CELL_TYPE_FORMULA: // 公式
+                            // 公式
+                            case HSSFCell.CELL_TYPE_FORMULA:
                                 value = cell.getCellFormula() + "";
                                 break;
-                            case HSSFCell.CELL_TYPE_BLANK: // 空值
+                            // 空值
+                            case HSSFCell.CELL_TYPE_BLANK:
                                 value = "";
                                 break;
-                            case HSSFCell.CELL_TYPE_ERROR: // 故障
+                            // 故障
+                            case HSSFCell.CELL_TYPE_ERROR:
                                 value = "非法字符";
                                 break;
                             default:
@@ -101,9 +114,10 @@ public class ExcelUtil<T> {
                         if (value.equals("")) {
                             continue;
                         }
-                        entity = (entity == null ? clazz.newInstance() : entity);// 如果不存在实例则新建.
-                        // System.out.println(cells[j].getContents());
-                        Field field = fieldsMap.get(j);// 从map中得到对应列的field.
+                        // 如果不存在实例则新建.
+                        entity = (entity == null ? clazz.newInstance() : entity);
+                        // 从map中得到对应列的field.
+                        Field field = fieldsMap.get(j);
                         // 取得类型,并根据对象类型设置值.
                         Class<?> fieldType = field.getType();
                         if (String.class == fieldType) {
@@ -156,7 +170,8 @@ public class ExcelUtil<T> {
      */
     public boolean exportExcel(List<T> list, String sheetName, int sheetSize,
                                OutputStream output) {
-        Field[] allFields = clazz.getDeclaredFields();// 得到所有定义字段
+        // 得到所有定义字段
+        Field[] allFields = clazz.getDeclaredFields();
         List<Field> fields = new ArrayList<Field>();
         // 得到所有field并存放到一个list中.
         for (Field field : allFields) {
@@ -164,38 +179,50 @@ public class ExcelUtil<T> {
                 fields.add(field);
             }
         }
-        HSSFWorkbook workbook = new HSSFWorkbook();// 产生工作薄对象
+        // 产生工作薄对象
+        HSSFWorkbook workbook = new HSSFWorkbook();
         // excel2003中每个sheet中最多有65536行,为避免产生错误所以加这个逻辑.
         if (sheetSize > 65536 || sheetSize < 1) {
             sheetSize = 65536;
         }
-        double sheetNo = Math.ceil(list.size() / sheetSize);// 取出一共有多少个sheet.
+        // 取出一共有多少个sheet.
+        double sheetNo = Math.ceil(list.size() / sheetSize);
         for (int index = 0; index <= sheetNo; index++) {
-            HSSFSheet sheet = workbook.createSheet();// 产生工作表对象
+            // 产生工作表对象
+            HSSFSheet sheet = workbook.createSheet();
             if (sheetNo == 0) {
                 workbook.setSheetName(index, sheetName);
             } else {
-                workbook.setSheetName(index, sheetName + index);// 设置工作表的名称.
+                // 设置工作表的名称.
+                workbook.setSheetName(index, sheetName + index);
             }
             HSSFRow row;
-            HSSFCell cell;// 产生单元格
-            row = sheet.createRow(0);// 产生一行
+            // 产生单元格
+            HSSFCell cell;
+            // 产生一行
+            row = sheet.createRow(0);
             // 写入各个字段的列头名称
             for (int i = 0; i < fields.size(); i++) {
                 Field field = fields.get(i);
                 ExcelVOAttribute attr = field
                         .getAnnotation(ExcelVOAttribute.class);
-                int col = getExcelCol(attr.column());// 获得列号
-                cell = row.createCell(col);// 创建列
-                cell.setCellType(HSSFCell.CELL_TYPE_STRING);// 设置列中写入内容为String类型
-                cell.setCellValue(attr.name());// 写入列名
+                // 获得列号
+                int col = getExcelCol(attr.column());
+                // 创建列
+                cell = row.createCell(col);
+                // 设置列中写入内容为String类型
+                cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+                // 写入列名
+                cell.setCellValue(attr.name());
                 // 如果设置了提示信息则鼠标放上去提示.
                 if (!attr.prompt().trim().equals("")) {
-                    setHSSFPrompt(sheet, "", attr.prompt(), 1, 100, col, col);// 这里默认设了2-101列提示.
+                    // 这里默认设了2-101列提示.
+                    setHSSFPrompt(sheet, "", attr.prompt(), 1, 100, col, col);
                 }
                 // 如果设置了combo属性则本列只能选择不能输入
                 if (attr.combo().length > 0) {
-                    setHSSFValidation(sheet, attr.combo(), 1, 100, col, col);// 这里默认设了2-101列只能选择不能输入.
+                    // 这里默认设了2-101列只能选择不能输入.
+                    setHSSFValidation(sheet, attr.combo(), 1, 100, col, col);
                 }
             }
             int startNo = index * sheetSize;
@@ -205,17 +232,21 @@ public class ExcelUtil<T> {
                 row = sheet.createRow(i + 1 - startNo);
                 T vo = (T) list.get(i); // 得到导出对象.
                 for (int j = 0; j < fields.size(); j++) {
-                    Field field = fields.get(j);// 获得field.
-                    field.setAccessible(true);// 设置实体类私有属性可访问
+                    // 获得field.
+                    Field field = fields.get(j);
+                    // 设置实体类私有属性可访问
+                    field.setAccessible(true);
                     ExcelVOAttribute attr = field
                             .getAnnotation(ExcelVOAttribute.class);
                     try {
                         // 根据ExcelVOAttribute中设置情况决定是否导出,有些情况需要保持为空,希望用户填写这一列.
                         if (attr.isExport()) {
-                            cell = row.createCell(getExcelCol(attr.column()));// 创建cell
+                            // 创建cell
+                            cell = row.createCell(getExcelCol(attr.column()));
                             cell.setCellType(HSSFCell.CELL_TYPE_STRING);
                             cell.setCellValue(field.get(vo) == null ? ""
-                                    : String.valueOf(field.get(vo)));// 如果数据存在就填入,不存在填入空格.
+                                    // 如果数据存在就填入,不存在填入空格.
+                                    : String.valueOf(field.get(vo)));
                         }
                     } catch (IllegalArgumentException e) {
                         e.printStackTrace();
