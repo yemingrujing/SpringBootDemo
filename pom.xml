@@ -44,6 +44,7 @@
         <spring.boot.admin.version>2.0.3</spring.boot.admin.version>
         <eureka.client.version>2.0.1.RELEASE</eureka.client.version>
         <eureka.server.version>1.4.5.RELEASE</eureka.server.version>
+        <springboot.cxf.jaxws.version>3.2.7</springboot.cxf.jaxws.version>
     </properties>
 
     <dependencyManagement>
