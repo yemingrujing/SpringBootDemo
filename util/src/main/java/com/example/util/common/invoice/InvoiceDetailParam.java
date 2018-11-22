@@ -50,7 +50,7 @@ public class InvoiceDetailParam {
     /**
      * 项目单价(正票和红票单价都大于‘0’)
      */
-    private String xmdj;
+    private BigDecimal xmdj;
 
     /**
      * 商品编码(技术人员需向企业财务核实；不足 19位后面补‘0’)
@@ -60,6 +60,7 @@ public class InvoiceDetailParam {
     /**
      * 优惠政策标识(0：不使用， 1：使用)
      */
+    @Builder.Default
     private String yhzcbs = "0";
 
     /**

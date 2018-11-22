@@ -62,7 +62,7 @@ public class XmlTemplate {
     /**
      * 平台编码, 事先取得从管理端（请求前）test 111MFWIK;  药师 P0000391
      */
-    private String USERNAME = "111MFWIK";
+    public static String USERNAME = "111MFWIK";
 
     /**
      * 事先取得从管理端（请求前）
@@ -135,19 +135,24 @@ public class XmlTemplate {
     private String CODETYPE_CA = "CA";
 
     /**
+     * 代开标志 自开(0) 代开(1)
+     */
+    public static String DKBZ = "0";
+
+    /**
      * 开票方识别号
      */
-    private String NSRSBH = "51310000501778371C";
+    public static String NSRSBH = "51310000501778371C";
 
     /**
      * 开票方名称
      */
-    private String NSRMC = "上海市执业药师协会";
+    public static String NSRMC = "上海市执业药师协会";
 
     /**
      * 编码表版本号 12.0 now
      */
-    private String BMB_BBH = "26.0";
+    public static String BMB_BBH = "26.0";
 
     /**
      * 加密字符串(生成用)
@@ -185,7 +190,7 @@ public class XmlTemplate {
         sb.append("<requestCode>");
         sb.append(REQUESTCODE);
         sb.append("</requestCode>");
-        sb.append("	<requestTime>");
+        sb.append("<requestTime>");
         sb.append(format.format(date));
         sb.append("</requestTime>");
         sb.append("<responseCode>");
@@ -261,6 +266,7 @@ public class XmlTemplate {
         sbContent.append("<DKBZ>");
         sbContent.append(invoiceParam.getDkbz());
         sbContent.append("</DKBZ>");
+        sbContent.append("<SGBZ></SGBZ>");
         sbContent.append("<PYDM></PYDM>");
         sbContent.append("<KPXM>");
         sbContent.append(invoiceParam.getKpxm());
@@ -297,7 +303,7 @@ public class XmlTemplate {
         sbContent.append(StringUtil.isBlank(invoiceParam.getGhfGddh()) ? "" : invoiceParam.getGhfGddh());
         sbContent.append("</GHF_GDDH>");
         sbContent.append("<GHF_SJ>");
-        sbContent.append(StringUtil.isBlank(invoiceParam.getGhfSf()) ? "" : invoiceParam.getGhfSf());
+        sbContent.append(StringUtil.isBlank(invoiceParam.getGhfSj()) ? "" : invoiceParam.getGhfSj());
         sbContent.append("</GHF_SJ>");
         sbContent.append("<GHF_EMAIL>");
         sbContent.append(StringUtil.isBlank(invoiceParam.getGhfEmail()) ? "" : invoiceParam.getGhfEmail());
@@ -359,7 +365,9 @@ public class XmlTemplate {
                 sbContent.append("</XMMC>");
                 sbContent.append("<XMDW></XMDW>");
                 sbContent.append("<GGXH></GGXH>");
-                sbContent.append("<XMSL></XMSL>");
+                sbContent.append("<XMSL>");
+                sbContent.append(invoiceDetailParam.getXmsl());
+                sbContent.append("</XMSL>");
                 sbContent.append("<HSBZ>");
                 sbContent.append(invoiceDetailParam.getHsbz());
                 sbContent.append("</HSBZ>");
@@ -397,14 +405,14 @@ public class XmlTemplate {
         sbContent.append("</FPKJXX_XMXXS>");
         sbContent.append("<FPKJXX_DDXX class=\"FPKJXX_DDXX\">");
         sbContent.append("<DDH>");
-        sbContent.append(invoiceParam.getDDH());
+        sbContent.append(invoiceParam.getDdh());
         sbContent.append("</DDH>");
-        sbContent.append("<THDH/>");
+        sbContent.append("<THDH>");
         sbContent.append(StringUtil.isBlank(invoiceParam.getThdh()) ? "" : invoiceParam.getThdh());
         sbContent.append("<THDH/>");
-        sbContent.append("<DDDATE><DDDATE/>");
-        sbContent.append(invoiceParam.getDddate() == null ? "" : new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(invoiceParam.getDddate()));
-        sbContent.append("<DDDATE><DDDATE/>");
+        sbContent.append("<DDDATE>");
+        sbContent.append(invoiceParam.getDddate() == null ? "" : invoiceParam.getDddate());
+        sbContent.append("<DDDATE/>");
         sbContent.append("</FPKJXX_DDXX>");
         sbContent.append("</REQUEST_FPKJXX>");
         return sbContent.toString();

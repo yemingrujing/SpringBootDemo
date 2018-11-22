@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,11 +26,13 @@ public class InvoiceParam {
     /**
      * 自开(0) 代开(1)
      */
+    @Builder.Default
     private String dkbz = "0";
 
     /**
      * 编码表版本号 26.0 now
      */
+    @Builder.Default
     private String bmbBbh = "26.0";
 
     /**
@@ -112,11 +113,14 @@ public class InvoiceParam {
     /**
      * 开票类型：1正票 2红票
      */
+    @Builder.Default
     private String kplx = "1";
 
     /**
      * 操作代码：10正票正常开具 20退货折让红票
      */
+
+    @Builder.Default
     private String czdm = "10";
 
     /**
@@ -147,7 +151,7 @@ public class InvoiceParam {
     /**
      * 订单号
      */
-    private String DDH;
+    private String ddh;
 
     /**
      * 退货单号(在开具红字发票退货、折让的时候必须填写)
@@ -157,7 +161,7 @@ public class InvoiceParam {
     /**
      * 订单时间
      */
-    private Date dddate;
+    private String dddate;
 
     /**
      * 项目明细

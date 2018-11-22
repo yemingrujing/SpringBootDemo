@@ -106,6 +106,14 @@ public final class DateUtil {
     /* ************工具方法***************   */
 
     /**
+     * 获取当前日期
+     * @return
+     */
+    public static Date now() {
+        return Calendar.getInstance(Locale.CHINESE).getTime();
+    }
+
+    /**
      * 获取某日期的年份
      *
      * @param date
