@@ -26,6 +26,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class XmlTemplate {
 
     /**
+     * API调用地址
+     */
+    public static final String WSDLADDRESS_HTTP = "http://fw1test.shdzfp.com:9000/sajt-shdzfp-sl-http/SvrServlet";
+
+    /**
      * 不同 API 编码不一样 ， 需要动态调用
      */
     public static Map<String, Object> interfaceCodeMap = new ConcurrentHashMap<>();
@@ -34,6 +39,9 @@ public class XmlTemplate {
     static {
         interfaceCodeMap.put("FPKJ", "ECXML.FPKJ.BC.E_INV");
         interfaceCodeMap.put("FPXZ", "ECXML.FPXZ.CX.E_INV");
+        interfaceCodeMap.put("FPXZ", "ECXML.EMAILPHONEFPTS.TS.E.INV");
+        interfaceCodeMap.put("FPMX", "ECXML.FPMXXZ.CX.E_INV");
+        interfaceCodeMap.put("KYFPSL", "ECXML.QY.KYFPSL");
     }
 
     /**
@@ -54,7 +62,7 @@ public class XmlTemplate {
     /**
      * 平台编码, 事先取得从管理端（请求前）test 111MFWIK;  药师 P0000391
      */
-    private String USERNAME = "testing";
+    private String USERNAME = "111MFWIK";
 
     /**
      * 事先取得从管理端（请求前）
@@ -69,17 +77,17 @@ public class XmlTemplate {
     /**
      * 数据交换请求发起方代码 ,用平台编码
      */
-    private String REQUESTCODE = "testing";
+    private String REQUESTCODE = "111MFWIK";
 
     /**
      *  纳税人识别号 test 310101000000090
      */
-    private String TAXPAYERID = "51310000501778371C";
+    private String TAXPAYERID = "310101000000090";
 
     /**
      * 纳税人授权码, 事先取得从平台系统获取（请求前) test 3100000090  ；药师 	70MP0I49BH
      */
-    private String AUTHORIZATIONCODE = "70MP0I49BH";
+    private String AUTHORIZATIONCODE = "3100000090";
 
     /**
      * 数据交换请求接受方代码
@@ -142,9 +150,9 @@ public class XmlTemplate {
     private String BMB_BBH = "26.0";
 
     /**
-     * 加密字符串
+     * 加密字符串(生成用)
      */
-    private String KEYBYTES = "==testing testing==";
+    private String KEYBYTES = "";
 
     /**
      * 拼接通用 XML 头信息
@@ -153,7 +161,7 @@ public class XmlTemplate {
      * @return
      */
     public String getGlobleInfoByInterfaceCode(String interfaceCode) {
-        DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ss");
         DateFormat mat = new SimpleDateFormat("YYYYMMDD");
         Date date = new Date();
         StringBuilder sb = new StringBuilder();
@@ -210,14 +218,16 @@ public class XmlTemplate {
         sb.append(ZIPCODE_NO_COMPRESS);
         sb.append("</zipCode>");
         sb.append("<encryptCode>");
+        // test
+        sb.append(ENCRYPTCODE_NO);
         // 正式
-        sb.append(ENCRYPTCODE_3DES);
+        //sb.append(ENCRYPTCODE_3DES);
         sb.append("</encryptCode>");
         sb.append("<codeType>");
         // test
-        // sb.append(CODETYPE);
+         sb.append(CODETYPE);
         // 正式
-        sb.append(CODETYPE_3DES);
+        //sb.append(CODETYPE_3DES);
         sb.append("</codeType>");
         sb.append("</dataDescription>");
         return sb.toString();
@@ -342,7 +352,7 @@ public class XmlTemplate {
         sbContent.append(size);
         sbContent.append("\">");
         if (size > 0) {
-            for (InvoiceParam.InvoiceDetailParam invoiceDetailParam : invoiceParam.getInvoiceDetailParams()) {
+            for (InvoiceDetailParam invoiceDetailParam : invoiceParam.getInvoiceDetailParams()) {
                 sbContent.append("<FPKJXX_XMXX>");
                 sbContent.append("<XMMC>");
                 sbContent.append(invoiceDetailParam.getXmmc());
