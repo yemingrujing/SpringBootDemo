@@ -36,7 +36,8 @@ public class DesUtil {
 
 
     /**
-     *  base64 encrypt
+     * 加密
+     * base64 encrypt
      * @param strMingByte
      * @return
      * @throws UnsupportedEncodingException
@@ -45,8 +46,10 @@ public class DesUtil {
         String encodedText = base64.encodeToString(strMingByte);
         return encodedText;
     }
+
     /**
-     *  base64 decrypt
+     * 解密
+     * base64 decrypt
      * @param encodedText
      * @return
      * @throws UnsupportedEncodingException
@@ -55,6 +58,12 @@ public class DesUtil {
         return base64.decode(encodedText);
     }
 
+    /**
+     * 字符串转换为数组
+     * @param strMing
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     public byte[] getStringByte(String strMing) throws UnsupportedEncodingException{
         return strMing.getBytes("UTF-8");
     }
@@ -67,7 +76,7 @@ public class DesUtil {
      * @throws Exception
      */
     public  byte[] des3EncodeECB(byte[] key, byte[] data) throws Exception {
-        Key deskey = null;
+        Key deskey;
         DESedeKeySpec spec = new DESedeKeySpec(key);
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
         deskey = keyfactory.generateSecret(spec);
@@ -76,6 +85,7 @@ public class DesUtil {
         byte[] bOut = cipher.doFinal(data);
         return bOut;
     }
+
     /**
      * ECB解密,不要IV
      * @param key 密钥
@@ -84,7 +94,7 @@ public class DesUtil {
      * @throws Exception
      */
     public  byte[] ees3DecodeECB(byte[] key, byte[] data) throws Exception {
-        Key deskey = null;
+        Key deskey;
         DESedeKeySpec spec = new DESedeKeySpec(key);
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
         deskey = keyfactory.generateSecret(spec);
@@ -93,25 +103,26 @@ public class DesUtil {
         byte[] bOut = cipher.doFinal(data);
         return bOut;
     }
+
     /**
      * zip解压
      * @param data
      * @return
      */
-    public  byte[] unGZip(byte[] data) {
+    public static byte[] unGZip(byte[] data) {
         byte[] b = null;
         try {
             ByteArrayInputStream bis = new ByteArrayInputStream(data);
             GZIPInputStream gzip = new GZIPInputStream(bis);
             byte[] buf = new byte[1024];
             int num = -1;
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ByteArrayOutputStream bs = new ByteArrayOutputStream();
             while ((num = gzip.read(buf, 0, buf.length)) != -1) {
-                baos.write(buf, 0, num);
+                bs.write(buf, 0, num);
             }
-            b = baos.toByteArray();
-            baos.flush();
-            baos.close();
+            b = bs.toByteArray();
+            bs.flush();
+            bs.close();
             gzip.close();
             bis.close();
         } catch (Exception ex) {
@@ -119,15 +130,16 @@ public class DesUtil {
         }
         return b;
     }
+
     /**
-     *
+     * ECB加密
      * @param key
      * @param data
      * @return
      * @throws Exception
      */
     public  String ees3encodeECB(String key, String data) throws Exception {
-        Key deskey = null;
+        Key deskey;
         DESedeKeySpec spec = new DESedeKeySpec(key.getBytes("UTF-8"));
         SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
         deskey = keyfactory.generateSecret(spec);
@@ -137,14 +149,14 @@ public class DesUtil {
         sun.misc.BASE64Encoder encoder=new sun.misc.BASE64Encoder();
         return encoder.encode(bOut);
     }
+
     /**
      * 将base64字符解码保存文件
      * @param base64Code
      * @param targetPath
      * @throws Exception
      */
-
-    public  void decoderBase64File(String base64Code, String targetPath) throws Exception {
+    public static void decoderBase64File(String base64Code, String targetPath) throws Exception {
         byte[] buffer = new BASE64Decoder().decodeBuffer(base64Code);
         FileOutputStream out = new FileOutputStream(targetPath);
         out.write(buffer);

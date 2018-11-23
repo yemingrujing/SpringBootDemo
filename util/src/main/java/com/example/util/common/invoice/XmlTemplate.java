@@ -1,5 +1,7 @@
 package com.example.util.common.invoice;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.StringUtil;
 import org.w3c.dom.Document;
 
@@ -13,7 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,8 +40,9 @@ public class XmlTemplate {
     static {
         interfaceCodeMap.put("FPKJ", "ECXML.FPKJ.BC.E_INV");
         interfaceCodeMap.put("FPXZ", "ECXML.FPXZ.CX.E_INV");
-        interfaceCodeMap.put("FPXZ", "ECXML.EMAILPHONEFPTS.TS.E.INV");
+        interfaceCodeMap.put("YXTS", "ECXML.EMAILPHONEFPTS.TS.E.INV");
         interfaceCodeMap.put("FPMX", "ECXML.FPMXXZ.CX.E_INV");
+        interfaceCodeMap.put("FPTS", "ECXML.FPKJJG.TS.E_INV");
         interfaceCodeMap.put("KYFPSL", "ECXML.QY.KYFPSL");
     }
 
@@ -67,7 +69,7 @@ public class XmlTemplate {
     /**
      * 事先取得从管理端（请求前）
      */
-    private String PASSWORD ="";
+    private String PASSWORD ="12345678909oyKs7cVo1yYzkuisP9bhA==";
 
     /**
      * 数据交换流水号
@@ -142,7 +144,7 @@ public class XmlTemplate {
     /**
      * 开票方识别号
      */
-    public static String NSRSBH = "51310000501778371C";
+    public static String NSRSBH = "310101000000090";
 
     /**
      * 开票方名称
@@ -250,7 +252,6 @@ public class XmlTemplate {
         sbContent.append("<FPKJXX_FPTXX class=\"FPKJXX_FPTXX\">");
         sbContent.append("<FPQQLSH>");
         sbContent.append(USERNAME).append(invoiceParam.getFpqqlsh());
-        //sbContent.append(fpqqlsh);
         sbContent.append("</FPQQLSH>");
         sbContent.append("<DSPTBM>");
         sbContent.append(USERNAME);
@@ -266,7 +267,6 @@ public class XmlTemplate {
         sbContent.append("<DKBZ>");
         sbContent.append(invoiceParam.getDkbz());
         sbContent.append("</DKBZ>");
-        sbContent.append("<SGBZ></SGBZ>");
         sbContent.append("<PYDM></PYDM>");
         sbContent.append("<KPXM>");
         sbContent.append(invoiceParam.getKpxm());
@@ -291,7 +291,7 @@ public class XmlTemplate {
         sbContent.append(invoiceParam.getGhfmc());
         sbContent.append("</GHFMC>");
         sbContent.append("<GHF_NSRSBH>");
-        sbContent.append(invoiceParam.getGhfNsrsbh());
+        sbContent.append(StringUtil.isBlank(invoiceParam.getGhfNsrsbh()) ? "" : invoiceParam.getGhfNsrsbh());
         sbContent.append("</GHF_NSRSBH>");
         sbContent.append("<GHF_SF>");
         sbContent.append(StringUtil.isBlank(invoiceParam.getGhfSf()) ? "" : invoiceParam.getGhfSf());
@@ -405,16 +405,150 @@ public class XmlTemplate {
         sbContent.append("</FPKJXX_XMXXS>");
         sbContent.append("<FPKJXX_DDXX class=\"FPKJXX_DDXX\">");
         sbContent.append("<DDH>");
-        sbContent.append(invoiceParam.getDdh());
+        sbContent.append(USERNAME).append(invoiceParam.getDdh());
         sbContent.append("</DDH>");
         sbContent.append("<THDH>");
         sbContent.append(StringUtil.isBlank(invoiceParam.getThdh()) ? "" : invoiceParam.getThdh());
-        sbContent.append("<THDH/>");
+        sbContent.append("</THDH>");
         sbContent.append("<DDDATE>");
         sbContent.append(invoiceParam.getDddate() == null ? "" : invoiceParam.getDddate());
-        sbContent.append("<DDDATE/>");
+        sbContent.append("</DDDATE>");
         sbContent.append("</FPKJXX_DDXX>");
         sbContent.append("</REQUEST_FPKJXX>");
+        return sbContent.toString();
+    }
+
+    /**
+     * 发票数据下载 API 编码： ECXML.FPXZ.CX.E_INV
+     * @param fpqqlsh 发票请求唯一流水号
+     * @param xzfs 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
+     * @return
+     */
+    public String getFpxzContentByInterfaceCode(String fpqqlsh, Integer xzfs) {
+        StringBuilder sbContent = new StringBuilder();
+        sbContent.append("<REQUEST_FPXXXZ_NEW class=\"REQUEST_FPXXXZ_NEW\">");
+        sbContent.append("<FPQQLSH>");
+        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append("</FPQQLSH>");
+        sbContent.append("<DSPTBM>");
+        sbContent.append(USERNAME);
+        sbContent.append("</DSPTBM>");
+        sbContent.append("<NSRSBH>");
+        sbContent.append(NSRSBH);
+        sbContent.append("</NSRSBH>");
+        sbContent.append("<DDH>");
+        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append("</DDH>");
+        sbContent.append("<PDF_XZFS>");
+        sbContent.append(xzfs);
+        sbContent.append("</PDF_XZFS>");
+        sbContent.append("</REQUEST_FPXXXZ_NEW>");
+        return sbContent.toString();
+    }
+
+    /**
+     * 发票明细信息下载 API 编码： ECXML.FPMXXZ.CX.E_INV
+     * @param fpqqlsh 发票请求唯一流水号
+     * @param xzfs 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
+     * @return
+     */
+    public String getFpmxContentByInterfaceCode(String fpqqlsh, Integer xzfs) {
+        StringBuilder sbContent = new StringBuilder();
+        sbContent.append("<REQUEST_FPXXXZ_NEW class=\"REQUEST_FPXXXZ_NEW\">");
+        sbContent.append("<FPQQLSH>");
+        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append("</FPQQLSH>");
+        sbContent.append("<DSPTBM>");
+        sbContent.append(USERNAME);
+        sbContent.append("</DSPTBM>");
+        sbContent.append("<NSRSBH>");
+        sbContent.append(NSRSBH);
+        sbContent.append("</NSRSBH>");
+        sbContent.append("<DDH>");
+        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append("</DDH>");
+        sbContent.append("<PDF_XZFS>");
+        sbContent.append(xzfs);
+        sbContent.append("</PDF_XZFS>");
+        sbContent.append("</REQUEST_FPXXXZ_NEW>");
+        return sbContent.toString();
+    }
+
+    /**
+     * 邮箱发票推送  API 编码： ECXML.EMAILPHONEFPTS.TS.E.INV
+     * 将受票方(购货方)的邮箱推送给电子发票服务平台，平台可通过邮箱把发票信息推送给受票方
+     * @param tsfsxx 邮箱发票推送-推送方式信息
+     * @param fpxxs 邮箱发票推送-发票信息（多条）
+     * @return
+     */
+    public String getYxfptsContentByInterfaceCode(JSONObject tsfsxx, JSONArray fpxxs) {
+        StringBuilder sbContent = new StringBuilder();
+        sbContent.append("<REQUEST_EMAILPHONEFPTS class=\"REQUEST_EMAILPHONEFPTS\">");
+        sbContent.append("<TSFSXX class=\"TSFSXX\">");
+        sbContent.append("<COMMON_NODES class=\"COMMON_NODE;\" size=\"4\">");
+        sbContent.append("<COMMON_NODE><NAME>TSFS</NAME><VALUE>");
+        sbContent.append(tsfsxx.get("tsfs"));
+        sbContent.append("</VALUE></COMMON_NODE>");
+        sbContent.append("<COMMON_NODE><NAME>SJ</NAME><VALUE>");
+        sbContent.append(StringUtil.isBlank((String) tsfsxx.get("sj")) ? "" : tsfsxx.get("sj"));
+        sbContent.append("</VALUE></COMMON_NODE>");
+        sbContent.append("<COMMON_NODE><NAME>EMAIL</NAME><VALUE>");
+        sbContent.append(tsfsxx.get("email"));
+        sbContent.append("</VALUE></COMMON_NODE>");
+        sbContent.append("<COMMON_NODE><NAME>扩展字段名称</NAME><VALUE>");
+        sbContent.append("</VALUE></COMMON_NODE>");
+        sbContent.append("</COMMON_NODES>");
+        sbContent.append("</TSFSXX>");
+        sbContent.append("<FPXXS class=\"FPXX;\" size=\"");
+        sbContent.append(fpxxs.size());
+        sbContent.append("\">");
+        for (int i = 0; i < fpxxs.size(); i++) {
+            JSONObject fpxx = fpxxs.getJSONObject(i);
+            sbContent.append("<FPXX>");
+            sbContent.append("<COMMON_NODES class=\"COMMON_NODE;\" size=\"5\">");
+            sbContent.append("<COMMON_NODE><NAME>FPQQLSH</NAME><VALUE>");
+            sbContent.append(USERNAME).append(fpxx.get("fpqqlsh"));
+            sbContent.append("</VALUE></COMMON_NODE>");
+            sbContent.append("<COMMON_NODE><NAME>NSRSBH</NAME><VALUE>");
+            sbContent.append(fpxx.get("nsrsbh"));
+            sbContent.append("</VALUE></COMMON_NODE>");
+            sbContent.append("<COMMON_NODE><NAME>FP_DM</NAME><VALUE>");
+            sbContent.append(fpxx.get("fpDm"));
+            sbContent.append("</VALUE></COMMON_NODE>");
+            sbContent.append("<COMMON_NODE><NAME>FP_HM</NAME><VALUE>");
+            sbContent.append(fpxx.get("fpHm"));
+            sbContent.append("</VALUE></COMMON_NODE>");
+            sbContent.append("<COMMON_NODE><NAME>扩展字段名称</NAME><VALUE>");
+            sbContent.append("</VALUE></COMMON_NODE>");
+            sbContent.append("</COMMON_NODES>");
+            sbContent.append("</FPXX>");
+        }
+        sbContent.append("</FPXXS>");
+        sbContent.append("</REQUEST_EMAILPHONEFPTS>");
+        return sbContent.toString();
+    }
+
+    /**
+     * 发票信息推送 API 编码： ECXML.FPKJJG.TS.E_INV
+     * 生成完成的发票信息传递给企业
+     * @param fptsContent 调用发票信息下载的返回content
+     * @return
+     */
+    public String getFptsContentByInterfaceCode(String fptsContent) {
+        StringBuilder sbContent = new StringBuilder();
+        sbContent.append(fptsContent);
+        return sbContent.toString();
+    }
+
+    /**
+     * 获取企业可用发票数量 API 编码： ECXML.QY.KYFPSL
+     * @return
+     */
+    public String getKyfpslContentByInterfaceCode() {
+        StringBuilder sbContent = new StringBuilder();
+        sbContent.append("<REQUEST_KYFPSL class=\"REQUEST_KYFPSL\"><NSRSBH>");
+        sbContent.append(TAXPAYERID);
+        sbContent.append("</NSRSBH></REQUEST_KYFPSL>");
         return sbContent.toString();
     }
 
@@ -464,7 +598,7 @@ public class XmlTemplate {
     }
 
     /**
-     *
+     * String类型转换成Document
      * @param str xml形状的str串
      * @return Document 对象
      */
@@ -482,7 +616,7 @@ public class XmlTemplate {
     }
 
     /**
-     *
+     * 获取节点名称
      * @param document
      * @param nodePaht
      * @return 某个节点的值 前提是需要知道xml格式，知道需要取的节点相对根节点所在位置
@@ -497,123 +631,5 @@ public class XmlTemplate {
             e.printStackTrace();
         }
         return servInitrBrch;
-    }
-
-    /**
-     * 发票数据下载 API 编码： ECXML.FPXZ.CX.E_INV
-     * @param fpqqlsh 发票请求唯一流水号
-     * @param ddh 订单号
-     * @param xzfs 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
-     * @return
-     */
-    public String getFpxzContentByInterfaceCode(String fpqqlsh, String ddh, Integer xzfs) {
-        StringBuilder sbContent = new StringBuilder();
-        sbContent.append("<REQUEST_FPXXXZ_NEW class=\"REQUEST_FPXXXZ_NEW\">");
-        sbContent.append("<FPQQLSH>");
-        sbContent.append(fpqqlsh);
-        sbContent.append("</FPQQLSH>");
-        sbContent.append("<DSPTBM>");
-        sbContent.append(USERNAME);
-        sbContent.append("</DSPTBM>");
-        sbContent.append("<NSRSBH>");
-        sbContent.append(NSRSBH);
-        sbContent.append("</NSRSBH>");
-        sbContent.append("<DDH>");
-        sbContent.append(ddh);
-        sbContent.append("</DDH>");
-        sbContent.append("<PDF_XZFS>");
-        sbContent.append(xzfs);
-        sbContent.append("</PDF_XZFS>");
-        sbContent.append("</REQUEST_FPXXXZ_NEW>");
-        return sbContent.toString();
-    }
-
-    /**
-     * 发票明细信息下载 API 编码： ECXML.FPMXXZ.CX.E_INV
-     * @param fpqqlsh 发票请求唯一流水号
-     * @param ddh 订单号
-     * @param xzfs 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
-     * @return
-     */
-    public String getFpmxContentByInterfaceCode(String fpqqlsh, String ddh, Integer xzfs) {
-        StringBuilder sbContent = new StringBuilder();
-        sbContent.append("<REQUEST_FPXXXZ_NEW class=\"REQUEST_FPXXXZ_NEW\">");
-        sbContent.append("<FPQQLSH>");
-        sbContent.append(fpqqlsh);
-        sbContent.append("</FPQQLSH>");
-        sbContent.append("<DSPTBM>");
-        sbContent.append(USERNAME);
-        sbContent.append("</DSPTBM>");
-        sbContent.append("<NSRSBH>");
-        sbContent.append(NSRSBH);
-        sbContent.append("</NSRSBH>");
-        sbContent.append("<DDH>");
-        sbContent.append(ddh);
-        sbContent.append("</DDH>");
-        sbContent.append("<PDF_XZFS>");
-        sbContent.append(xzfs);
-        sbContent.append("</PDF_XZFS>");
-        sbContent.append("</REQUEST_FPXXXZ_NEW>");
-        return sbContent.toString();
-    }
-
-    /**
-     * 邮箱发票推送  API 编码： ECXML.EMAILPHONEFPTS.TS.E.INV
-     * @param tsfsxx 邮箱发票推送-推送方式信息
-     * @param fpxxs 邮箱发票推送-发票信息（多条）
-     * @return
-     */
-    public String getYxfptsContentByInterfaceCode(Map<String, String> tsfsxx, List<Map<String, String>> fpxxs) {
-        StringBuilder sbContent = new StringBuilder();
-        sbContent.append("REQUEST_EMAILPHONEFPTS class=\"REQUEST_EMAILPHONEFPTS\">");
-        sbContent.append("<TSFSXX class=\"TSFSXX\">");
-        sbContent.append("<COMMON_NODES class=\"COMMON_NODE;\" size=\"3\">");
-        sbContent.append("<COMMON_NODE><NAME>TSFS</NAME><VALUE>");
-        sbContent.append(tsfsxx.get("tsfs"));
-        sbContent.append("<NAME>TSFS</NAME></VALUE></COMMON_NODE>");
-        sbContent.append("<COMMON_NODE><NAME>SJ</NAME><VALUE>");
-        sbContent.append(StringUtil.isBlank(tsfsxx.get("sj")) ? "" : tsfsxx.get("sj"));
-        sbContent.append("<NAME>SJ</NAME></VALUE></COMMON_NODE>");
-        sbContent.append("<COMMON_NODE><NAME>EMAIL</NAME><VALUE>");
-        sbContent.append(tsfsxx.get("email"));
-        sbContent.append("<NAME>EMAIL</NAME></VALUE></COMMON_NODE>");
-        sbContent.append("</COMMON_NODES>");
-        sbContent.append("</TSFSXX>");
-        sbContent.append("<FPXXS class=\"FPXX;\" size=\"");
-        sbContent.append(fpxxs.size());
-        sbContent.append("\">");
-        for (Map<String, String> map : fpxxs) {
-            sbContent.append("<FPXX>");
-            sbContent.append("<COMMON_NODES class=\"COMMON_NODE;\" size=\"4\">");
-            sbContent.append("<COMMON_NODE><NAME>FPQQLSH</NAME><VALUE>");
-            sbContent.append(map.get("fpqqlsh"));
-            sbContent.append("<NAME>EMAIL</NAME></VALUE></COMMON_NODE>");
-            sbContent.append("<COMMON_NODE><NAME>NSRSBH</NAME><VALUE>");
-            sbContent.append(map.get("nsrsbh"));
-            sbContent.append("<NAME>EMAIL</NAME></VALUE></COMMON_NODE>");
-            sbContent.append("<COMMON_NODE><NAME>FP_DM</NAME><VALUE>");
-            sbContent.append(map.get("fpDm"));
-            sbContent.append("<NAME>EMAIL</NAME></VALUE></COMMON_NODE>");
-            sbContent.append("<COMMON_NODE><NAME>FP_HM</NAME><VALUE>");
-            sbContent.append(map.get("fpHm"));
-            sbContent.append("<NAME>EMAIL</NAME></VALUE></COMMON_NODE>");
-            sbContent.append("</COMMON_NODES>");
-            sbContent.append("</FPXX>");
-        }
-        sbContent.append("<FPXXS>");
-        sbContent.append("</REQUEST_EMAILPHONEFPTS>");
-        return sbContent.toString();
-    }
-
-    /**
-     * 获取企业可用发票数量 API 编码： ECXML.QY.KYFPSL
-     * @return
-     */
-    public String getKyfpslContentByInterfaceCode() {
-        StringBuilder sbContent = new StringBuilder();
-        sbContent.append("<REQUEST_KYFPSL class=\"REQUEST_KYFPSL\"><NSRSBH>");
-        sbContent.append(TAXPAYERID);
-        sbContent.append("</NSRSBH></REQUEST_KYFPSL>");
-        return sbContent.toString();
     }
 }
