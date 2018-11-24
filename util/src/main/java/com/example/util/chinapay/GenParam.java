@@ -28,7 +28,7 @@ public class GenParam<T> {
             //一个泛型类可能有多个泛型形参，比如ClassName<T,K> 这里有两个泛型形参T和K，Class Name<T> 这里只有1个泛型形参T
             Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
             Class<T> clazz = (Class<T>) params[0];
-                t = clazz.newInstance();
+            t = clazz.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -150,7 +150,7 @@ public class GenParam<T> {
             for (int j = 0; j < field.length; j++) { // 遍历所有属性
                 String name = field[j].getName(); // 获取属性的名字
                 name = name.substring(0, 1).toUpperCase() + name.substring(1); // 将属性的首字符大写，方便构造get，set方法
-                String type = field[j].getGenericType().toString(); // 获取属性的类型
+                String type = field[j].getType().toString(); // 获取属性的类型
                 if (type.equals("class java.lang.String")) { // 如果type是类类型，则前面包含"class "，后面跟类名
                     Method m = model.getClass().getMethod("get" + name);
                     String value = (String) m.invoke(model); // 调用getter方法获取属性值
@@ -215,6 +215,20 @@ public class GenParam<T> {
                         m.invoke(model, BigDecimal.ZERO);
                     }
                 }
+
+                if (type.equals("interface java.util.List")) {
+                    ParameterizedType parameterizedType = (ParameterizedType) field[j].getGenericType();
+                    Class<?> listActualClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                    Object object = generateList(listActualClass);
+                    Method m = model.getClass().getMethod("get" + name);
+                    List value = (ArrayList) m.invoke(model);
+                    if (value == null) {
+                        m = model.getClass().getMethod("set" + name, List.class);
+                        List<Object> objectList = new ArrayList<>();
+                        objectList.add(object);
+                        m.invoke(model, objectList);
+                    }
+                }
             }
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
@@ -248,5 +262,23 @@ public class GenParam<T> {
             list.add(name);
         }
         return list;
+    }
+
+    /**
+     * 将List中对象初始化并塞入值
+     * @param listClass
+     * @return
+     */
+    public Object generateList(Class listClass) {
+        Object object = null;
+        try {
+            object = listClass.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        setValue((T) object);
+        return object;
     }
 }

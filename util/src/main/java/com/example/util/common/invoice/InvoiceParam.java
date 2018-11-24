@@ -1,21 +1,61 @@
 package com.example.util.common.invoice;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 开票请求参数
+ * 开票请求参数：
+ * {
+ *     "ghfSj": "",
+ *     "kplx": "1",
+ *     "ghfSf": "",
+ *     "xhfmc": "",
+ *     "ghfDz": "",
+ *     "thdh": "",
+ *     "xhfNsrsbh": "",
+ *     "fpqqlsh": "",
+ *     "xhfDh": "",
+ *     "kphjje": 0,
+ *     "bz": "",
+ *     "bmbBbh": "",
+ *     "ghfEmail": "",
+ *     "hjbhsje": 0,
+ *     "ghfYhzh": "",
+ *     "hjse": 0,
+ *     "xhfDz": "",
+ *     "ghfmc": "",
+ *     "kpxm": "",
+ *     "ddh": "",
+ *     "chyy": "",
+ *     "czdm": "10",
+ *     "dkbz": "",
+ *     "ghfNsrsbh": "",
+ *     "ghfqylx": "",
+ *     "kpy": "",
+ *     "invoiceDetailParams": [{
+ *         "xmdw": "",
+ *         "ggxh": "",
+ *         "fphxz": "",
+ *         "hsbz": "",
+ *         "xmmc": "",
+ *         "xmdj": 0,
+ *         "yhzcbs": "0",
+ *         "xmsl": "",
+ *         "xmje": 0,
+ *         "sl": "",
+ *         "spbm": ""
+ *     }],
+ *     "dddate": "",
+ *     "ghfGddh": ""
+ * }
  *
  * @author Wei.Guang
  * @create 2018-11-21 17:34
  **/
-@Setter
-@Getter
-@Builder
+@Data
 public class InvoiceParam {
 
     /**

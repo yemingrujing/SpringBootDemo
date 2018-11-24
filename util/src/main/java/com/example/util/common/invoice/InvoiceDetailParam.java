@@ -1,8 +1,7 @@
 package com.example.util.common.invoice;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
@@ -12,9 +11,7 @@ import java.math.BigDecimal;
  * @author Wei.Guang
  * @create 2018-11-22 14:05
  **/
-@Setter
-@Getter
-@Builder
+@Data
 public class InvoiceDetailParam {
 
     /**

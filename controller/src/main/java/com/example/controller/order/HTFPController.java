@@ -4,7 +4,6 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.json.XML;
 import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.DateUtil;
-import com.example.util.common.StringUtil;
 import com.example.util.common.invoice.*;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import sun.misc.BASE64Decoder;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -48,11 +46,11 @@ public class HTFPController {
 
     /**
      * 开发票
-     *
+     * @param invoiceParam
      * @return
      */
-    @GetMapping(value = "/order/invoice/fpkj")
-    public Map<String, Object> fpkj(String dkbz) {
+    @PostMapping(value = "/order/invoice/fpkj")
+    public Map<String, Object> fpkj(InvoiceParam invoiceParam) {
         XmlTemplate xmlTemplate = new XmlTemplate();
         Map<String, Object> moduleMap = new HashMap<>();
         Date date = DateUtil.now();
@@ -67,17 +65,6 @@ public class HTFPController {
         // 项目金额  设置成和单价一样
         BigDecimal xmje = new BigDecimal(400).setScale(2, BigDecimal.ROUND_HALF_UP);
         List<InvoiceDetailParam> list = Lists.newArrayList();
-        InvoiceDetailParam detailParam = InvoiceDetailParam.builder().xmmc("迷你裙").xmsl("2")
-                .hsbz("1").fphxz("0").xmdj(xmdj).spbm("1010101030000000000").xmje(xmje).sl("0.17").build();
-        list.add(detailParam);
-        InvoiceParam invoiceParam = InvoiceParam.builder().fpqqlsh(fpqqlsh).dkbz(StringUtil.isNotBlank(dkbz) ? dkbz : InvoiceConfig.getConfig().getDkbz())
-                .bmbBbh(InvoiceConfig.getConfig().getBmbBbh()).kpxm("迷你裙")
-                .xhfNsrsbh("310101000000090").xhfmc("上海市执业药师协会")
-                .xhfDz("上海市柳州路615号2号楼3楼").xhfDh("213132")
-                .ghfmc(ghfmc).ghfSj("13888884434")
-                .ghfqylx(ghfqylx).ghfSf("江苏省").kpy("药师").kplx("1")
-                .czdm("10").chyy("").kphjje(xmje).hjbhsje(new BigDecimal(BigInteger.ZERO)).hjse(new BigDecimal(BigInteger.ZERO))
-                .invoiceDetailParams(list).ddh(fpqqlsh).dddate(DateUtil.parseDateToStr(date, DateUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS)).build();
         String globleInfo = xmlTemplate.getGlobleInfoByInterfaceCode("FPKJ");
         String content = xmlTemplate.getFpkjContentByInterfaceCode(invoiceParam);
         // String contentEncrypted = XmlTemplate.encryptContent(content);
