@@ -1,5 +1,6 @@
 package com.example.util.common.invoice;
 
+import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.StringUtil;
@@ -47,121 +48,6 @@ public class XmlTemplate {
     }
 
     /**
-     * 终端类型标识(0:B/S 请求来源;1:C/S 请求来源
-     */
-    private String TERMINALCODE = "0";
-
-    /**
-     * DZFP 表示普通发票。ZZS_PT_DZFP 表示增值税普通电子发票
-     */
-    private String APPID = "ZZS_PT_DZFP";
-
-    /**
-     * API 版本,当前 1.0
-     */
-    private String VERSION = "1.0";
-
-    /**
-     * 平台编码, 事先取得从管理端（请求前）test 111MFWIK;  药师 P0000391
-     */
-    public static String USERNAME = "111MFWIK";
-
-    /**
-     * 事先取得从管理端（请求前）
-     */
-    private String PASSWORD ="12345678909oyKs7cVo1yYzkuisP9bhA==";
-
-    /**
-     * 数据交换流水号
-     */
-    private String SERIALNUM = "eXl4EymmJ";
-
-    /**
-     * 数据交换请求发起方代码 ,用平台编码
-     */
-    private String REQUESTCODE = "111MFWIK";
-
-    /**
-     *  纳税人识别号 test 310101000000090
-     */
-    private String TAXPAYERID = "310101000000090";
-
-    /**
-     * 纳税人授权码, 事先取得从平台系统获取（请求前) test 3100000090  ；药师 	70MP0I49BH
-     */
-    private String AUTHORIZATIONCODE = "3100000090";
-
-    /**
-     * 数据交换请求接受方代码
-     */
-    private String RESPONSECODE = "121";
-
-    /**
-     * 压缩标识 0 不压缩 1 压缩
-     */
-    private String ZIPCODE_NO_COMPRESS = "0";
-
-    /**
-     *  压缩标识 0 不压缩 1 压缩
-     */
-    private String ZIPCODE_COMPRESS = "1";
-
-    /**
-     * 加密标识 0:不加密 1: 3DES 加密 2:CA
-     */
-    private String ENCRYPTCODE_NO = "0";
-
-    /**
-     * 加密标识 0:不加密 1: 3DES 加密 2:CA
-     */
-    private String ENCRYPTCODE_3DES = "1";
-
-    /**
-     * 加密标识 0:不加密 1: 3DES 加密 2:CA
-     */
-    private String ENCRYPTCODE_CA = "2";
-
-    /**
-     * 加密方式
-     */
-    private String CODETYPE = "0";
-
-    /**
-     * 加密方式
-     */
-    private String CODETYPE_3DES = "3DES";
-
-    /**
-     * 加密方式
-     */
-    private String CODETYPE_CA = "CA";
-
-    /**
-     * 代开标志 自开(0) 代开(1)
-     */
-    public static String DKBZ = "0";
-
-    /**
-     * 开票方识别号
-     */
-    public static String NSRSBH = "310101000000090";
-
-    /**
-     * 开票方名称
-     */
-    public static String NSRMC = "上海市执业药师协会";
-
-    /**
-     * 编码表版本号 12.0 now
-     */
-    public static String BMB_BBH = "26.0";
-
-    /**
-     * 加密字符串(生成用)
-     */
-    private String KEYBYTES = "";
-
-    /**
      * 拼接通用 XML 头信息
      *
      * @param interfaceCode
@@ -178,41 +64,41 @@ public class XmlTemplate {
         sb.append(" version=\'DZFP1.0\'>");
         sb.append(" <globalInfo>");
         sb.append("<terminalCode>");
-        sb.append(TERMINALCODE);
+        sb.append(InvoiceConfig.getConfig().getTerminalcode());
         sb.append("</terminalCode>");
         sb.append("<appId>");
-        sb.append(APPID);
+        sb.append(InvoiceConfig.getConfig().getAppid());
         sb.append("</appId>");
         sb.append("<version>");
-        sb.append(VERSION);
+        sb.append(InvoiceConfig.getConfig().getVersion());
         sb.append("</version>");
         sb.append("<interfaceCode>");
         sb.append(interfaceCodeMap.get(interfaceCode).toString());
         sb.append("</interfaceCode>");
         sb.append("<requestCode>");
-        sb.append(REQUESTCODE);
+        sb.append(InvoiceConfig.getConfig().getRequestcode());
         sb.append("</requestCode>");
         sb.append("<requestTime>");
         sb.append(format.format(date));
         sb.append("</requestTime>");
         sb.append("<responseCode>");
-        sb.append(RESPONSECODE);
+        sb.append(InvoiceConfig.getConfig().getResponsecode());
         sb.append("</responseCode>");
         sb.append("<dataExchangeId>");
-        sb.append(USERNAME).append(interfaceCodeMap.get(interfaceCode).toString()).append(mat.format(date))
-                .append(SERIALNUM);
+        sb.append(InvoiceConfig.getConfig().getUsername()).append(interfaceCodeMap.get(interfaceCode).toString()).append(mat.format(date))
+                .append(InvoiceConfig.getConfig().getSerialnum());
         sb.append("</dataExchangeId>");
         sb.append("<userName>");
-        sb.append(USERNAME);
+        sb.append(InvoiceConfig.getConfig().getUsername());
         sb.append("</userName>");
         sb.append("<passWord>");
-        sb.append(PASSWORD);
+        sb.append(InvoiceConfig.getConfig().getPassword());
         sb.append("</passWord>");
         sb.append("<taxpayerId>");
-        sb.append(TAXPAYERID);
+        sb.append(InvoiceConfig.getConfig().getTaxpayerid());
         sb.append("</taxpayerId>");
         sb.append("<authorizationCode>");
-        sb.append(AUTHORIZATIONCODE);
+        sb.append(InvoiceConfig.getConfig().getAuthorizationcode());
         sb.append("</authorizationCode>");
         sb.append("</globalInfo>");
         sb.append("<returnStateInfo>");
@@ -222,19 +108,13 @@ public class XmlTemplate {
         sb.append("<Data>");
         sb.append("<dataDescription>");
         sb.append("<zipCode>");
-        sb.append(ZIPCODE_NO_COMPRESS);
+        sb.append(InvoiceConfig.getConfig().getZipcode());
         sb.append("</zipCode>");
         sb.append("<encryptCode>");
-        // test
-        sb.append(ENCRYPTCODE_NO);
-        // 正式
-        //sb.append(ENCRYPTCODE_3DES);
+        sb.append(InvoiceConfig.getConfig().getEncryptcode());
         sb.append("</encryptCode>");
         sb.append("<codeType>");
-        // test
-         sb.append(CODETYPE);
-        // 正式
-        //sb.append(CODETYPE_3DES);
+        sb.append(InvoiceConfig.getConfig().getCodetype());
         sb.append("</codeType>");
         sb.append("</dataDescription>");
         return sb.toString();
@@ -251,16 +131,16 @@ public class XmlTemplate {
         sbContent.append("<REQUEST_FPKJXX class=\"REQUEST_FPKJXX\">");
         sbContent.append("<FPKJXX_FPTXX class=\"FPKJXX_FPTXX\">");
         sbContent.append("<FPQQLSH>");
-        sbContent.append(USERNAME).append(invoiceParam.getFpqqlsh());
+        sbContent.append(InvoiceConfig.getConfig().getUsername()).append(invoiceParam.getFpqqlsh());
         sbContent.append("</FPQQLSH>");
         sbContent.append("<DSPTBM>");
-        sbContent.append(USERNAME);
+        sbContent.append(InvoiceConfig.getConfig().getUsername());
         sbContent.append("</DSPTBM>");
         sbContent.append("<NSRSBH>");
-        sbContent.append(NSRSBH);
+        sbContent.append(InvoiceConfig.getConfig().getNsrsbh());
         sbContent.append("</NSRSBH>");
         sbContent.append("<NSRMC>");
-        sbContent.append(NSRMC);
+        sbContent.append(InvoiceConfig.getConfig().getNsrmc());
         sbContent.append("</NSRMC>");
         sbContent.append("<NSRDZDAH></NSRDZDAH>");
         sbContent.append("<SWJG_DM></SWJG_DM>");
@@ -405,7 +285,7 @@ public class XmlTemplate {
         sbContent.append("</FPKJXX_XMXXS>");
         sbContent.append("<FPKJXX_DDXX class=\"FPKJXX_DDXX\">");
         sbContent.append("<DDH>");
-        sbContent.append(USERNAME).append(invoiceParam.getDdh());
+        sbContent.append(InvoiceConfig.getConfig().getUsername()).append(invoiceParam.getDdh());
         sbContent.append("</DDH>");
         sbContent.append("<THDH>");
         sbContent.append(StringUtil.isBlank(invoiceParam.getThdh()) ? "" : invoiceParam.getThdh());
@@ -428,16 +308,16 @@ public class XmlTemplate {
         StringBuilder sbContent = new StringBuilder();
         sbContent.append("<REQUEST_FPXXXZ_NEW class=\"REQUEST_FPXXXZ_NEW\">");
         sbContent.append("<FPQQLSH>");
-        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append(InvoiceConfig.getConfig().getUsername()).append(fpqqlsh);
         sbContent.append("</FPQQLSH>");
         sbContent.append("<DSPTBM>");
-        sbContent.append(USERNAME);
+        sbContent.append(InvoiceConfig.getConfig().getUsername());
         sbContent.append("</DSPTBM>");
         sbContent.append("<NSRSBH>");
-        sbContent.append(NSRSBH);
+        sbContent.append(InvoiceConfig.getConfig().getNsrsbh());
         sbContent.append("</NSRSBH>");
         sbContent.append("<DDH>");
-        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append(InvoiceConfig.getConfig().getUsername()).append(fpqqlsh);
         sbContent.append("</DDH>");
         sbContent.append("<PDF_XZFS>");
         sbContent.append(xzfs);
@@ -456,16 +336,16 @@ public class XmlTemplate {
         StringBuilder sbContent = new StringBuilder();
         sbContent.append("<REQUEST_FPXXXZ_NEW class=\"REQUEST_FPXXXZ_NEW\">");
         sbContent.append("<FPQQLSH>");
-        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append(InvoiceConfig.getConfig().getUsername()).append(fpqqlsh);
         sbContent.append("</FPQQLSH>");
         sbContent.append("<DSPTBM>");
-        sbContent.append(USERNAME);
+        sbContent.append(InvoiceConfig.getConfig().getUsername());
         sbContent.append("</DSPTBM>");
         sbContent.append("<NSRSBH>");
-        sbContent.append(NSRSBH);
+        sbContent.append(InvoiceConfig.getConfig().getNsrsbh());
         sbContent.append("</NSRSBH>");
         sbContent.append("<DDH>");
-        sbContent.append(USERNAME).append(fpqqlsh);
+        sbContent.append(InvoiceConfig.getConfig().getUsername()).append(fpqqlsh);
         sbContent.append("</DDH>");
         sbContent.append("<PDF_XZFS>");
         sbContent.append(xzfs);
@@ -507,7 +387,7 @@ public class XmlTemplate {
             sbContent.append("<FPXX>");
             sbContent.append("<COMMON_NODES class=\"COMMON_NODE;\" size=\"5\">");
             sbContent.append("<COMMON_NODE><NAME>FPQQLSH</NAME><VALUE>");
-            sbContent.append(USERNAME).append(fpxx.get("fpqqlsh"));
+            sbContent.append(InvoiceConfig.getConfig().getUsername()).append(fpxx.get("fpqqlsh"));
             sbContent.append("</VALUE></COMMON_NODE>");
             sbContent.append("<COMMON_NODE><NAME>NSRSBH</NAME><VALUE>");
             sbContent.append(fpxx.get("nsrsbh"));
@@ -547,9 +427,26 @@ public class XmlTemplate {
     public String getKyfpslContentByInterfaceCode() {
         StringBuilder sbContent = new StringBuilder();
         sbContent.append("<REQUEST_KYFPSL class=\"REQUEST_KYFPSL\"><NSRSBH>");
-        sbContent.append(TAXPAYERID);
+        sbContent.append(InvoiceConfig.getConfig().getTaxpayerid());
         sbContent.append("</NSRSBH></REQUEST_KYFPSL>");
         return sbContent.toString();
+    }
+
+    /**
+     * 拼接全部报文
+     * @param globleInfo
+     * @param encryptContent
+     * @return
+     */
+    public static String getFullXmlEncryptedString(String globleInfo, String encryptContent) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(globleInfo);
+        sb.append("<content>");
+        sb.append(encryptContent);
+        sb.append("</content>");
+        sb.append("</Data>");
+        sb.append("</interface>");
+        return sb.toString();
     }
 
     /**
@@ -558,16 +455,16 @@ public class XmlTemplate {
      * @param content
      * @return
      */
-    public String encryptContent(String content) {
+    public static String encryptContent(String content) {
         DesUtil desUtil = new DesUtil();
         byte[] data = null;
         String encryptContent = "";
         try {
             data = desUtil.getStringByte(content);
             // CA 加密生产用
-            data = desUtil.des3EncodeECB(KEYBYTES.getBytes("UTF-8"), data);
+            data = desUtil.des3EncodeECB(InvoiceConfig.getConfig().getKeybytes().getBytes("UTF-8"), data);
             // Base64 加密
-            encryptContent = desUtil.getBase64EncString(data);
+            encryptContent = Base64.encode(data);
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -581,20 +478,31 @@ public class XmlTemplate {
     }
 
     /**
-     * 拼接全部报文
-     * @param globleInfo
-     * @param encryptContent
+     * 解密 Content
+     *
+     * @param content
      * @return
      */
-    public String getFullXmlEncryptedString(String globleInfo, String encryptContent) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(globleInfo);
-        sb.append("<content>");
-        sb.append(encryptContent);
-        sb.append("</content>");
-        sb.append("</Data>");
-        sb.append("</interface>");
-        return sb.toString();
+    public static String decryptContent(String content) {
+        DesUtil desUtil = new DesUtil();
+        byte[] data = null;
+        String decryptContent = "";
+        try {
+            data = desUtil.getStringByte(content);
+            // CA 加密生产用
+            data = desUtil.des3DecodeECB(InvoiceConfig.getConfig().getKeybytes().getBytes("UTF-8"), data);
+            // Base64 加密
+            decryptContent = new String(Base64.decode(data), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        // bash64 加密 content
+        return decryptContent;
     }
 
     /**
@@ -602,7 +510,7 @@ public class XmlTemplate {
      * @param str xml形状的str串
      * @return Document 对象
      */
-    public Document StringTOXml(String str) {
+    public static Document StringTOXml(String str) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         Document doc = null;
         try {
@@ -621,7 +529,7 @@ public class XmlTemplate {
      * @param nodePaht
      * @return 某个节点的值 前提是需要知道xml格式，知道需要取的节点相对根节点所在位置
      */
-    public String getNodeValue(Document document, String nodePaht) {
+    public static String getNodeValue(Document document, String nodePaht) {
         XPathFactory xpfactory = XPathFactory.newInstance();
         XPath path = xpfactory.newXPath();
         String servInitrBrch = "";

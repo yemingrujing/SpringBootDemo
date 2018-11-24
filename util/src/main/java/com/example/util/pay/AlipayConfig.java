@@ -110,7 +110,7 @@ public class AlipayConfig extends LoadProperties {
 
     @Override
     public void loadProperties(Properties pro) {
-        log.info("开始从属性文件中加载配置项");
+        log.info("AliPay：开始从属性文件中加载配置项");
         String value;
 
         value = pro.getProperty(AlipayConstants.APPID);

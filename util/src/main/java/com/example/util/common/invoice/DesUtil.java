@@ -4,8 +4,10 @@ import org.apache.commons.codec.binary.Base64;
 import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -34,29 +36,10 @@ public class DesUtil {
      */
     private final Base64 base64 = new Base64();
 
-
     /**
-     * 加密
-     * base64 encrypt
-     * @param strMingByte
-     * @return
-     * @throws UnsupportedEncodingException
+     * 定义 加密算法,可用 DES,DESede,Blowfish
      */
-    public String getBase64EncString(byte[] strMingByte) throws UnsupportedEncodingException {
-        String encodedText = base64.encodeToString(strMingByte);
-        return encodedText;
-    }
-
-    /**
-     * 解密
-     * base64 decrypt
-     * @param encodedText
-     * @return
-     * @throws UnsupportedEncodingException
-     */
-    public byte[] getBase64DecString(String encodedText) throws UnsupportedEncodingException  {
-        return base64.decode(encodedText);
-    }
+    private static final String Algorithm = "DESede";
 
     /**
      * 字符串转换为数组
@@ -76,14 +59,12 @@ public class DesUtil {
      * @throws Exception
      */
     public  byte[] des3EncodeECB(byte[] key, byte[] data) throws Exception {
-        Key deskey;
         DESedeKeySpec spec = new DESedeKeySpec(key);
-        SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
-        deskey = keyfactory.generateSecret(spec);
-        Cipher cipher = Cipher.getInstance("desede" + "/ECB/PKCS5Padding");
+        SecretKeyFactory keyfactory = SecretKeyFactory.getInstance(Algorithm);
+        Key deskey = keyfactory.generateSecret(spec);
+        Cipher cipher = Cipher.getInstance(Algorithm);
         cipher.init(Cipher.ENCRYPT_MODE, deskey);
-        byte[] bOut = cipher.doFinal(data);
-        return bOut;
+        return cipher.doFinal(data);
     }
 
     /**
@@ -93,15 +74,13 @@ public class DesUtil {
      * @return 明文
      * @throws Exception
      */
-    public  byte[] ees3DecodeECB(byte[] key, byte[] data) throws Exception {
-        Key deskey;
+    public  byte[] des3DecodeECB(byte[] key, byte[] data) throws Exception {
         DESedeKeySpec spec = new DESedeKeySpec(key);
-        SecretKeyFactory keyfactory = SecretKeyFactory.getInstance("desede");
-        deskey = keyfactory.generateSecret(spec);
-        Cipher cipher = Cipher.getInstance("desede" + "/ECB/PKCS5Padding");
+        SecretKeyFactory keyfactory = SecretKeyFactory.getInstance(Algorithm);
+        Key deskey = keyfactory.generateSecret(spec);
+        Cipher cipher = Cipher.getInstance(Algorithm);
         cipher.init(Cipher.DECRYPT_MODE, deskey);
-        byte[] bOut = cipher.doFinal(data);
-        return bOut;
+        return cipher.doFinal(data);
     }
 
     /**

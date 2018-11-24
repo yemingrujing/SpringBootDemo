@@ -27,13 +27,13 @@ public class InvoiceParam {
      * 自开(0) 代开(1)
      */
     @Builder.Default
-    private String dkbz = "0";
+    private String dkbz;
 
     /**
      * 编码表版本号 26.0 now
      */
     @Builder.Default
-    private String bmbBbh = "26.0";
+    private String bmbBbh;
 
     /**
      * 主要开票项目

@@ -4,12 +4,15 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.json.XML;
 import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.DateUtil;
+import com.example.util.common.StringUtil;
 import com.example.util.common.invoice.*;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import sun.misc.BASE64Decoder;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -21,8 +24,18 @@ import java.util.*;
  * @author Wei.Guang
  * @create 2018-11-22 13:43
  **/
+@Slf4j
 @RestController
 public class HTFPController {
+
+    /**
+     * 公用参数初始化
+     */
+    @PostConstruct
+    public void init() {
+        log.info("航天信息发票基础参数初始化");
+        InvoiceConfig.getConfig().loadPropertiesFromSrc();
+    }
 
     /**
      * XML node 位置
@@ -35,10 +48,11 @@ public class HTFPController {
 
     /**
      * 开发票
+     *
      * @return
      */
     @GetMapping(value = "/order/invoice/fpkj")
-    public Map<String, Object> fpkj() {
+    public Map<String, Object> fpkj(String dkbz) {
         XmlTemplate xmlTemplate = new XmlTemplate();
         Map<String, Object> moduleMap = new HashMap<>();
         Date date = DateUtil.now();
@@ -56,8 +70,8 @@ public class HTFPController {
         InvoiceDetailParam detailParam = InvoiceDetailParam.builder().xmmc("迷你裙").xmsl("2")
                 .hsbz("1").fphxz("0").xmdj(xmdj).spbm("1010101030000000000").xmje(xmje).sl("0.17").build();
         list.add(detailParam);
-        InvoiceParam invoiceParam = InvoiceParam.builder().fpqqlsh(fpqqlsh).dkbz(XmlTemplate.DKBZ)
-                .bmbBbh(XmlTemplate.BMB_BBH).kpxm("迷你裙")
+        InvoiceParam invoiceParam = InvoiceParam.builder().fpqqlsh(fpqqlsh).dkbz(StringUtil.isNotBlank(dkbz) ? dkbz : InvoiceConfig.getConfig().getDkbz())
+                .bmbBbh(InvoiceConfig.getConfig().getBmbBbh()).kpxm("迷你裙")
                 .xhfNsrsbh("310101000000090").xhfmc("上海市执业药师协会")
                 .xhfDz("上海市柳州路615号2号楼3楼").xhfDh("213132")
                 .ghfmc(ghfmc).ghfSj("13888884434")
@@ -66,15 +80,15 @@ public class HTFPController {
                 .invoiceDetailParams(list).ddh(fpqqlsh).dddate(DateUtil.parseDateToStr(date, DateUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS)).build();
         String globleInfo = xmlTemplate.getGlobleInfoByInterfaceCode("FPKJ");
         String content = xmlTemplate.getFpkjContentByInterfaceCode(invoiceParam);
-        // String contentEncrypted = xmlTemplate.encryptContent(content);
+        // String contentEncrypted = XmlTemplate.encryptContent(content);
         String contentEncrypted = Base64.encode(content);
-        String soapXml = xmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
+        String soapXml = XmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
         // 接口调用
         String response = HttpClientCallSoapUtil.doPostSoap(XmlTemplate.WSDLADDRESS_HTTP, soapXml);
         // 解析
-        Document doc = xmlTemplate.StringTOXml(response);
-        String returnVal = xmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(xmlTemplate.getNodeValue(doc, RETURNMESSAGE));
+        Document doc = XmlTemplate.StringTOXml(response);
+        String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
+        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         if (returnVal.equals("0000")) {
             moduleMap.put("orderCode", fpqqlsh);
         }
@@ -85,8 +99,9 @@ public class HTFPController {
 
     /**
      * 发票数据下载
+     *
      * @param orderCode 订单号
-     * @param xzfs 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
+     * @param xzfs      1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
      * @return
      */
     @GetMapping(value = "/order/invoice/fpxz")
@@ -99,19 +114,19 @@ public class HTFPController {
         // 拼接 content 中的明文
         String content = xmlTemplate.getFpxzContentByInterfaceCode(orderCode, xzfs);
         // 加密 content
-        // String contentEncrypted = xmlTemplate.encryptContent(content);
+        // String contentEncrypted = XmlTemplate.encryptContent(content);
         String contentEncrypted = Base64.encode(content);
-        String soapXml = xmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
+        String soapXml = XmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
         // 接口调用
         String response = HttpClientCallSoapUtil.doPostSoap(XmlTemplate.WSDLADDRESS_HTTP, soapXml);
         // 解析
-        Document doc = xmlTemplate.StringTOXml(response);
-        String returnVal = xmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(xmlTemplate.getNodeValue(doc, RETURNMESSAGE));
+        Document doc = XmlTemplate.StringTOXml(response);
+        String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
+        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         if (xzfs.intValue() == 1 && returnVal.equals("0000")) {
-            String returnContent = new String(DesUtil.unGZip(new BASE64Decoder().decodeBuffer(xmlTemplate.getNodeValue(doc, CONTENT))));
-            String pdfFile = xmlTemplate.getNodeValue(xmlTemplate.StringTOXml(returnContent), "/REQUEST_FPKJXX_FPJGXX_NEW/PDF_FILE");
-            String path  = PDF_FILE_PATH + UUID.randomUUID().toString() + ".pdf";
+            String returnContent = new String(DesUtil.unGZip(new BASE64Decoder().decodeBuffer(XmlTemplate.getNodeValue(doc, CONTENT))));
+            String pdfFile = XmlTemplate.getNodeValue(XmlTemplate.StringTOXml(returnContent), "/REQUEST_FPKJXX_FPJGXX_NEW/PDF_FILE");
+            String path = PDF_FILE_PATH + UUID.randomUUID().toString() + ".pdf";
             DesUtil.decoderBase64File(pdfFile, path);
             moduleMap.put("content", XML.toJSONObject(returnContent));
         }
@@ -122,6 +137,7 @@ public class HTFPController {
 
     /**
      * 邮箱发票推送
+     *
      * @param jsonObject
      */
     @PostMapping(value = "/order/invoice/fpts", produces = "application/json;charset=UTF-8")
@@ -133,18 +149,18 @@ public class HTFPController {
         // 拼接 content 中的明文
         String content = xmlTemplate.getYxfptsContentByInterfaceCode(jsonObject.getJSONObject("tsfsxx"), jsonObject.getJSONArray("fpxxs"));
         // 加密 content
-        // String contentEncrypted = xmlTemplate.encryptContent(content);
+        // String contentEncrypted = XmlTemplate.encryptContent(content);
         String contentEncrypted = Base64.encode(content);
-        String soapXml = xmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
+        String soapXml = XmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
         // 接口调用
         String response = HttpClientCallSoapUtil.doPostSoap(XmlTemplate.WSDLADDRESS_HTTP, soapXml);
         // 解析
-        Document doc = xmlTemplate.StringTOXml(response);
-        String returnVal = xmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(xmlTemplate.getNodeValue(doc, RETURNMESSAGE));
+        Document doc = XmlTemplate.StringTOXml(response);
+        String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
+        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         if (returnVal.equals("0000")) {
-            String returnContent = Base64.decodeStr(xmlTemplate.getNodeValue(doc, CONTENT));
-            String fptslsh = xmlTemplate.getNodeValue(xmlTemplate.StringTOXml(returnContent), "/RESPONSE_EMAILPHONEFPTS/COMMON_NODES/COMMON_NODE/VALUE");
+            String returnContent = Base64.decodeStr(XmlTemplate.getNodeValue(doc, CONTENT));
+            String fptslsh = XmlTemplate.getNodeValue(XmlTemplate.StringTOXml(returnContent), "/RESPONSE_EMAILPHONEFPTS/COMMON_NODES/COMMON_NODE/VALUE");
             moduleMap.put("fptslsh", fptslsh);
 
         }
@@ -155,8 +171,9 @@ public class HTFPController {
 
     /**
      * 发票明细信息下载
+     *
      * @param orderCode 订单号
-     * @param xzfs PDF下载方式 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
+     * @param xzfs      PDF下载方式 1 - PDF文件（PDF_FILE） 2 - PDF链接（PDF_URL）
      * @return
      */
     @PostMapping(value = "/order/invoice/fpmx")
@@ -169,21 +186,21 @@ public class HTFPController {
         // 拼接 content 中的明文
         String content = xmlTemplate.getFpmxContentByInterfaceCode(orderCode, xzfs);
         // 加密 content
-        // String contentEncrypted = xmlTemplate.encryptContent(content);
+        // String contentEncrypted = XmlTemplate.encryptContent(content);
         String contentEncrypted = Base64.encode(content);
-        String soapXml = xmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
+        String soapXml = XmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
         // 接口调用
         String response = HttpClientCallSoapUtil.doPostSoap(XmlTemplate.WSDLADDRESS_HTTP, soapXml);
         // 解析
-        Document doc = xmlTemplate.StringTOXml(response);
-        String returnVal = xmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(xmlTemplate.getNodeValue(doc, RETURNMESSAGE));
+        Document doc = XmlTemplate.StringTOXml(response);
+        String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
+        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         if (returnVal.equals("0000")) {
             String returnContent;
             if (xzfs.intValue() == 1) {
-                returnContent = new String(DesUtil.unGZip(new BASE64Decoder().decodeBuffer(xmlTemplate.getNodeValue(doc, CONTENT))));
+                returnContent = new String(DesUtil.unGZip(new BASE64Decoder().decodeBuffer(XmlTemplate.getNodeValue(doc, CONTENT))));
             } else {
-                returnContent = Base64.decodeStr(xmlTemplate.getNodeValue(doc, CONTENT));
+                returnContent = Base64.decodeStr(XmlTemplate.getNodeValue(doc, CONTENT));
             }
             moduleMap.put("returnContent", XML.toJSONObject(returnContent));
 
@@ -195,6 +212,7 @@ public class HTFPController {
 
     /**
      * 发票信息推送
+     *
      * @param fptsContent 推送参数(调用发票信息下载的返回content)
      * @return
      */
@@ -208,13 +226,13 @@ public class HTFPController {
         // 加密 content
         // String contentEncrypted = xmlTemplate.encryptContent(content);
         String contentEncrypted = Base64.encode(content);
-        String soapXml = xmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
+        String soapXml = XmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
         // 接口调用
         String response = HttpClientCallSoapUtil.doPostSoap(XmlTemplate.WSDLADDRESS_HTTP, soapXml);
         // 解析
-        Document doc = xmlTemplate.StringTOXml(response);
-        String returnVal = xmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(xmlTemplate.getNodeValue(doc, RETURNMESSAGE));
+        Document doc = XmlTemplate.StringTOXml(response);
+        String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
+        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         moduleMap.put("code", returnVal);
         moduleMap.put("message", returnMessageVal);
         return moduleMap;
@@ -222,6 +240,7 @@ public class HTFPController {
 
     /**
      * 获取企业可用发票数量 API
+     *
      * @return
      */
     @GetMapping(value = "/order/invoice/getkyfpsl")
@@ -233,20 +252,20 @@ public class HTFPController {
         // 拼接 content 中的明文
         String content = xmlTemplate.getKyfpslContentByInterfaceCode();
         // 加密 content
-        // String contentEncrypted = xmlTemplate.encryptContent(content);
+        // String contentEncrypted = XmlTemplate.encryptContent(content);
         String contentEncrypted = Base64.encode(content);
-        String soapXml = xmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
+        String soapXml = XmlTemplate.getFullXmlEncryptedString(globleInfo, contentEncrypted);
         // 接口调用
         String response = HttpClientCallSoapUtil.doPostSoap(XmlTemplate.WSDLADDRESS_HTTP, soapXml);
         // 解析
-        Document doc = xmlTemplate.StringTOXml(response);
-        String returnVal = xmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(xmlTemplate.getNodeValue(doc, RETURNMESSAGE));
-        String returnContent = Base64.decodeStr(xmlTemplate.getNodeValue(doc, CONTENT));
+        Document doc = XmlTemplate.StringTOXml(response);
+        String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
+        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
+        String returnContent = Base64.decodeStr(XmlTemplate.getNodeValue(doc, CONTENT));
         moduleMap.put("code", returnVal);
         moduleMap.put("message", returnMessageVal);
         if (returnVal.equals("0000")) {
-            String sl = xmlTemplate.getNodeValue(xmlTemplate.StringTOXml(returnContent), KYFPSL);
+            String sl = XmlTemplate.getNodeValue(XmlTemplate.StringTOXml(returnContent), KYFPSL);
             moduleMap.put("kyfpsl", sl);
         }
         return moduleMap;

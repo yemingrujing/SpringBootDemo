@@ -96,8 +96,8 @@ public class SDKConfig extends LoadProperties {
      */
     @Override
     public void loadProperties(Properties pro) {
-        log.info("开始从属性文件中加载配置项");
-        String value = null;
+        log.info("CHINAPAY：开始从属性文件中加载配置项");
+        String value;
 
         value = pro.getProperty(SecssConstants.SDK_FRONT_URL);
         log.info(SecssConstants.SDK_FRONT_URL + ":" + value);
