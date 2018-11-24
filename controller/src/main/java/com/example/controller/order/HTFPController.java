@@ -50,7 +50,7 @@ public class HTFPController {
      * @return
      */
     @PostMapping(value = "/order/invoice/fpkj")
-    public Map<String, Object> fpkj(InvoiceParam invoiceParam) {
+    public Map<String, Object> fpkj(@RequestBody InvoiceParam invoiceParam) {
         XmlTemplate xmlTemplate = new XmlTemplate();
         Map<String, Object> moduleMap = new HashMap<>();
         Date date = DateUtil.now();
