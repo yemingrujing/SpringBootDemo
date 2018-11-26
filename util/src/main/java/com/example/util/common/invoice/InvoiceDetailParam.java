@@ -61,12 +61,32 @@ public class InvoiceDetailParam {
     private String yhzcbs = "0";
 
     /**
+     * 零税率标识(非必填)
+     * 空：非零税率， 1：免税， 2：不征税，3普通零税率
+     */
+    private String lslbs;
+
+    /**
+     * 增值税特殊管理(非必填)
+     * 当YHZCBS为1时必填（如：免税、不征税）
+     */
+    private String zzstsgl;
+
+    /**
+     * 扣除额(非必填)
+     * 单位元，小数点 2位小数 不能大于不含税金额 说明上海爱信诺航天信息有限公司
+     * 如下： 1.差额征税的发票如果没有折扣的话，只能允许一条商品行。 2.具体差额征税发票的
+     * 计算方法如下： 不含税差额 = 不含税金额 - 扣除额；税额 = 不含税差额*税率
+     */
+    private String kce;
+
+    /**
      * 项目金额
      */
     private BigDecimal xmje;
 
     /**
-     * 税率
+     * 税率  test 0.17 ; ys 0.03
      */
     private String sl;
 }

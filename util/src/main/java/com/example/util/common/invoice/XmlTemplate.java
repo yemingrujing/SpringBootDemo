@@ -166,7 +166,9 @@ public class XmlTemplate {
         sbContent.append("<XHF_DH>");
         sbContent.append(invoiceParam.getXhfDh());
         sbContent.append("</XHF_DH>");
-        sbContent.append("<XHF_YHZH></XHF_YHZH>");
+        sbContent.append("<XHF_YHZH>");
+        sbContent.append(StringUtil.isBlank(invoiceParam.getXhfYhzh()) ? "" : invoiceParam.getXhfYhzh());
+        sbContent.append("</XHF_YHZH>");
         sbContent.append("<GHFMC>");
         sbContent.append(invoiceParam.getGhfmc());
         sbContent.append("</GHFMC>");
@@ -205,8 +207,16 @@ public class XmlTemplate {
         sbContent.append("<KPLX>");
         sbContent.append(invoiceParam.getKplx());
         sbContent.append("</KPLX>");
-        sbContent.append("<YFP_DM></YFP_DM>");
-        sbContent.append("<YFP_HM></YFP_HM>");
+        sbContent.append("<YFP_DM>");
+        if (!"10".equals(invoiceParam.getCzdm()) || "2".equals(invoiceParam.getKplx())) {
+            sbContent.append(invoiceParam.getYfpDm());
+        }
+        sbContent.append("</YFP_DM>");
+        sbContent.append("<YFP_HM>");
+        if (!"10".equals(invoiceParam.getCzdm()) || "2".equals(invoiceParam.getKplx())) {
+            sbContent.append(invoiceParam.getCzdm());
+        }
+        sbContent.append("</YFP_HM>");
         sbContent.append("<CZDM>");
         sbContent.append(invoiceParam.getCzdm());
         sbContent.append("</CZDM>");
@@ -215,7 +225,9 @@ public class XmlTemplate {
         sbContent.append("<CHYY>");
         sbContent.append(StringUtil.isBlank(invoiceParam.getChyy()) ? "" : invoiceParam.getChyy());
         sbContent.append("</CHYY>");
-        sbContent.append("<TSCHBZ></TSCHBZ>");
+        sbContent.append("<TSCHBZ>");
+        sbContent.append(StringUtil.isBlank(invoiceParam.getTschbz()) ? "" : invoiceParam.getTschbz());
+        sbContent.append("</TSCHBZ>");
         sbContent.append("<KPHJJE>");
         sbContent.append(invoiceParam.getKphjje());
         sbContent.append("</KPHJJE>");
@@ -243,8 +255,12 @@ public class XmlTemplate {
                 sbContent.append("<XMMC>");
                 sbContent.append(invoiceDetailParam.getXmmc());
                 sbContent.append("</XMMC>");
-                sbContent.append("<XMDW></XMDW>");
-                sbContent.append("<GGXH></GGXH>");
+                sbContent.append("<XMDW>");
+                sbContent.append(StringUtil.isBlank(invoiceDetailParam.getXmdw()) ? "" : invoiceDetailParam.getXmdw());
+                sbContent.append("</XMDW>");
+                sbContent.append("<GGXH>");
+                sbContent.append(StringUtil.isBlank(invoiceDetailParam.getGgxh()) ? "" : invoiceDetailParam.getGgxh());
+                sbContent.append("</GGXH>");
                 sbContent.append("<XMSL>");
                 sbContent.append(invoiceDetailParam.getXmsl());
                 sbContent.append("</XMSL>");
@@ -264,9 +280,15 @@ public class XmlTemplate {
                 sbContent.append("<YHZCBS>");
                 sbContent.append(invoiceDetailParam.getYhzcbs());
                 sbContent.append("</YHZCBS>");
-                sbContent.append("<LSLBS></LSLBS>");
-                sbContent.append("<ZZSTSGL></ZZSTSGL>");
-                sbContent.append("<KCE></KCE>");
+                sbContent.append("<LSLBS>");
+                sbContent.append(StringUtil.isBlank(invoiceDetailParam.getLslbs()) ? "" : invoiceDetailParam.getLslbs());
+                sbContent.append("</LSLBS>");
+                sbContent.append("<ZZSTSGL>");
+                sbContent.append(StringUtil.isBlank(invoiceDetailParam.getZzstsgl()) ? "" : invoiceDetailParam.getZzstsgl());
+                sbContent.append("</ZZSTSGL>");
+                sbContent.append("<KCE>");
+                sbContent.append(StringUtil.isBlank(invoiceDetailParam.getKce()) ? "" : invoiceDetailParam.getKce());
+                sbContent.append("</KCE>");
                 sbContent.append("<XMJE>");
                 sbContent.append(invoiceDetailParam.getXmje());
                 sbContent.append("</XMJE>");

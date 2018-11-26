@@ -14,40 +14,63 @@ import java.util.List;
  *     "ghfSf": "江苏省",
  *     "xhfmc": "上海市执业药师协会",
  *     "ghfDz": "金沙江西路1555弄",
+ *     "tschbz": "",
  *     "thdh": "",
  *     "xhfNsrsbh": "310101000000090",
- *     "xhfDh": "213132",
+ * 	"xhfYhzh": "建设银行622788987765345",
+ *     "fpqqlsh": "213132",
+ *     "xhfDh": "13888884434",
  *     "kphjje": 400.00,
- *     "bz": "",
+ *     "bz": "黑色和白色的",
  *     "ghfEmail": "1383838438@qq.com",
- *     "hjbhsje": 400.00,
+ *     "hjbhsje": 0,
  *     "ghfYhzh": "工商银行6227092334322123",
  *     "hjse": 0,
  *     "xhfDz": "上海市柳州路615号2号楼3楼",
- *     "ghfmc": "廖兵",
+ *     "ghfmc": "上海天启集团",
  *     "kpxm": "迷你裙",
  *     "ddh": "",
  *     "chyy": "",
  *     "czdm": "10",
- *     "dkbz": "",
- *     "ghfNsrsbh": "",
- *     "ghfqylx": "",
+ *     "dkbz": "0",
+ *     "yfpHm": "",
+ *     "ghfNsrsbh": "420101008800090",
+ *     "ghfqylx": "01",
  *     "kpy": "药师",
+ *     "yfpDm": "",
  *     "invoiceDetailParams": [{
- *         "xmdw": "条",
- *         "ggxh": "",
- *         "fphxz": "0",
- *         "hsbz": "1",
- *         "xmmc": "迷你裙",
+ *         "ggxh": "M 165",
  *         "xmdj": 0,
  *         "yhzcbs": "0",
- *         "xmsl": "2",
+ *         "zzstsgl": "",
  *         "xmje": 200.00,
+ *         "kce": "",
+ *         "xmdw": "条",
+ *         "fphxz": "0",
+ *         "lslbs": "",
+ *         "hsbz": "1",
+ *         "xmmc": "迷你裙",
+ *         "xmsl": "1",
  *         "sl": "0.17",
+ *         "spbm": "1010101030000000000"
+ *     },{
+ *         "ggxh": "M 165",
+ *         "xmdj": 0,
+ *         "yhzcbs": "0",
+ *         "zzstsgl": "",
+ *         "xmje": 200.00,
+ *         "kce": "",
+ *         "xmdw": "条",
+ *         "fphxz": "0",
+ *         "lslbs": "",
+ *         "hsbz": "1",
+ *         "xmmc": "超短裤",
+ *         "xmsl": "1",
+ *         "sl": "0.03",
  *         "spbm": "1010101030000000000"
  *     }],
  *     "dddate": "",
- *     "ghfGddh": ""
+ *     "ghfGddh": "1383838438"
  * }
  *
  * @author Wei.Guang
@@ -97,6 +120,11 @@ public class InvoiceParam {
      * 销货方电话
      */
     private String xhfDh;
+
+    /**
+     * 销方银行、账号
+     */
+    private String xhfYhzh;
 
     /**
      * 购货方名称, 即发票抬头
@@ -155,6 +183,24 @@ public class InvoiceParam {
     private String kplx = "1";
 
     /**
+     * 原发票代码
+     * 如果CZDM不是10或KPLX为红票时候都是必录
+     */
+    private String yfpDm;
+
+    /**
+     * 原发票号码
+     * 如果CZDM不是10或KPLX为红票时候都是必录
+     */
+    private String yfpHm;
+
+    /**
+     * 特殊冲红标志
+     * 正常冲红(电子发票) 1特殊冲红(冲红纸质等)
+     */
+    private String tschbz;
+
+    /**
      * 操作代码：10正票正常开具 20退货折让红票
      */
 
@@ -168,16 +214,21 @@ public class InvoiceParam {
 
     /**
      * 价税合计金额
+     * 小数点后2位，以元为单位精确到分
      */
     private BigDecimal kphjje;
 
     /**
-     * 合计不含税金额。所有商品行不含税金额之和
+     * 合计不含税金额。
+     * 所有商品行不含税金额之和小数点后2位，以元为单位精确到分(单行商品税额之和)
+     * 平台处理价税分离，此值传0
      */
     private BigDecimal hjbhsje;
 
     /**
      * 合计税额。所有商品行税额之和。
+     * 所有商品行不含税金额之和小数点后2位，以元为单位精确到分(单行商品税额之和)
+     * 平台处理价税分离，此值传0
      */
     private BigDecimal hjse;
 

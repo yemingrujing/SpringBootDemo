@@ -5,7 +5,6 @@ import cn.hutool.json.XML;
 import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.DateUtil;
 import com.example.util.common.invoice.*;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
@@ -13,7 +12,6 @@ import sun.misc.BASE64Decoder;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -56,15 +54,8 @@ public class HTFPController {
         Date date = DateUtil.now();
         // 流水号
         String fpqqlsh = DateUtil.parseDateToStr(date, DateUtil.DATE_TIME_FORMAT_YYYYMMDDHHMISS);
-        // 填写学员名字或 对方单位名称
-        String ghfmc = "廖兵";
-        // 购货方企业类型 01：企业    02：机关事业单位    03：个人    04：其它
-        String ghfqylx = "03";
-        // 项目单价
-        BigDecimal xmdj = new BigDecimal(200).setScale(2, BigDecimal.ROUND_HALF_UP);
-        // 项目金额  设置成和单价一样
-        BigDecimal xmje = new BigDecimal(400).setScale(2, BigDecimal.ROUND_HALF_UP);
-        List<InvoiceDetailParam> list = Lists.newArrayList();
+        invoiceParam.setFpqqlsh(fpqqlsh);
+        invoiceParam.setDdh(fpqqlsh);
         String globleInfo = xmlTemplate.getGlobleInfoByInterfaceCode("FPKJ");
         String content = xmlTemplate.getFpkjContentByInterfaceCode(invoiceParam);
         // String contentEncrypted = XmlTemplate.encryptContent(content);
