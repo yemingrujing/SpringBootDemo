@@ -1,16 +1,31 @@
 package com.example.util.common.invoice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 基于HttpClient的Soap的工具类
@@ -32,12 +47,14 @@ public class HttpClientCallSoapUtil {
     /**
      * 请求超时时间
      */
-    private static int socketTimeout = 30000;
+    private static final int socketTimeout = 30000;
 
     /**
      * 传输超时时间
      */
-    private static int connectTimeout = 30000;
+    private static final int connectTimeout = 30000;
+
+    private static final int successCode = 200;
 
     /**
      * 使用SOAP发送消息
@@ -75,5 +92,108 @@ public class HttpClientCallSoapUtil {
             log.error("Request Send Failure: {}", e.getMessage());
         }
         return respStr;
+    }
+
+    /**
+     * 同步发送方式
+     * @param url
+     * @param headers
+     * @param param
+     * @return
+     */
+    public static String sendSyncSingleHttp(String url, Map<String, String> headers, String param) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        RequestConfig defaultRequestConfig = RequestConfig.custom().build();
+        RequestConfig requestConfig = RequestConfig.copy(defaultRequestConfig).setSocketTimeout(socketTimeout)
+                .setConnectTimeout(connectTimeout).build();
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        CloseableHttpResponse response = null;
+        try {
+            HttpPost httpPost = setConnectionParam(url, headers);
+            param = URLEncoder.encode(param, "UTF-8");
+            if ("1".equals(InvoiceConfig.getConfig().getZipcode())) {
+                // 压缩
+                param = SecurityUtil.compress(param);
+            }
+            nameValuePairs.add(new BasicNameValuePair("param", param));
+            UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(nameValuePairs);
+            httpPost.setEntity(urlEncodedFormEntity);
+            httpPost.setConfig(requestConfig);
+            response = httpClient.execute(httpPost);
+            return printResult(response);
+        } catch (Exception e) {
+            log.error("Request Send Error: {}", ExceptionUtils.getStackTrace(e));
+        } finally {
+            try {
+                if (response != null) {
+                    response.close();
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (IOException e) {
+                log.error("Request Send Error: {}", ExceptionUtils.getStackTrace(e));
+            }
+        }
+        return null;
+    }
+
+    private static String printResult(CloseableHttpResponse response) {
+        String str = "";
+        InputStream inputStream = null;
+        if (response.getStatusLine().getStatusCode() == successCode) {
+            try {
+                inputStream = response.getEntity().getContent();
+                str = URLDecoder.decode(inputStreamToString(inputStream), "UTF-8");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                    response.close();
+                } catch (IOException e) {
+                    log.error("Request Send Error: {}", ExceptionUtils.getStackTrace(e));
+                }
+            }
+        } else {
+            try {
+                log.info(response.getStatusLine().getStatusCode() + ":" + response.getEntity().getContent());
+            } catch (IOException e) {
+                log.error("Request Send Error: {}", ExceptionUtils.getStackTrace(e));
+            }
+        }
+        return str;
+    }
+
+    /**
+     * 构建post请求
+     * @param url
+     * @param headers
+     * @return
+     */
+    private static HttpPost setConnectionParam(String url, Map<String, String> headers) {
+        HttpPost httpPost = new HttpPost(url);
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            httpPost.setHeader(entry.getKey(), entry.getValue());
+        }
+        return httpPost;
+    }
+
+    /**
+     * 获取流
+     * @return
+     * @throws IOException
+     */
+    public static String inputStreamToString(InputStream input) throws IOException {
+        BufferedReader br = null;
+        String data = "";
+        StringBuffer sb = new StringBuffer();
+        br = new BufferedReader(new InputStreamReader(input));
+        while ((data = br.readLine()) != null) {
+            sb.append(data);
+        }
+        return sb.toString();
     }
 }

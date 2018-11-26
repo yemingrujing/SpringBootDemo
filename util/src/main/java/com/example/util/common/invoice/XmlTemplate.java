@@ -1,6 +1,5 @@
 package com.example.util.common.invoice;
 
-import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.util.common.StringUtil;
@@ -478,25 +477,19 @@ public class XmlTemplate {
      * @return
      */
     public static String encryptContent(String content) {
-        DesUtil desUtil = new DesUtil();
-        byte[] data = null;
-        String encryptContent = "";
+        SecurityUtil securityUtil = new SecurityUtil();
+        String data = null;
         try {
-            data = desUtil.getStringByte(content);
             // CA 加密生产用
-            data = desUtil.des3EncodeECB(InvoiceConfig.getConfig().getKeybytes().getBytes("UTF-8"), data);
-            // Base64 加密
-            encryptContent = Base64.encode(data);
+            data = securityUtil.des3EncodeECB(InvoiceConfig.getConfig().getKeybytes(), content);
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
         // bash64 加密 content
-        return encryptContent;
+        return data;
     }
 
     /**
@@ -506,25 +499,18 @@ public class XmlTemplate {
      * @return
      */
     public static String decryptContent(String content) {
-        DesUtil desUtil = new DesUtil();
-        byte[] data = null;
-        String decryptContent = "";
+        SecurityUtil securityUtil = new SecurityUtil();
+        String data = null;
         try {
-            data = desUtil.getStringByte(content);
             // CA 加密生产用
-            data = desUtil.des3DecodeECB(InvoiceConfig.getConfig().getKeybytes().getBytes("UTF-8"), data);
-            // Base64 加密
-            decryptContent = new String(Base64.decode(data), "UTF-8");
+            data = securityUtil.des3DecodeECB(InvoiceConfig.getConfig().getKeybytes(), content);
         } catch (UnsupportedEncodingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        // bash64 加密 content
-        return decryptContent;
+        return data;
     }
 
     /**

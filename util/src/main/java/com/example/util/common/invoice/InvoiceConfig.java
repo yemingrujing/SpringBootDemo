@@ -118,6 +118,11 @@ public class InvoiceConfig extends LoadProperties {
      */
     private String keybytes;
 
+    /**
+     * PDF文件下载目录
+     */
+    private String pdfFilePath;
+
     @Override
     public void loadProperties(Properties pro) {
         log.info("航天信息发票：开始从属性文件中加载配置项");
@@ -230,6 +235,12 @@ public class InvoiceConfig extends LoadProperties {
         if (StringUtil.isNotBlank(value)) {
             this.keybytes = value.trim();
         }
+
+        value = pro.getProperty(InvoiceConstants.PDF_FILE_PATH);
+        log.info(InvoiceConstants.PDF_FILE_PATH + ":" + value);
+        if (StringUtil.isNotBlank(value)) {
+            this.pdfFilePath = value.trim();
+        }
     }
 
     /**
@@ -310,5 +321,9 @@ public class InvoiceConfig extends LoadProperties {
 
     public String getKeybytes() {
         return keybytes;
+    }
+
+    public String getPdfFilePath() {
+        return pdfFilePath;
     }
 }

@@ -96,4 +96,9 @@ public class InvoiceConstants {
      * 加密字符串(生产用)
      */
     public static String KEYBYTES = "keybytes";
+
+    /**
+     * PDF文件下载目录
+     */
+    public static String PDF_FILE_PATH = "pdfFilePath";
 }

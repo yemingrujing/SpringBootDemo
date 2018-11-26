@@ -8,10 +8,9 @@ import com.example.util.common.invoice.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
-import sun.misc.BASE64Decoder;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -40,7 +39,6 @@ public class HTFPController {
     private static final String RETURNMESSAGE = "/interface/returnStateInfo/returnMessage";
     private static final String CONTENT = "/interface/Data/content";
     private static final String KYFPSL = "/RESPONSE_KYFPSL/KYFPSL";
-    private static final String PDF_FILE_PATH = "E:\\file\\htfp\\";
 
     /**
      * 开发票
@@ -83,9 +81,9 @@ public class HTFPController {
      * @return
      */
     @GetMapping(value = "/order/invoice/fpxz")
-    public Map<String, Object> fpxz(@RequestParam String orderCode,
-                                    @RequestParam Integer xzfs) throws Exception {
-        Map<String, Object> moduleMap = new HashMap<>();
+    public void fpxz(@RequestParam String orderCode,
+                                    @RequestParam Integer xzfs,
+                                    HttpServletResponse rsp) throws Exception {
         XmlTemplate xmlTemplate = new XmlTemplate();
         // 拼接 通用 globleInfo
         String globleInfo = xmlTemplate.getGlobleInfoByInterfaceCode("FPXZ");
@@ -102,15 +100,12 @@ public class HTFPController {
         String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
         String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         if (xzfs.intValue() == 1 && returnVal.equals("0000")) {
-            String returnContent = new String(DesUtil.unGZip(new BASE64Decoder().decodeBuffer(XmlTemplate.getNodeValue(doc, CONTENT))));
+            String returnContent = new String(SecurityUtil.unGZip(XmlTemplate.getNodeValue(doc, CONTENT)));
             String pdfFile = XmlTemplate.getNodeValue(XmlTemplate.StringTOXml(returnContent), "/REQUEST_FPKJXX_FPJGXX_NEW/PDF_FILE");
-            String path = PDF_FILE_PATH + UUID.randomUUID().toString() + ".pdf";
-            DesUtil.decoderBase64File(pdfFile, path);
-            moduleMap.put("content", XML.toJSONObject(returnContent));
+            String path =  UUID.randomUUID().toString() + ".pdf";
+            // SecurityUtil.decoderBase64File(pdfFile, path);
+            SecurityUtil.downLoadFile(pdfFile, path, rsp);
         }
-        moduleMap.put("code", returnVal);
-        moduleMap.put("message", returnMessageVal);
-        return moduleMap;
     }
 
     /**
@@ -156,7 +151,7 @@ public class HTFPController {
      */
     @PostMapping(value = "/order/invoice/fpmx")
     public Map<String, Object> fpmx(@RequestParam String orderCode,
-                                    @RequestParam Integer xzfs) throws IOException {
+                                    @RequestParam Integer xzfs) throws Exception {
         Map<String, Object> moduleMap = new HashMap<>();
         XmlTemplate xmlTemplate = new XmlTemplate();
         // 拼接 通用 globleInfo
@@ -176,7 +171,7 @@ public class HTFPController {
         if (returnVal.equals("0000")) {
             String returnContent;
             if (xzfs.intValue() == 1) {
-                returnContent = new String(DesUtil.unGZip(new BASE64Decoder().decodeBuffer(XmlTemplate.getNodeValue(doc, CONTENT))));
+                returnContent = new String(SecurityUtil.unGZip(XmlTemplate.getNodeValue(doc, CONTENT)));
             } else {
                 returnContent = Base64.decodeStr(XmlTemplate.getNodeValue(doc, CONTENT));
             }
