@@ -1,6 +1,5 @@
 package com.example.util.common;
 
-import com.egzosn.pay.common.util.str.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 import org.reflections.scanners.*;
@@ -96,7 +95,7 @@ public class ScanUtils {
         }
 
         String excludePackage = pro.getProperty("excludePackage");
-        if (StringUtils.isNotEmpty(excludePackage)) {
+        if (StringUtil.isNotEmpty(excludePackage)) {
             for (String packName : excludePackage.split(SPLIT_STR)) {
                 filterBuilder = filterBuilder.excludePackage(packName);
 
@@ -106,7 +105,7 @@ public class ScanUtils {
         }
 
         String excludeRegex = pro.getProperty("excludeRegex");
-        if (StringUtils.isNotEmpty(excludeRegex)) {
+        if (StringUtil.isNotEmpty(excludeRegex)) {
             for (String packName : excludeRegex.split(SPLIT_STR)) {
                 filterBuilder = filterBuilder.includePackage(packName);
 

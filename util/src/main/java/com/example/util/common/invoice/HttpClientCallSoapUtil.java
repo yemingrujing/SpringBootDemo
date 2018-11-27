@@ -54,6 +54,9 @@ public class HttpClientCallSoapUtil {
      */
     private static final int connectTimeout = 30000;
 
+    /**
+     * 请求成功代码
+     */
     private static final int successCode = 200;
 
     /**
@@ -96,9 +99,9 @@ public class HttpClientCallSoapUtil {
 
     /**
      * 同步发送方式
-     * @param url
-     * @param headers
-     * @param param
+     * @param url 请求地址
+     * @param headers 请求头
+     * @param param 请求参数
      * @return
      */
     public static String sendSyncSingleHttp(String url, Map<String, String> headers, String param) {
@@ -146,7 +149,7 @@ public class HttpClientCallSoapUtil {
                 inputStream = response.getEntity().getContent();
                 str = URLDecoder.decode(inputStreamToString(inputStream), "UTF-8");
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Request Send Error: {}", ExceptionUtils.getStackTrace(e));
             } finally {
                 try {
                     if (inputStream != null) {

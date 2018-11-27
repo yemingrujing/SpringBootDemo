@@ -11,7 +11,10 @@ import org.w3c.dom.Document;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 航天信息发票controller
@@ -98,7 +101,6 @@ public class HTFPController {
         // 解析
         Document doc = XmlTemplate.StringTOXml(response);
         String returnVal = XmlTemplate.getNodeValue(doc, RETURNCODE);
-        String returnMessageVal = Base64.decodeStr(XmlTemplate.getNodeValue(doc, RETURNMESSAGE));
         if (xzfs.intValue() == 1 && returnVal.equals("0000")) {
             String returnContent = new String(SecurityUtil.unGZip(XmlTemplate.getNodeValue(doc, CONTENT)));
             String pdfFile = XmlTemplate.getNodeValue(XmlTemplate.StringTOXml(returnContent), "/REQUEST_FPKJXX_FPJGXX_NEW/PDF_FILE");
@@ -176,7 +178,8 @@ public class HTFPController {
                 returnContent = Base64.decodeStr(XmlTemplate.getNodeValue(doc, CONTENT));
             }
             moduleMap.put("returnContent", XML.toJSONObject(returnContent));
-
+            System.out.println(returnContent);
+            System.out.println(XML.toXml(XML.toJSONObject(returnContent)));
         }
         moduleMap.put("code", returnVal);
         moduleMap.put("message", returnMessageVal);
