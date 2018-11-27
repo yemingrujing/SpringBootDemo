@@ -1,4 +1,4 @@
-package com.example.util.common.invoice;
+package com.example.util.common.invoice.nuonuo;
 
 import lombok.Builder;
 import lombok.Data;
@@ -16,41 +16,45 @@ public class InvoiceDetailParam {
 
     /**
      * 项目名称
+     * 是否必填：是
      */
-    private String xmmc;
+    private String goodsname;
 
     /**
      * 项目单位
      */
-    private String xmdw;
+    private String unit;
 
     /**
      * 规格型号
      */
-    private String ggxh;
+    private String spec;
 
     /**
-     * 项目数量
+     * 数量(冲红时项目数量为负数)
      */
-    private String xmsl;
+    private String num;
 
     /**
-     * 0 表示都不含税，1 表示都含税。(表示项目单价和项目金额是否含税)
+     * 单价含税标志， 0:不含税,1:含税
+     * 是否必填：是
      */
     private String hsbz;
 
     /**
      * 0正常行 1折扣行 2被折扣行
+     * 是否必填：是
      */
     private String fphxz;
 
     /**
      * 项目单价(正票和红票单价都大于‘0’)
      */
-    private BigDecimal xmdj;
+    private BigDecimal price;
 
     /**
      * 商品编码(技术人员需向企业财务核实；不足 19位后面补‘0’)
+     * 是否必填：是
      */
     private String spbm;
 
@@ -81,12 +85,23 @@ public class InvoiceDetailParam {
     private String kce;
 
     /**
-     * 项目金额(根据含税标志，确定此金额是否为含税金额)
-     */
-    private BigDecimal xmje;
-
-    /**
      * 税率  test 0.17 ; ys 0.03
      */
-    private String sl;
+    private String taxrate;
+
+    /**
+     * 不含税金额
+     */
+    private String taxfreeamt;
+
+    /**
+     * 税额
+     */
+    private String tax;
+
+    /**
+     * 含税金额
+     * 是否必填：是
+     */
+    private String taxamt;
 }
