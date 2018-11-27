@@ -1,5 +1,7 @@
 package com.example.util.common.invoice.nuonuo;
 
+import lombok.Data;
+
 import java.util.List;
 
 /**
@@ -8,6 +10,7 @@ import java.util.List;
  * @author Wei.Guang
  * @create 2018-11-27 17:35
  **/
+@Data
 public class InvoiceParam {
 
     /**
