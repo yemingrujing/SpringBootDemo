@@ -22,6 +22,9 @@ import java.util.Map;
 @RestController
 public class NuoNFPController {
 
+    /**
+     * 开票请求接口地址
+     */
     public static final String FPKJURL = "https://nnfpdev.jss.com.cn/shop/buyer/allow/cxfKp/cxfServerKpOrderSync.action";
 
     /**
