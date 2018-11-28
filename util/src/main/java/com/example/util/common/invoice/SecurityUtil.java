@@ -9,6 +9,7 @@ import sun.misc.BASE64Encoder;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
@@ -35,7 +36,7 @@ public class SecurityUtil {
      * ④传入字节数组，调用Cipher.doFinal()方法，实现加密/解密，并返回一个byte字节数组
      * c1.doFinal(src);
      */
-    private final Base64 base64 = new Base64();
+    private static final Base64 base64 = new Base64();
 
     /**
      * 定义 加密算法,可用 DES,DESede,Blowfish,AES/ECB/PKCS5Padding
@@ -49,19 +50,15 @@ public class SecurityUtil {
      * @return Base64编码的密文
      * @throws Exception
      */
-    public  String des3EncodeECB(String key, String data) throws Exception {
+    public static String AESEncrypt(String key, String data) throws Exception {
         if (key == null) {
             return null;
         }
-        byte[] keyBytes = key.getBytes("UTF-8");
-        byte[] dateBytes = data.getBytes("UTF-8");
-        DESedeKeySpec spec = new DESedeKeySpec(keyBytes);
-        SecretKeyFactory keyfactory = SecretKeyFactory.getInstance(Algorithm);
-        Key deskey = keyfactory.generateSecret(spec);
+        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
         Cipher cipher = Cipher.getInstance(Algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE, deskey);
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
         // Base64 加密
-        return base64.encodeToString(cipher.doFinal(dateBytes));
+        return base64.encodeToString(cipher.doFinal(data.getBytes("UTF-8")));
     }
 
     /**
@@ -71,18 +68,15 @@ public class SecurityUtil {
      * @return 明文
      * @throws Exception
      */
-    public String des3DecodeECB(String key,String data) throws Exception {
+    public static String AESDecrypt(String key,String data) throws Exception {
         if (key == null) {
             return null;
         }
-        byte[] keyBytes = key.getBytes("UTF-8");
         // Base64 解密
         byte[] dateBytes = base64.decode(data);
-        DESedeKeySpec spec = new DESedeKeySpec(keyBytes);
-        SecretKeyFactory keyfactory = SecretKeyFactory.getInstance(Algorithm);
-        Key deskey = keyfactory.generateSecret(spec);
+        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
         Cipher cipher = Cipher.getInstance(Algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, deskey);
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
         byte[] original = cipher.doFinal(dateBytes);
         return new String(original, "UTF-8");
     }

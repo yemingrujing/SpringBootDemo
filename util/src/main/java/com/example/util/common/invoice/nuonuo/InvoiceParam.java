@@ -30,7 +30,7 @@ public class InvoiceParam {
      */
     private String phone;
 
-    /**
+    /**deptid
      * 购方地址(企业要填，个人可为空)
      */
     private String address;

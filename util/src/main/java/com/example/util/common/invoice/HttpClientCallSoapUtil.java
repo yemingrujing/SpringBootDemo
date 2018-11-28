@@ -23,6 +23,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +104,7 @@ public class HttpClientCallSoapUtil {
      * @param param 请求参数
      * @return
      */
-    public static String sendSyncSingleHttp(String url, Map<String, String> headers, String param) {
+    public static String sendSyncSingleHttp(String url, String param) {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         RequestConfig defaultRequestConfig = RequestConfig.custom().build();
         RequestConfig requestConfig = RequestConfig.copy(defaultRequestConfig).setSocketTimeout(socketTimeout)
@@ -111,13 +112,16 @@ public class HttpClientCallSoapUtil {
         List<NameValuePair> nameValuePairs = new ArrayList<>();
         CloseableHttpResponse response = null;
         try {
+            Map<String, String> headers = new HashMap<>();
+            headers.put("dataType", "JSON");
+            headers.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
             HttpPost httpPost = setConnectionParam(url, headers);
             param = URLEncoder.encode(param, "UTF-8");
             if ("1".equals(InvoiceConfig.getConfig().getZipcode())) {
                 // 压缩
                 param = SecurityUtil.compress(param);
             }
-            nameValuePairs.add(new BasicNameValuePair("param", param));
+            nameValuePairs.add(new BasicNameValuePair("order", param));
             UrlEncodedFormEntity urlEncodedFormEntity = new UrlEncodedFormEntity(nameValuePairs);
             httpPost.setEntity(urlEncodedFormEntity);
             httpPost.setConfig(requestConfig);
@@ -161,7 +165,8 @@ public class HttpClientCallSoapUtil {
             }
         } else {
             try {
-                log.info(response.getStatusLine().getStatusCode() + ":" + response.getEntity().getContent());
+                str = EntityUtils.toString(response.getEntity(), "UTF-8");
+                log.info(response.getStatusLine().getStatusCode() + ":" + str);
             } catch (IOException e) {
                 log.error("Request Send Error: {}", ExceptionUtils.getStackTrace(e));
             }

@@ -477,11 +477,10 @@ public class XmlTemplate {
      * @return
      */
     public static String encryptContent(String content) {
-        SecurityUtil securityUtil = new SecurityUtil();
         String data = null;
         try {
             // CA 加密生产用
-            data = securityUtil.des3EncodeECB(InvoiceConfig.getConfig().getKeybytes(), content);
+            data = SecurityUtil.AESEncrypt(InvoiceConfig.getConfig().getKeybytes(), content);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -499,11 +498,10 @@ public class XmlTemplate {
      * @return
      */
     public static String decryptContent(String content) {
-        SecurityUtil securityUtil = new SecurityUtil();
         String data = null;
         try {
             // CA 加密生产用
-            data = securityUtil.des3DecodeECB(InvoiceConfig.getConfig().getKeybytes(), content);
+            data = SecurityUtil.AESDecrypt(InvoiceConfig.getConfig().getKeybytes(), content);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (Exception e) {
