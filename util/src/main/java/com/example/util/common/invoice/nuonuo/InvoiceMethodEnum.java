@@ -18,30 +18,30 @@ public enum InvoiceMethodEnum implements BaseMethod {
 
     fpkj{
         @Override
-        public <InvoiceParam> JSONObject paramsContentTemplate(InvoiceParam invoiceParam) {
+        public <T extends Object> JSONObject paramsContentTemplate(T t) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("order", invoiceParam);
+            jsonObject.put("order", t);
             return jsonObject;
         }
     }, fpjgcx{
         @Override
-        public <List> JSONObject paramsContentTemplate(List fpqqlshs) {
+        public <T extends Object> JSONObject paramsContentTemplate(T t) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("fpqqlsh", fpqqlshs);
+            jsonObject.put("fpqqlsh", t);
             return jsonObject;
         }
     }, kpcx{
         @Override
-        public <List> JSONObject paramsContentTemplate(List orderno) {
+        public <T extends Object> JSONObject paramsContentTemplate(T t) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("orderno", orderno);
+            jsonObject.put("orderno", t);
             return jsonObject;
         }
     }, fpzf{
         @Override
-        public <InvoiceInvalidParam> JSONObject paramsContentTemplate(InvoiceInvalidParam invoiceInvalidParam) {
+        public <T extends Object> JSONObject paramsContentTemplate(T t) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("order", invoiceInvalidParam);
+            jsonObject.put("order", t);
             return jsonObject;
         }
     };
