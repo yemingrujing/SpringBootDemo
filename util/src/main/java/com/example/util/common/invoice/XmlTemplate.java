@@ -480,7 +480,7 @@ public class XmlTemplate {
         String data = null;
         try {
             // CA 加密生产用
-            data = SecurityUtil.AESEncrypt(InvoiceConfig.getConfig().getKeybytes(), content);
+            data = SecurityUtil.AESEncrypt(InvoiceConfig.getConfig().getKeyData(), content);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -501,7 +501,7 @@ public class XmlTemplate {
         String data = null;
         try {
             // CA 加密生产用
-            data = SecurityUtil.AESDecrypt(InvoiceConfig.getConfig().getKeybytes(), content);
+            data = SecurityUtil.AESDecrypt(InvoiceConfig.getConfig().getKeyData(), content);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (Exception e) {

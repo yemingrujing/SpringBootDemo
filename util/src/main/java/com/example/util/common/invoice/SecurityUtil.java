@@ -7,10 +7,12 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -33,49 +35,94 @@ public class SecurityUtil {
      * ④传入字节数组，调用Cipher.doFinal()方法，实现加密/解密，并返回一个byte字节数组
      * c1.doFinal(src);
      */
-    private static final Base64 base64 = new Base64();
+    private static final Base64 BASE64 = new Base64();
 
     /**
-     * 定义 加密算法,可用 DES,DESede,Blowfish,AES/ECB/PKCS5Padding
+     * MD5Hash码位数
      */
-    private static final String Algorithm = "AES/ECB/PKCS5Padding";
+    private static final int MD5HASHLENGTH = 16;
+
+    /**
+     * 定义 加密算法,可用 DES/CBC/PKCS5Padding(KEY 由8位字节数组通过SecretKeySpec类转换而成, IV偏转向量，由8位字节数组通过IvParameterSpec类转换而成。),
+     * TripleDES/CBC/PKCS5Padding(KEY 由24位字节数组通过SecretKeySpec类转换而成, IV偏转向量，由8位字节数组通过IvParameterSpec类转换而成。)
+     */
+    private static final String ALGORITHM = "DES/CBC/PKCS5Padding";
 
     /**
      * ECB加密,不要IV
-     * @param key 密钥
+     * @param keyData 密钥
      * @param data 明文
      * @return Base64编码的密文
      * @throws Exception
      */
-    public static String AESEncrypt(String key, String data) throws Exception {
-        if (key == null) {
+    public static String AESEncrypt(String keyData, String data) throws Exception {
+        if (keyData == null) {
             return null;
         }
-        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-        Cipher cipher = Cipher.getInstance(Algorithm);
-        cipher.init(Cipher.ENCRYPT_MODE, skeySpec);
+
+        byte[] encrypt = {};
+        if (data != null) {
+            encrypt = data.getBytes("utf-8");
+        }
+        // 取MD5Hash码，并组合加密数组
+        byte[] md5Hasn = SecurityUtil.MD5Hash(encrypt, 0, encrypt.length);
+        // 组合消息体
+        byte[] totalByte = SecurityUtil.addMD5(md5Hasn, encrypt);
+
+        // 取密钥和偏转向量
+        byte[] key = new byte[8];
+        byte[] iv = new byte[8];
+        getKeyIV(keyData, key, iv);
+
+        SecretKeySpec skeySpec = new SecretKeySpec(key, "DES");
+        IvParameterSpec ivParam = new IvParameterSpec(iv);
+
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivParam);
         // Base64 加密
-        return base64.encodeToString(cipher.doFinal(data.getBytes("UTF-8")));
+        return BASE64.encodeToString(cipher.doFinal(totalByte, 0, totalByte.length));
     }
 
     /**
      * ECB解密,不要IV
-     * @param key 密钥
+     * @param keyData 密钥
      * @param data Base64编码的密文
      * @return 明文
      * @throws Exception
      */
-    public static String AESDecrypt(String key,String data) throws Exception {
-        if (key == null) {
+    public static String AESDecrypt(String keyData, String data) throws Exception {
+        if (keyData == null) {
             return null;
         }
+
+        if (data != null){
+            //解决URL里加号变空格
+            data = data.replaceAll(" ", "+");
+        }
         // Base64 解密
-        byte[] dateBytes = base64.decode(data);
-        SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
-        Cipher cipher = Cipher.getInstance(Algorithm);
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec);
-        byte[] original = cipher.doFinal(dateBytes);
-        return new String(original, "UTF-8");
+        byte[] encBuf = BASE64.decode(data);
+
+        // 取密钥和偏转向量
+        byte[] key = new byte[8];
+        byte[] iv = new byte[8];
+        getKeyIV(keyData, key, iv);
+
+        SecretKeySpec skeySpec = new SecretKeySpec(key, "DES");
+        IvParameterSpec ivParam = new IvParameterSpec(iv);
+
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, skeySpec, ivParam);
+        byte[] original = cipher.doFinal(encBuf, 0, encBuf.length);
+
+        // 进行解密后的md5Hash校验
+        byte[] md5Hash = SecurityUtil.MD5Hash(original, MD5HASHLENGTH, original.length - MD5HASHLENGTH);;
+        // 进行解密校检
+        for (int i = 0; i < md5Hash.length; i++) {
+            if (md5Hash[i] != original[i]) {
+                throw new Exception("MD5校验错误。");
+            }
+        }
+        return new String(original, MD5HASHLENGTH, original.length - MD5HASHLENGTH, "UTF-8");
     }
 
     /**
@@ -161,5 +208,92 @@ public class SecurityUtil {
         outputStream.write(buffer);
         outputStream.flush();
         IOUtils.closeQuietly(outputStream);
+    }
+
+    /**
+     * <li>
+     * 方法名称:MD5Hash</li> <li>
+     * 功能描述:
+     *
+     * <pre>
+     * MD5，进行了简单的封装，以适用于加，解密字符串的校验。
+     * </pre>
+     *
+     * </li>
+     *
+     * @param buf
+     *            需要MD5加密字节数组。
+     * @param offset
+     *            加密数据起始位置。
+     * @param length
+     *            需要加密的数组长度。
+     * @return
+     * @throws Exception
+     */
+    public static byte[] MD5Hash(byte[] buf, int offset, int length) throws Exception {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(buf, offset, length);
+        return md.digest();
+    }
+
+    /**
+     * <li>
+     * 方法名称:addMD5</li> <li>
+     * 功能描述:
+     *
+     * <pre>
+     * MD校验码 组合方法，前16位放MD5Hash码。 把MD5验证码byte[]，加密内容byte[]组合的方法。
+     * </pre>
+     *
+     * </li>
+     *
+     * @param md5Byte
+     *            加密内容的MD5Hash字节数组。
+     * @param bodyByte
+     *            加密内容字节数组
+     * @return 组合后的字节数组，比加密内容长16个字节。
+     */
+    public static byte[] addMD5(byte[] md5Byte, byte[] bodyByte) {
+        int length = bodyByte.length + md5Byte.length;
+        byte[] resutlByte = new byte[length];
+
+        // 前16位放MD5Hash码
+        for (int i = 0; i < length; i++) {
+            if (i < md5Byte.length) {
+                resutlByte[i] = md5Byte[i];
+            } else {
+                resutlByte[i] = bodyByte[i - md5Byte.length];
+            }
+        }
+
+        return resutlByte;
+    }
+
+    /**
+     * <li>
+     * 方法名称:getKeyIV</li> <li>
+     * 功能描述:
+     *
+     * <pre>
+     *
+     * </pre>
+     * </li>
+     *
+     * @param encryptKey
+     * @param key
+     * @param iv
+     */
+    public static void getKeyIV(String encryptKey, byte[] key, byte[] iv) {
+        // 密钥Base64解密
+        byte[] buf = Base64.decodeBase64(encryptKey);
+        // 前8位为key
+        int i;
+        for (i = 0; i < key.length; i++) {
+            key[i] = buf[i];
+        }
+        // 后8位为iv向量
+        for (i = 0; i < iv.length; i++) {
+            iv[i] = buf[i + 8];
+        }
     }
 }

@@ -116,7 +116,7 @@ public class InvoiceConfig extends LoadProperties {
     /**
      * 加密字符串(生产用)
      */
-    private String keybytes;
+    private String keyData;
 
     /**
      * PDF文件下载目录
@@ -230,10 +230,10 @@ public class InvoiceConfig extends LoadProperties {
             this.bmbBbh = value.trim();
         }
 
-        value = pro.getProperty(InvoiceConstants.KEYBYTES);
-        log.info(InvoiceConstants.KEYBYTES + ":" + value);
+        value = pro.getProperty(InvoiceConstants.KEYDATA);
+        log.info(InvoiceConstants.KEYDATA + ":" + value);
         if (StringUtil.isNotBlank(value)) {
-            this.keybytes = value.trim();
+            this.keyData = value.trim();
         }
 
         value = pro.getProperty(InvoiceConstants.PDF_FILE_PATH);
@@ -319,8 +319,8 @@ public class InvoiceConfig extends LoadProperties {
         return bmbBbh;
     }
 
-    public String getKeybytes() {
-        return keybytes;
+    public String getKeyData() {
+        return keyData;
     }
 
     public String getPdfFilePath() {

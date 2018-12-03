@@ -2,6 +2,7 @@ package com.example.util.common.invoice.nuonuo;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.util.common.invoice.InvoiceConfig;
 import com.example.util.common.invoice.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -22,11 +23,11 @@ public enum InvoiceMethodEnum implements BaseMethod {
             jsonObject.put("order", invoiceParam);
             return jsonObject;
         }
-    }, fpjg{
+    }, fpjgcx{
         @Override
-        public <List> JSONObject paramsContentTemplate(List fpqqlsh) {
+        public <List> JSONObject paramsContentTemplate(List fpqqlshs) {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("fpqqlsh", fpqqlsh);
+            jsonObject.put("fpqqlsh", fpqqlshs);
             return jsonObject;
         }
     }, kpcx{
@@ -50,7 +51,7 @@ public enum InvoiceMethodEnum implements BaseMethod {
             JSONObject jsonObject = invoiceMethodEnum.paramsContentTemplate(t);
             jsonObject.put("identity", "93363DCC6064869708F1F3C72A0CE72A713A9D425CD50CDE");
             System.out.println(JSON.toJSONString(jsonObject));
-            return SecurityUtil.AESEncrypt("9oyKs7cVo1yYzkuisP9bhA==", JSON.toJSONString(jsonObject));
+            return SecurityUtil.AESEncrypt(InvoiceConfig.getConfig().getKeyData(), JSON.toJSONString(jsonObject));
         } catch (Exception e) {
             log.error("Parameter install failure: {}", ExceptionUtils.getStackTrace(e));
         }

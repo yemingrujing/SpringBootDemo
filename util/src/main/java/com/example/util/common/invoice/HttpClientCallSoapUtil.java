@@ -116,7 +116,7 @@ public class HttpClientCallSoapUtil {
             headers.put("dataType", "JSON");
             headers.put("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
             HttpPost httpPost = setConnectionParam(url, headers);
-            param = URLEncoder.encode(param, "UTF-8");
+            // param = URLEncoder.encode(param, "UTF-8");
             if ("1".equals(InvoiceConfig.getConfig().getZipcode())) {
                 // 压缩
                 param = SecurityUtil.compress(param);
