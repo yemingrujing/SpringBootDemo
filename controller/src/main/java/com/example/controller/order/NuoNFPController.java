@@ -75,7 +75,7 @@ public class NuoNFPController {
     }
 
     /**
-     * 开票结果查询接口
+     * 根据订单号查询发票请求流水号接口
      * @param param
      * @return
      */
