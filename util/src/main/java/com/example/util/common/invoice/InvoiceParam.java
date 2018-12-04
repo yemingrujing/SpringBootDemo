@@ -88,13 +88,13 @@ public class InvoiceParam {
      * 自开(0) 代开(1)
      */
     @Builder.Default
-    private String dkbz;
+    private String dkbz = "0";
 
     /**
      * 编码表版本号 26.0 now
      */
     @Builder.Default
-    private String bmbBbh;
+    private String bmbBbh = "26.0";
 
     /**
      * 主要开票项目
