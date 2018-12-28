@@ -565,7 +565,7 @@ public class QRCodeUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String text = "http://192.168.168.5:9901/app/listensignin/?activityId=68";
+        String text = "http://192.168.168.43:9091/app/auditPay/pay?userId=339&invoiceId=11&activityId=111";
         //不含LOGO
         QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
         //含LOGO，不指定二维码图片
