@@ -193,7 +193,7 @@ public class AddressUtils {
         return null;
     }
     
-    public static void main(String[] args) throws SocketException, UnsupportedEncodingException {
+    public static void main(String[] args) throws SocketException {
         // 局域网的ip地址
         System.out.println("内网ip:" + AddressUtils.getInnetIp());
         // 用于实际判断地址的ip
