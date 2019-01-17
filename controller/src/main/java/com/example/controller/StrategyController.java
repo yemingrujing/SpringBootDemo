@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.base.enums.MemberLevelEnum;
-import com.example.service.impl.StrategyContext;
+import com.example.service.strategy.impl.StrategyContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

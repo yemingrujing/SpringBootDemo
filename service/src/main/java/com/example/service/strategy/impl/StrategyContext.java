@@ -1,6 +1,7 @@
-package com.example.service.impl;
+package com.example.service.strategy.impl;
 
-import com.example.service.Strategy;
+import com.example.service.strategy.Strategy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,6 +23,7 @@ public class StrategyContext {
      * 注入所有实现了Strategy接口的Bean
      * @param strategyMap
      */
+    @Autowired
     public StrategyContext(Map<String, Strategy> strategyMap) {
         this.strategyMap.clear();
         strategyMap.forEach((k, v) -> this.strategyMap.put(k, v));

@@ -89,7 +89,7 @@ public class DBDataToWord {
                     }
                 }
             }
-            createHeader(xdoc, "C:\\Users\\guang\\Desktop\\logo.jpg");
+            createHeader(xdoc, "C:\\Users\\guang\\Desktop\\logo.png");
             createFooter(xdoc, "淘 美 妆 商 会");
             // 强制执行制度保护
             //xdoc.enforceReadonlyProtection();
@@ -827,7 +827,7 @@ public class DBDataToWord {
         if (StringUtils.isNotBlank(imgFile)) {
             InputStream is = new FileInputStream(new File(imgFile));
 
-            XWPFPicture picture = run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgFile, Units.toEMU(30), Units.toEMU(30));
+            XWPFPicture picture = run.addPicture(is, XWPFDocument.PICTURE_TYPE_PNG, imgFile, Units.toEMU(30), Units.toEMU(30));
 
             String blipID = "";
             // 这段必须有，不然打开的logo图片不显示

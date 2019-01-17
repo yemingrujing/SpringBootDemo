@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.service.strategy;
 
 import java.math.BigDecimal;
 

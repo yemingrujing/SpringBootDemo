@@ -1,6 +1,6 @@
-package com.example.service.impl;
+package com.example.service.strategy.impl;
 
-import com.example.service.Strategy;
+import com.example.service.strategy.Strategy;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
