@@ -1031,7 +1031,6 @@ public class SecssUtil {
      * 功能：后台交易提交请求报文并接收同步应答报文<br>
      *
      * @param reqData      请求报文<br>
-     * @param rspData      应答报文<br>
      * @param reqUrl       请求地址<br>
      * @param encoding<br>
      * @return 应答http 200返回true ,其他false<br>
@@ -1064,7 +1063,6 @@ public class SecssUtil {
      * 功能：后台交易提交请求报文并接收同步应答报文<br>
      *
      * @param reqData      请求报文<br>
-     * @param rspData      应答报文<br>
      * @param reqUrl       请求地址<br>
      * @param encoding<br>
      * @return 应答http 200返回true ,其他false<br>
