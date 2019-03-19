@@ -565,21 +565,23 @@ public class QRCodeUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        String text = "http://192.168.168.43:9091/app/auditPay/pay?userId=339&invoiceId=11&activityId=111";
-        //不含LOGO
-        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
-        //含LOGO，不指定二维码图片
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆商友会");
-        //含LOGO，指定二维码图片名
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆商友会");
+//        String text = "http://192.168.168.43:9091/app/auditPay/pay?userId=339&invoiceId=11&activityId=111";
+//        //不含LOGO
+//        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null);
+//        //含LOGO，不指定二维码图片
+//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "淘美妆商友会");
+//        //含LOGO，指定二维码图片名
+//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "qrcode", true, "淘美妆商友会");
+//
+//        //含LOGO，背景图
+//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg", true);
+//        //背景图
+//        QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
+//        //含LOGO，背景图，文本
+//        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆商友会");
+//        //含LOGO，文本
+//        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null, "淘美妆商友会");
 
-        //含LOGO，背景图
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg", true);
-        //背景图
-        QRCodeUtil.encode(text, "E:\\file\\qrcode", "C:\\Users\\guang\\Desktop\\logo.jpg");
-        //含LOGO，背景图，文本
-        QRCodeUtil.encode(text, "C:\\Users\\guang\\Desktop\\timg.jpg", "E:\\file\\qrcode", true, "C:\\Users\\guang\\Desktop\\logo.jpg", "淘美妆商友会");
-        //含LOGO，文本
-        QRCodeUtil.encode(text, null, "E:\\file\\qrcode", true, null, "淘美妆商友会");
+        System.out.println(QRCodeUtil.decode("D:\\images\\pinguan.png"));
     }
 }

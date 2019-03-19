@@ -3,9 +3,9 @@ package com.example.service.wechat.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.example.base.login.User;
 import com.example.base.login.UserAuths;
+import com.example.service.config.RestClient;
 import com.example.service.wechat.WeixinLoginService;
 import com.example.util.chat.ChatParam;
-import com.example.util.rest.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -5,9 +5,9 @@ import com.example.base.login.OAuthInfo;
 import com.example.base.login.OUserInfo;
 import com.example.mapper.login.OAuthInfoMapper;
 import com.example.mapper.login.OUserInfoMapper;
+import com.example.service.config.RestClient;
 import com.example.service.wechat.WeixinAuthService;
 import com.example.util.chat.ChatParam;
-import com.example.util.rest.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
