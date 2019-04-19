@@ -34,16 +34,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <springboot.version>2.0.3.RELEASE</springboot.version>
+        <springboot.version>2.1.4.RELEASE</springboot.version>
         <mybatis.version>1.3.2</mybatis.version>
         <commons.lang3.version>3.7</commons.lang3.version>
         <pagehelper.mybatis.version>1.2.3</pagehelper.mybatis.version>
         <tk.mybatis.version>1.2.4</tk.mybatis.version>
         <alibaba.version>1.1.10</alibaba.version>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-        <spring.boot.admin.version>2.0.3</spring.boot.admin.version>
-        <eureka.client.version>2.0.1.RELEASE</eureka.client.version>
-        <eureka.server.version>1.4.5.RELEASE</eureka.server.version>
+        <spring.boot.admin.version>2.1.4</spring.boot.admin.version>
+        <eureka.client.version>2.1.1.RELEASE</eureka.client.version>
+        <eureka.server.version>1.4.6.RELEASE</eureka.server.version>
         <springboot.cxf.jaxws.version>3.2.7</springboot.cxf.jaxws.version>
     </properties>
 
