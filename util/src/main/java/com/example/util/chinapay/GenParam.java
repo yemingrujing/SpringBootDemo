@@ -40,9 +40,9 @@ public class GenParam<T> {
      * 转换成json
      * @return
      */
-    public String transferToJson() {
-        setValue(t);
-        return JSONUtil.toJsonPrettyStr(t);
+    public static <E> String transferToJson(E e) {
+        setValue(e);
+        return JSONUtil.toJsonPrettyStr(e);
     }
 
     /**
@@ -144,7 +144,7 @@ public class GenParam<T> {
      * 通过反射给对象的指定字段赋值
      * @param model
      */
-    private void setValue(T model) {
+    private static <E> void setValue(E model) {
         Field[] field = model.getClass().getDeclaredFields(); // 获取实体类的所有属性，返回Field数组
         try {
             for (int j = 0; j < field.length; j++) { // 遍历所有属性
@@ -269,7 +269,7 @@ public class GenParam<T> {
      * @param listClass
      * @return
      */
-    public Object generateList(Class listClass) {
+    public static <E> Object generateList(Class listClass) {
         Object object = null;
         try {
             object = listClass.newInstance();
@@ -278,7 +278,7 @@ public class GenParam<T> {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        setValue((T) object);
+        setValue((E) object);
         return object;
     }
 }

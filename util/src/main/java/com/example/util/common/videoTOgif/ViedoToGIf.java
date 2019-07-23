@@ -149,7 +149,7 @@ public class ViedoToGIf {
      * 压缩图片
      * @param sourceImage    待压缩图片
      * @param width          压缩图片高度
-     * @param heigt          压缩图片宽度
+     * @param height          压缩图片宽度
      */
     private static BufferedImage zoom(BufferedImage sourceImage , int width , int height){
         BufferedImage zoomImage = new BufferedImage(width, height, sourceImage.getType());
@@ -161,6 +161,6 @@ public class ViedoToGIf {
     }
 
     public static void main(String[] args) throws IOException {
-        buildGIf("E:\\file\\video\\test.mp4", 3, null, 10, 2);
+        buildGIf("E:\\file\\video\\1111.mp4", 3, null, 30, 1);
     }
 }
