@@ -19,7 +19,7 @@
     <description>App project for Spring Boot</description>
 
     <properties>
-        <fastjson.version>1.2.43</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <!-- MyBatis Generator -->
         <!-- Java接口和实体类 -->
         <targetModelPackage>com.example.order</targetModelPackage>
